@@ -6,10 +6,28 @@
 #define BREWPILOT_BOILERCONTROLLER_H
 
 #include "HardwareController.h"
+#include "Arduino.h"
+#include "Config.h"
+
+enum BoilerState {
+    BOILER_FILLED,
+    BOILER_FILLING,
+    BOILER_BELOW_TARGET,
+    BOILER_UNKNOWN
+};
 
 class BoilerController : public HardwareController {
+private:
+    BoilerState state;
+    int fillTally = 0;
 public:
-    void loop() override {};
+    BoilerController() {
+        state = BOILER_UNKNOWN;
+    }
+
+    void loop() override;
+
+    void readBoilerSensor();
 };
 
 
