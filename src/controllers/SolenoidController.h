@@ -6,7 +6,7 @@
 #define BREWPILOT_SOLENOIDCONTROLLER_H
 
 #include "HardwareController.h"
-#include "Solenoid.h"
+#include "hardware/Solenoid.h"
 
 class SolenoidController : public HardwareController {
 private:
