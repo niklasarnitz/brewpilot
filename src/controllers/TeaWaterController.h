@@ -6,10 +6,11 @@
 #define BREWPILOT_TEAWATERCONTROLLER_H
 
 #include "HardwareController.h"
+#include "state/State.h"
 
 class TeaWaterController : public HardwareController {
 public:
-    void loop() override {};
+    void loop(State &state) override {};
 };
 
 

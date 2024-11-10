@@ -9,7 +9,7 @@
 #define BOILER_LEVEL_SENSOR_PIN A0
 
 // TODO: Make this value configurable via the web interface
-// Value of the "Full" State of the Boiler Sensor
+// Value of the "Full" state of the Boiler Sensor
 #define BOILER_FILL_LEVEL 2000
 
 // Number of consecutive reads of the Boiler Sensor that must be below the "Full" Level

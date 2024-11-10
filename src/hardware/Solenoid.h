@@ -5,6 +5,8 @@
 #ifndef BREWPILOT_SOLENOIOD_H
 #define BREWPILOT_SOLENOIOD_H
 
+#include "Arduino.h"
+
 enum SolenoidState {
     SOLENOID_OPEN,
     SOLENOID_CLOSED
@@ -16,7 +18,13 @@ private:
     int pin;
     bool isInverted;
 public:
-    Solenoid(int pin, bool isInverted);
+    Solenoid(int pin, bool isInverted) {
+        this->pin = pin;
+        this->isInverted = isInverted;
+        state = SOLENOID_CLOSED;
+
+        pinMode(pin, OUTPUT);
+    };
 
     void setState(SolenoidState newState);
 };

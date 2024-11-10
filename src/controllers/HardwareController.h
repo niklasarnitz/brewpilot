@@ -5,10 +5,11 @@
 #ifndef BREWPILOT_HARDWARECONTROLLER_H
 #define BREWPILOT_HARDWARECONTROLLER_H
 
+#include "state/State.h"
 
 class HardwareController {
 public:
-    virtual void loop() = 0;
+    virtual void loop(State &state) = 0;
 
 protected:
     HardwareController() {};

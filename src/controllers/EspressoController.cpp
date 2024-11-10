@@ -4,10 +4,10 @@
 
 #include "EspressoController.h"
 
-void EspressoController::loop() {
-    boilerController.loop();
-    pumpController.loop();
-    groupOneController.loop();
-    groupTwoController.loop();
-    teaWaterController.loop();
+void EspressoController::loop(State &state) {
+    boilerController.loop(state);
+    pumpController.loop(state);
+    groupOneController.loop(state);
+    groupTwoController.loop(state);
+    teaWaterController.loop(state);
 }

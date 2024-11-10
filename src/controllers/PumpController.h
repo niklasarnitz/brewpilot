@@ -5,11 +5,12 @@
 #ifndef BREWPILOT_PUMPCONTROLLER_H
 #define BREWPILOT_PUMPCONTROLLER_H
 
+#include "state/State.h"
 #include "HardwareController.h"
 
 class PumpController : public HardwareController {
 public:
-    void loop() override {};
+    void loop(State &state) override {};
 };
 
 

@@ -5,6 +5,7 @@
 #ifndef BREWPILOT_SOLENOIDCONTROLLER_H
 #define BREWPILOT_SOLENOIDCONTROLLER_H
 
+#include "state/State.h"
 #include "HardwareController.h"
 #include "hardware/Solenoid.h"
 
@@ -17,7 +18,7 @@ private:
 public:
     void init();
 
-    void loop() override;
+    void loop(State &state) override;
 };
 
 

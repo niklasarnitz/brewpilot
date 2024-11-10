@@ -3,3 +3,11 @@
 //
 
 #include "Solenoid.h"
+
+void Solenoid::setState(SolenoidState newState) {
+    if (newState == SOLENOID_OPEN) {
+        digitalWrite(pin, HIGH);
+    } else {
+        digitalWrite(pin, LOW);
+    }
+}

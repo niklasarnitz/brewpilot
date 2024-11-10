@@ -10,6 +10,7 @@
 #include "PumpController.h"
 #include "GroupController.h"
 #include "TeaWaterController.h"
+#include "state/State.h"
 
 class EspressoController : public HardwareController {
 private:
@@ -20,7 +21,7 @@ private:
     TeaWaterController teaWaterController;
 
 public:
-    void loop() override;
+    void loop(State &state) override;
 };
 
 #endif //BREWPILOT_ESPRESSOCONTROLLER_H

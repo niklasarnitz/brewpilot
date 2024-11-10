@@ -5,12 +5,12 @@
 #ifndef BREWPILOT_GROUPCONTROLLER_H
 #define BREWPILOT_GROUPCONTROLLER_H
 
+#include "state/State.h"
 #include "HardwareController.h"
 
 class GroupController : public HardwareController {
 public:
-    void loop() override {};
-
+    void loop(State &state) override {};
 };
 
 
