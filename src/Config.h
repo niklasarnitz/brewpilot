@@ -1,0 +1,20 @@
+//
+// Created by Niklas Arnitz on 11.11.24.
+//
+
+#ifndef BREWPILOT_CONFIG_H
+#define BREWPILOT_CONFIG_H
+
+// Pins
+#define BOILER_PROBE_PIN 15
+#define BOILER_FILL_VALVE_PIN 16
+#define GROUP_ONE_FLOW_METER_PIN 1
+#define GROUP_TWO_FLOW_METER_PIN 2
+#define GROUP_ONE_SOLENOID_PIN 3
+#define GROUP_TWO_SOLENOID_PIN 4
+#define TEA_WATER_SOLENOID_PIN 5
+
+#define GROUP_ONE_ID 1
+#define GROUP_TWO_ID 2
+
+#endif //BREWPILOT_CONFIG_H

@@ -1,15 +1,24 @@
 #include <Arduino.h>
-#include "controllers/EspressoController.h"
-#include "state/State.h"
+#include "hardware/controllers/HardwareController.h"
 
-EspressoController espressoController;
+#include "Config.h"
 
-State state;
+HardwareController hardwareController;
+
+void groupOneFlowMeterHandler() {
+    hardwareController.updateFlow(GROUP_ONE_ID);
+}
+
+void groupTwoFlowMeterHandler() {
+    hardwareController.updateFlow(GROUP_TWO_ID);
+}
 
 void setup() {
+    attachInterrupt(digitalPinToInterrupt(GROUP_ONE_FLOW_METER_PIN), groupOneFlowMeterHandler, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(GROUP_TWO_FLOW_METER_PIN), groupTwoFlowMeterHandler, CHANGE);
 }
 
 void loop() {
-    espressoController.loop(state);
+    hardwareController.loop();
     delay(10);
 }
