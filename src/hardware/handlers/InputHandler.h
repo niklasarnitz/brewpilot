@@ -5,29 +5,38 @@
 #ifndef BREWPILOT_INPUTHANDLER_H
 #define BREWPILOT_INPUTHANDLER_H
 
-#include "hardware/devices/Button.h"
-
+#include "structs/ButtonEvent.h"
+#include "hardware/handlers/ButtonHandler.h"
+#include "hardware/handlers/GroupHeadButtonHandler.h"
+#include "structs/ButtonMatrixState.h"
+#include "hardware/handlers/ButtonMatrixHandler.h"
 
 class InputHandler {
 private:
+    ButtonMatrixState buttonMatrixState{};
+
+    ButtonMatrixHandler buttonMatrixHandler;
+
+    GroupHeadButtonHandler groupOneHandler;
+    GroupHeadButtonHandler groupTwoHandler;
+
+    // Tea
+    ButtonHandler teaButtonHandler;
+
+
+    ButtonEvent &buttonEvent;
 //    TODO: Implement the reading of the button matrix here using coordinates
-    Button buttons[9] = {
-            // GROUP_ONE
-            Button(0),
-            Button(1),
-            Button(2),
-            Button(3),
-//            TEA
-            Button(4),
-//            GROUP_TWO
-            Button(5),
-            Button(6),
-            Button(7),
-            Button(8)
-    };
 
 public:
-    void readInputs();
+    explicit InputHandler(ButtonEvent &buttonEvent) : buttonEvent(buttonEvent), buttonMatrixHandler(buttonMatrixState),
+                                                      teaButtonHandler(buttonMatrixState.tea), groupOneHandler(
+                    buttonMatrixState.groupOne),
+                                                      groupTwoHandler(buttonMatrixState.groupTwo) {};
+
+
+    void readInputs() {
+
+    };
 };
 
 

@@ -11,15 +11,32 @@ class Solenoid {
 private:
     int pin;
     bool isInverted;
+    bool open;
+
 public:
     Solenoid(int pin, bool isInverted) {
         this->pin = pin;
         this->isInverted = isInverted;
+        this->open = false;
 
         pinMode(pin, OUTPUT);
+
+        this->setOpen(false);
     };
 
-    void setState(bool newState);
+    void setOpen(bool newState) {
+        this->open = newState;
+
+        if (isInverted) {
+            digitalWrite(pin, newState ? HIGH : LOW);
+        } else {
+            digitalWrite(pin, newState ? LOW : HIGH);
+        }
+    }
+
+    bool isOpen() {
+        return open;
+    }
 };
 
 
