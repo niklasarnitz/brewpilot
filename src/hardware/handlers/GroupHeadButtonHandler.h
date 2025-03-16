@@ -7,10 +7,12 @@
 
 #include "ButtonHandler.h"
 #include "structs/ButtonMatrixState.h"
+#include "hardware/enums/GroupHeadButtonEvent.h"
 
 class GroupHeadButtonHandler {
 private:
-    GroupButtonMatrixState groupState;
+    // Output
+    GroupHeadButtonEvent &event;
 
     ButtonHandler groupLeftSingleDoseButtonHandler;
     ButtonHandler groupLeftDoubleDoseButtonHandler;
@@ -19,17 +21,40 @@ private:
     ButtonHandler groupRightDoubleDoseButtonHandler;
 
 public:
-    explicit GroupHeadButtonHandler(GroupButtonMatrixState groupState) : groupState(groupState),
-                                                                         groupLeftSingleDoseButtonHandler(
-                                                                                 groupState.leftSingleDose),
-                                                                         groupLeftDoubleDoseButtonHandler(
-                                                                                 groupState.leftDoubleDose),
-                                                                         groupContinuousButtonHandler(
-                                                                                 groupState.continuous),
-                                                                         groupRightSingleDoseButtonHandler(
-                                                                                 groupState.rightSingleDose),
-                                                                         groupRightDoubleDoseButtonHandler(
-                                                                                 groupState.rightDoubleDose) {};
+    explicit GroupHeadButtonHandler(GroupButtonMatrixState &groupState, GroupHeadButtonEvent &event) :
+            event(event),
+            groupLeftSingleDoseButtonHandler(
+                    groupState.leftSingleDose),
+            groupLeftDoubleDoseButtonHandler(
+                    groupState.leftDoubleDose),
+            groupContinuousButtonHandler(
+                    groupState.continuous),
+            groupRightSingleDoseButtonHandler(
+                    groupState.rightSingleDose),
+            groupRightDoubleDoseButtonHandler(
+                    groupState.rightDoubleDose) {};
+
+    void handle() {
+        bool leftSingleDoseEvent = groupLeftSingleDoseButtonHandler.handleButton();
+        bool leftDoubleDoseEvent = groupLeftDoubleDoseButtonHandler.handleButton();
+        bool continuousEvent = groupContinuousButtonHandler.handleButton();
+        bool rightSingleDoseEvent = groupRightSingleDoseButtonHandler.handleButton();
+        bool rightDoubleDoseEvent = groupRightDoubleDoseButtonHandler.handleButton();
+
+        if (continuousEvent) {
+            event = CONTINUOUS;
+        } else if (leftSingleDoseEvent) {
+            event = LEFT_SINGLE_ESPRESSO;
+        } else if (leftDoubleDoseEvent) {
+            event = LEFT_DOUBLE_ESPRESSO;
+        } else if (rightSingleDoseEvent) {
+            event = RIGHT_SINGLE_ESPRESSO;
+        } else if (rightDoubleDoseEvent) {
+            event = RIGHT_DOUBLE_ESPRESSO;
+        } else {
+            event = NONE;
+        }
+    }
 };
 
 #endif //BREWPILOT_GROUPBUTTONHANDLER_H

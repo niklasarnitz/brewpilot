@@ -28,14 +28,21 @@ private:
 //    TODO: Implement the reading of the button matrix here using coordinates
 
 public:
-    explicit InputHandler(ButtonEvent &buttonEvent) : buttonEvent(buttonEvent), buttonMatrixHandler(buttonMatrixState),
-                                                      teaButtonHandler(buttonMatrixState.tea), groupOneHandler(
-                    buttonMatrixState.groupOne),
-                                                      groupTwoHandler(buttonMatrixState.groupTwo) {};
+    explicit InputHandler(ButtonEvent &buttonEvent) :
+            buttonEvent(buttonEvent), buttonMatrixHandler(buttonMatrixState),
+            teaButtonHandler(buttonMatrixState.tea), groupOneHandler(
+            buttonMatrixState.groupOne, buttonEvent.groupOne),
+            groupTwoHandler(buttonMatrixState.groupTwo, buttonEvent.groupTwo) {};
 
 
     void readInputs() {
+        // Read inputs
+        buttonMatrixHandler.handle();
 
+        // Write Events
+        teaButtonHandler.handleButton();
+        groupOneHandler.handle();
+        groupTwoHandler.handle();
     };
 };
 
