@@ -11,7 +11,8 @@
 #include "structs/ButtonMatrixState.h"
 #include "hardware/handlers/ButtonMatrixHandler.h"
 
-class InputHandler {
+class InputHandler
+{
 private:
     ButtonMatrixState buttonMatrixState{};
 
@@ -23,19 +24,15 @@ private:
     // Tea
     ButtonHandler teaButtonHandler;
 
-
     ButtonEvent &buttonEvent;
-//    TODO: Implement the reading of the button matrix here using coordinates
+    //    TODO: Implement the reading of the button matrix here using coordinates
 
 public:
-    explicit InputHandler(ButtonEvent &buttonEvent) :
-            buttonEvent(buttonEvent), buttonMatrixHandler(buttonMatrixState),
-            teaButtonHandler(buttonMatrixState.tea), groupOneHandler(
-            buttonMatrixState.groupOne, buttonEvent.groupOne),
-            groupTwoHandler(buttonMatrixState.groupTwo, buttonEvent.groupTwo) {};
+    explicit InputHandler(ButtonEvent &buttonEvent) : buttonEvent(buttonEvent), buttonMatrixHandler(buttonMatrixState),
+                                                      teaButtonHandler(buttonMatrixState.tea), groupOneHandler(buttonMatrixState.groupOne, buttonEvent.groupOne), groupTwoHandler(buttonMatrixState.groupTwo, buttonEvent.groupTwo) {};
 
-
-    void readInputs() {
+    void readInputs()
+    {
         // Read inputs
         buttonMatrixHandler.handle();
 
@@ -46,5 +43,4 @@ public:
     };
 };
 
-
-#endif //BREWPILOT_INPUTHANDLER_H
+#endif // BREWPILOT_INPUTHANDLER_H

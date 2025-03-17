@@ -10,7 +10,8 @@
 #include "GroupHeadHandler.h"
 #include "TeaStateHandler.h"
 
-class StateHandler : public GenericStateHandler {
+class StateHandler : public GenericStateHandler
+{
 private:
     BoilerStateHandler boilerStateHandler;
     GroupHeadStateHandler groupOneStateHandler;
@@ -26,21 +27,24 @@ public:
                                                            teaStateHandler(buttonEvent.tea,
                                                                            state.isExtractingTeaWater) {};
 
-    void handleState() override {
-//        TODO: Check the order of these handlers :D
+    void handleState() override
+    {
+        //        TODO: Check the order of these handlers :D
         boilerStateHandler.handleState();
         groupOneStateHandler.handleState();
         groupTwoStateHandler.handleState();
         teaStateHandler.handleState();
     }
 
-    void groupOneFlowMeterPulseInterrupt() {
+    void groupOneFlowMeterPulseInterrupt()
+    {
         groupOneStateHandler.flowMeterPulseInterrupt();
     }
 
-    void groupTwoFlowMeterPulseInterrupt() {
+    void groupTwoFlowMeterPulseInterrupt()
+    {
         groupTwoStateHandler.flowMeterPulseInterrupt();
     }
 };
 
-#endif //BREWPILOT_STATEHANDLER_H
+#endif // BREWPILOT_STATEHANDLER_H

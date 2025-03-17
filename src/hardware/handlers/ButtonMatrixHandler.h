@@ -26,9 +26,9 @@ public:
         pinMode(IN_GROUP_LEFT_SMALL_DRINKS, INPUT_PULLUP);
         pinMode(IN_GROUP_LEFT_STOP, INPUT_PULLUP);
 
-        pinMode(IN_GROUP_RIGHT_BIG_DRINKS, INPUT_PULLUP);
-        pinMode(IN_GROUP_RIGHT_SMALL_DRINKS, INPUT_PULLUP);
-        pinMode(IN_GROUP_RIGHT_STOP, INPUT_PULLUP);
+        pinMode(IN_GROUP_ONE_BIG_DRINKS, INPUT_PULLUP);
+        pinMode(IN_GROUP_ONE_SMALL_DRINKS, INPUT_PULLUP);
+        pinMode(IN_GROUP_ONE_STOP, INPUT_PULLUP);
 
         pinMode(IN_TEA_WATER, INPUT_PULLUP);
 
@@ -59,16 +59,16 @@ public:
         digitalWrite(OUT_GROUP_RIGHT_LEFT_HALF_AND_STOP, LOW);
         noop();
 
-        buttonMatrixState.groupTwo.leftSingleDose = !digitalRead(IN_GROUP_RIGHT_SMALL_DRINKS);
-        buttonMatrixState.groupTwo.leftDoubleDose = !digitalRead(IN_GROUP_RIGHT_BIG_DRINKS);
-        buttonMatrixState.groupTwo.continuous = !digitalRead(IN_GROUP_RIGHT_STOP);
+        buttonMatrixState.groupTwo.leftSingleDose = !digitalRead(IN_GROUP_ONE_SMALL_DRINKS);
+        buttonMatrixState.groupTwo.leftDoubleDose = !digitalRead(IN_GROUP_ONE_BIG_DRINKS);
+        buttonMatrixState.groupTwo.continuous = !digitalRead(IN_GROUP_ONE_STOP);
 
         digitalWrite(OUT_GROUP_RIGHT_LEFT_HALF_AND_STOP, HIGH);
         digitalWrite(OUT_GROUP_RIGHT_RIGHT_HALF, LOW);
         noop();
 
-        buttonMatrixState.groupTwo.rightSingleDose = !digitalRead(IN_GROUP_RIGHT_SMALL_DRINKS);
-        buttonMatrixState.groupTwo.rightDoubleDose = !digitalRead(IN_GROUP_RIGHT_BIG_DRINKS);
+        buttonMatrixState.groupTwo.rightSingleDose = !digitalRead(IN_GROUP_ONE_SMALL_DRINKS);
+        buttonMatrixState.groupTwo.rightDoubleDose = !digitalRead(IN_GROUP_ONE_BIG_DRINKS);
 
         digitalWrite(OUT_GROUP_RIGHT_RIGHT_HALF, HIGH);
         digitalWrite(OUT_TEA_WATER, LOW);

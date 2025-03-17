@@ -7,27 +7,27 @@
 
 #include "Arduino.h"
 
-class ButtonHandler {
+class ButtonHandler
+{
 private:
     bool lastState;
 
     bool &matrixButtonState;
 
 public:
-    explicit ButtonHandler(bool &matrixButtonState) : matrixButtonState(matrixButtonState) {
+    explicit ButtonHandler(bool &matrixButtonState) : matrixButtonState(matrixButtonState)
+    {
         lastState = false;
     };
 
-    bool handleButton() {
-        // TODO: Implement debouncing
-
+    bool handleButton()
+    {
         bool returnValue = !lastState && matrixButtonState;
 
         lastState = matrixButtonState;
 
         return returnValue;
     }
-
 };
 
-#endif //BREWPILOT_BUTTONHANDLER_H
+#endif // BREWPILOT_BUTTONHANDLER_H

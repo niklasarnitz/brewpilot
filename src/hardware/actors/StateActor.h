@@ -10,7 +10,8 @@
 #include "hardware/devices/Solenoid.h"
 #include "Config.h"
 
-class StateActor {
+class StateActor
+{
 private:
     Solenoid boilerFillSolenoid;
     Solenoid groupOneSolenoid;
@@ -23,14 +24,15 @@ private:
     State &state;
 
 public:
-    explicit StateActor(State &state) : state(state), pumpRelay(PUMP_RELAY_PIN, false),
-                                        boilerFillSolenoid(BOILER_FILL_VALVE_PIN, false),
-                                        groupOneSolenoid(GROUP_ONE_SOLENOID_PIN, false),
-                                        groupTwoSolenoid(GROUP_TWO_SOLENOID_PIN, false),
-                                        teaWaterColdWaterSolenoid(TEA_WATER_SOLENOID_PIN, false),
-                                        teaWaterExtractionSolenoid(TEA_WATER_EXTRACTION_SOLENOID_PIN, false) {}
+    explicit StateActor(State &state) : state(state), pumpRelay(PUMP_RELAY_PIN, false, "Pump"),
+                                        boilerFillSolenoid(BOILER_FILL_VALVE_PIN, false, "Boiler Fill"),
+                                        groupOneSolenoid(GROUP_ONE_SOLENOID_PIN, false, "Group One"),
+                                        groupTwoSolenoid(GROUP_TWO_SOLENOID_PIN, false, "Group Two"),
+                                        teaWaterColdWaterSolenoid(TEA_WATER_SOLENOID_PIN, false, "Tea Water Cold Water"),
+                                        teaWaterExtractionSolenoid(TEA_WATER_EXTRACTION_SOLENOID_PIN, false, "Tea Water Extraction") {}
 
-    void loop() {
+    void loop()
+    {
         // Boiler
         boilerFillSolenoid.setOpen(state.isFillingBoiler);
 
@@ -47,4 +49,4 @@ public:
     };
 };
 
-#endif //BREWPILOT_STATEACTOR_H
+#endif // BREWPILOT_STATEACTOR_H

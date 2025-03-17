@@ -5,7 +5,8 @@
 #ifndef BREWPILOT_BUTTONMATRIXSTATE_H
 #define BREWPILOT_BUTTONMATRIXSTATE_H
 
-struct GroupButtonMatrixState {
+struct GroupButtonMatrixState
+{
     bool leftSingleDose = false;
     bool leftDoubleDose = false;
     bool continuous = false;
@@ -13,10 +14,11 @@ struct GroupButtonMatrixState {
     bool rightDoubleDose = false;
 };
 
-struct ButtonMatrixState {
+struct ButtonMatrixState
+{
     GroupButtonMatrixState groupOne{};
     GroupButtonMatrixState groupTwo{};
     bool tea = false;
 };
 
-#endif //BREWPILOT_BUTTONMATRIXSTATE_H
+#endif // BREWPILOT_BUTTONMATRIXSTATE_H
