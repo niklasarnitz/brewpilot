@@ -16,20 +16,18 @@ private:
     Solenoid boilerFillSolenoid;
     Solenoid groupOneSolenoid;
     Solenoid groupTwoSolenoid;
-    Solenoid teaWaterColdWaterSolenoid;
-    Solenoid teaWaterExtractionSolenoid;
+    Solenoid teaWaterSolenoid;
 
     Relay pumpRelay;
 
     State &state;
 
 public:
-    explicit StateActor(State &state) : state(state), pumpRelay(PUMP_RELAY_PIN, false, "Pump"),
-                                        boilerFillSolenoid(BOILER_FILL_VALVE_PIN, false, "Boiler Fill"),
-                                        groupOneSolenoid(GROUP_ONE_SOLENOID_PIN, false, "Group One"),
-                                        groupTwoSolenoid(GROUP_TWO_SOLENOID_PIN, false, "Group Two"),
-                                        teaWaterColdWaterSolenoid(TEA_WATER_SOLENOID_PIN, false, "Tea Water Cold Water"),
-                                        teaWaterExtractionSolenoid(TEA_WATER_EXTRACTION_SOLENOID_PIN, false, "Tea Water Extraction") {}
+    explicit StateActor(State &state) : state(state), pumpRelay(RELAY_PUMP, false, "Pump"),
+                                        boilerFillSolenoid(RELAY_BOILER_FILL, false, "Boiler Fill"),
+                                        groupOneSolenoid(RELAY_GROUP_ONE, false, "Group One"),
+                                        groupTwoSolenoid(RELAY_GROUP_TWO, false, "Group Two"),
+                                        teaWaterSolenoid(RELAY_TEA, false, "Tea Water Cold Water") {}
 
     void loop()
     {
@@ -41,8 +39,7 @@ public:
         groupTwoSolenoid.setOpen(state.groupTwoIsExtracting);
 
         // Tea Water
-        teaWaterColdWaterSolenoid.setOpen(state.isExtractingTeaWater);
-        teaWaterExtractionSolenoid.setOpen(state.isExtractingTeaWater);
+        teaWaterSolenoid.setOpen(state.isExtractingTeaWater);
 
         // Pump
         pumpRelay.setEnabled(state.isFillingBoiler || state.groupOneIsExtracting || state.groupTwoIsExtracting);

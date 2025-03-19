@@ -9,17 +9,14 @@
 
 // Pins
 // Outputs
-#define PUMP_RELAY_PIN 1
-#define BOILER_PROBE_PIN 2
-#define BOILER_FILL_VALVE_PIN 3
-#define GROUP_ONE_FLOW_METER_PIN 4
-#define GROUP_TWO_FLOW_METER_PIN 5
-#define GROUP_ONE_SOLENOID_PIN 6
-#define GROUP_TWO_SOLENOID_PIN 7
-#define TEA_WATER_SOLENOID_PIN 8
-#define TEA_WATER_EXTRACTION_SOLENOID_PIN 9
+#define RELAY_PUMP 18
+#define RELAY_GROUP_ONE 5
+#define RELAY_GROUP_TWO 4
+#define RELAY_BOILER_FILL 2
+#define RELAY_TEA 15
 
 // Inputs
+// Keyboard Matrix
 #define IN_GROUP_ONE_BIG_DRINKS 13
 #define IN_GROUP_ONE_SMALL_DRINKS 12
 #define IN_GROUP_ONE_STOP 14
@@ -37,6 +34,13 @@
 #define OUT_GROUP_RIGHT_RIGHT_HALF 22
 
 #define IN_TEA_WATER 23
+
+// Boiler Probe
+#define BOILER_PROBE_PIN 2
+
+// Flow Meters
+#define GROUP_ONE_FLOW_METER_PIN 4
+#define GROUP_TWO_FLOW_METER_PIN 5
 
 // Boiler Stuff
 // TODO: TEST THIS
