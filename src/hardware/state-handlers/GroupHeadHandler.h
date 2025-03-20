@@ -12,15 +12,15 @@
 
 class GroupHeadStateHandler : public GenericStateHandler
 {
-    GroupHeadButtonEvent &event;
-    bool &isExtracting;
+    GroupHeadButtonEvent *event;
+    bool *isExtracting;
 
     long remainingPulses;
 
     long getRemainingPulses()
     {
         // TODO: Get this from memory/FS
-        switch (event)
+        switch (*event)
         {
         case LEFT_SINGLE_ESPRESSO:
             return 0;
@@ -38,7 +38,7 @@ class GroupHeadStateHandler : public GenericStateHandler
     }
 
 public:
-    GroupHeadStateHandler(bool &isExtracting, GroupHeadButtonEvent &event) : isExtracting(isExtracting),
+    GroupHeadStateHandler(bool *isExtracting, GroupHeadButtonEvent *event) : isExtracting(isExtracting),
                                                                              event(event)
     {
         remainingPulses = 0;
@@ -46,24 +46,24 @@ public:
 
     void handleState() override
     {
-        if (isExtracting)
+        if (*isExtracting)
         {
-            if (event == CONTINUOUS)
+            if (*event == CONTINUOUS)
             {
-                isExtracting = false;
+                *isExtracting = false;
                 remainingPulses = 0;
             }
         }
-        else if (event != NONE)
+        else if (*event != NONE)
         {
-            isExtracting = true;
+            *isExtracting = true;
 
             remainingPulses = getRemainingPulses();
         }
 
         if (remainingPulses == 0)
         {
-            isExtracting = false;
+            *isExtracting = false;
         }
 
         // TODO: Implement "hold to program" handling

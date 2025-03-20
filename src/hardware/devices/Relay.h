@@ -16,11 +16,10 @@ private:
     bool enabled;
 
 public:
-    Relay(int pin, bool isInverted, char *name)
+    Relay(int pin, char *name)
     {
         this->name = name;
         this->pin = pin;
-        this->isInverted = isInverted;
         this->enabled = false;
 
         pinMode(pin, OUTPUT);
@@ -30,17 +29,14 @@ public:
 
     void setEnabled(bool newState)
     {
-        Serial.printf("Setting Relay %s to %s", this->name, newState ? "true" : "false");
+        if (newState != enabled)
+        {
+            Serial.printf("Setting Relay %s to %s\n", this->name, newState ? "true" : "false");
+        }
+
         enabled = newState;
 
-        if (isInverted)
-        {
-            digitalWrite(pin, newState ? LOW : HIGH);
-        }
-        else
-        {
-            digitalWrite(pin, newState ? HIGH : LOW);
-        }
+        digitalWrite(pin, newState ? LOW : HIGH);
     }
 
     bool isEnabled()

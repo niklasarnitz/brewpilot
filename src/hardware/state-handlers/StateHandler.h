@@ -19,13 +19,13 @@ private:
     TeaStateHandler teaStateHandler;
 
 public:
-    StateHandler(State &state, ButtonEvent &buttonEvent) : boilerStateHandler(state.isFillingBoiler),
-                                                           groupOneStateHandler(state.groupOneIsExtracting,
-                                                                                buttonEvent.groupOne),
-                                                           groupTwoStateHandler(state.groupTwoIsExtracting,
-                                                                                buttonEvent.groupTwo),
-                                                           teaStateHandler(buttonEvent.tea,
-                                                                           state.isExtractingTeaWater) {};
+    StateHandler(State *state, ButtonEvent *buttonEvent) : boilerStateHandler(&state->isFillingBoiler),
+                                                           groupOneStateHandler(&state->groupOneIsExtracting,
+                                                                                &buttonEvent->groupOne),
+                                                           groupTwoStateHandler(&state->groupTwoIsExtracting,
+                                                                                &buttonEvent->groupTwo),
+                                                           teaStateHandler(&buttonEvent->tea,
+                                                                           &state->isExtractingTeaWater) {};
 
     void handleState() override
     {

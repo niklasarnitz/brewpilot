@@ -16,10 +16,9 @@ private:
     bool open;
 
 public:
-    Solenoid(int pin, bool isInverted, char *name)
+    Solenoid(int pin, char *name)
     {
         this->pin = pin;
-        this->isInverted = isInverted;
         this->open = false;
         this->name = name;
 
@@ -30,18 +29,14 @@ public:
 
     void setOpen(bool newState)
     {
-        Serial.printf("Setting Solenoid %s to %s", this->name, newState ? "open" : "closed");
+        if (newState != open)
+        {
+            Serial.printf("Setting Solenoid %s to %s\n", this->name, newState ? "open" : "closed");
+        }
 
         this->open = newState;
 
-        if (isInverted)
-        {
-            digitalWrite(pin, newState ? HIGH : LOW);
-        }
-        else
-        {
-            digitalWrite(pin, newState ? LOW : HIGH);
-        }
+        digitalWrite(pin, newState ? LOW : HIGH);
     }
 
     bool isOpen()

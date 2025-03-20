@@ -11,12 +11,12 @@
 class TeaStateHandler : public GenericStateHandler
 {
 private:
-    bool &teaButtonPressed;
-    bool &isExtractingTeaWater;
+    bool *teaButtonPressed;
+    bool *isExtractingTeaWater;
     unsigned long startTime;
 
 public:
-    TeaStateHandler(bool &teaButtonPressed, bool &isExtractingTeaWater) : teaButtonPressed(teaButtonPressed),
+    TeaStateHandler(bool *teaButtonPressed, bool *isExtractingTeaWater) : teaButtonPressed(teaButtonPressed),
                                                                           isExtractingTeaWater(isExtractingTeaWater)
     {
         startTime = 0;
@@ -24,17 +24,19 @@ public:
 
     void handleState() override
     {
-        if (isExtractingTeaWater)
+        if (*isExtractingTeaWater)
         {
             // TODO: Implement to read this from the FS + programming
             if (millis() - startTime > 2000)
             {
-                isExtractingTeaWater = false;
+                Serial.println("Tea water stops extracting");
+                *isExtractingTeaWater = false;
             }
         }
-        else if (teaButtonPressed)
+        else if (*teaButtonPressed && !*isExtractingTeaWater)
         {
-            isExtractingTeaWater = true;
+            Serial.println("Tea water starts extracting");
+            *isExtractingTeaWater = true;
             startTime = millis();
         }
     }

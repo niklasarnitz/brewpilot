@@ -6,11 +6,11 @@
 #include "hardware/actors/StateActor.h"
 #include "hardware/handlers/InputHandler.h"
 
-ButtonEvent buttonEvent;
-State state;
-StateHandler stateHandler(state, buttonEvent);
-StateActor stateActor(state);
-InputHandler inputHandler(buttonEvent);
+ButtonEvent buttonEvent{};
+State state{};
+StateHandler stateHandler(&state, &buttonEvent);
+StateActor stateActor(&state);
+InputHandler inputHandler(&buttonEvent);
 
 void IRAM_ATTR groupOneFlowMeterHandler()
 {
@@ -37,4 +37,6 @@ void loop()
     inputHandler.readInputs();
     stateHandler.handleState();
     stateActor.loop();
+
+    delay(50);
 }

@@ -24,12 +24,11 @@ private:
     // Tea
     ButtonHandler teaButtonHandler;
 
-    ButtonEvent &buttonEvent;
-    //    TODO: Implement the reading of the button matrix here using coordinates
+    ButtonEvent *buttonEvent;
 
 public:
-    explicit InputHandler(ButtonEvent &buttonEvent) : buttonEvent(buttonEvent), buttonMatrixHandler(buttonMatrixState),
-                                                      teaButtonHandler(buttonMatrixState.tea), groupOneHandler(buttonMatrixState.groupOne, buttonEvent.groupOne), groupTwoHandler(buttonMatrixState.groupTwo, buttonEvent.groupTwo) {};
+    explicit InputHandler(ButtonEvent *buttonEvent) : buttonEvent(buttonEvent), buttonMatrixHandler(&buttonMatrixState),
+                                                      teaButtonHandler(&buttonMatrixState.tea), groupOneHandler(&(buttonMatrixState.groupOne), &(buttonEvent->groupOne)), groupTwoHandler(&(buttonMatrixState.groupTwo), &(buttonEvent->groupTwo)) {};
 
     void readInputs()
     {
@@ -37,7 +36,7 @@ public:
         buttonMatrixHandler.handle();
 
         // Write Events
-        teaButtonHandler.handleButton();
+        buttonEvent->tea = teaButtonHandler.handleButton(true);
         groupOneHandler.handle();
         groupTwoHandler.handle();
     };

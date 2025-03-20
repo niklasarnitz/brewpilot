@@ -12,19 +12,19 @@ class ButtonHandler
 private:
     bool lastState;
 
-    bool &matrixButtonState;
+    bool *matrixButtonState;
 
 public:
-    explicit ButtonHandler(bool &matrixButtonState) : matrixButtonState(matrixButtonState)
+    explicit ButtonHandler(bool *matrixButtonState) : matrixButtonState(matrixButtonState)
     {
         lastState = false;
     };
 
-    bool handleButton()
+    bool handleButton(bool foo = false)
     {
-        bool returnValue = !lastState && matrixButtonState;
+        bool returnValue = !lastState && *matrixButtonState;
 
-        lastState = matrixButtonState;
+        lastState = *matrixButtonState;
 
         return returnValue;
     }

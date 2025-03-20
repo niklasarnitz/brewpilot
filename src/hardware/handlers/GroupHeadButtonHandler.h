@@ -13,7 +13,7 @@ class GroupHeadButtonHandler
 {
 private:
     // Output
-    GroupHeadButtonEvent &event;
+    GroupHeadButtonEvent *event;
 
     ButtonHandler groupLeftSingleDoseButtonHandler;
     ButtonHandler groupLeftDoubleDoseButtonHandler;
@@ -22,17 +22,17 @@ private:
     ButtonHandler groupRightDoubleDoseButtonHandler;
 
 public:
-    explicit GroupHeadButtonHandler(GroupButtonMatrixState &groupState, GroupHeadButtonEvent &event) : event(event),
+    explicit GroupHeadButtonHandler(GroupButtonMatrixState *groupState, GroupHeadButtonEvent *event) : event(event),
                                                                                                        groupLeftSingleDoseButtonHandler(
-                                                                                                           groupState.leftSingleDose),
+                                                                                                           &(groupState->leftSingleDose)),
                                                                                                        groupLeftDoubleDoseButtonHandler(
-                                                                                                           groupState.leftDoubleDose),
+                                                                                                           &(groupState->leftDoubleDose)),
                                                                                                        groupContinuousButtonHandler(
-                                                                                                           groupState.continuous),
+                                                                                                           &groupState->continuous),
                                                                                                        groupRightSingleDoseButtonHandler(
-                                                                                                           groupState.rightSingleDose),
+                                                                                                           &groupState->rightSingleDose),
                                                                                                        groupRightDoubleDoseButtonHandler(
-                                                                                                           groupState.rightDoubleDose) {};
+                                                                                                           &groupState->rightDoubleDose) {};
 
     void handle()
     {
@@ -44,27 +44,27 @@ public:
 
         if (continuousEvent)
         {
-            event = CONTINUOUS;
+            *event = CONTINUOUS;
         }
         else if (leftSingleDoseEvent)
         {
-            event = LEFT_SINGLE_ESPRESSO;
+            *event = LEFT_SINGLE_ESPRESSO;
         }
         else if (leftDoubleDoseEvent)
         {
-            event = LEFT_DOUBLE_ESPRESSO;
+            *event = LEFT_DOUBLE_ESPRESSO;
         }
         else if (rightSingleDoseEvent)
         {
-            event = RIGHT_SINGLE_ESPRESSO;
+            *event = RIGHT_SINGLE_ESPRESSO;
         }
         else if (rightDoubleDoseEvent)
         {
-            event = RIGHT_DOUBLE_ESPRESSO;
+            *event = RIGHT_DOUBLE_ESPRESSO;
         }
         else
         {
-            event = NONE;
+            *event = NONE;
         }
     }
 };
