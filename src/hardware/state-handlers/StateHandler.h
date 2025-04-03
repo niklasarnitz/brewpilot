@@ -29,7 +29,6 @@ public:
 
     void handleState() override
     {
-        // TODO: Check the order of these handlers :D
         boilerStateHandler.handleState();
         groupOneStateHandler.handleState();
         groupTwoStateHandler.handleState();

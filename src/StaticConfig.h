@@ -37,13 +37,13 @@
 
 // Boiler Probe
 #define BOILER_PROBE_PIN 34
+#define OUT_BOILER_VOLTAGE 17
 
 // Flow Meters
-#define GROUP_ONE_FLOW_METER_PIN 4
-#define GROUP_TWO_FLOW_METER_PIN 5
+#define GROUP_ONE_FLOW_METER_PIN 16
+#define GROUP_TWO_FLOW_METER_PIN 35
 
 // Boiler Stuff
-// TODO: TEST THIS
-#define BOILER_FILL_LEVEL 1500
+#define BOILER_FILL_LEVEL 1000 // Value for the LaCimbali M29 Select DT2 / R
 
 #endif // BREWPILOT_CONFIG_H

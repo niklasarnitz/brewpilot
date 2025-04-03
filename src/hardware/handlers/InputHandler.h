@@ -28,13 +28,12 @@ private:
 
 public:
     explicit InputHandler(ButtonEvent *buttonEvent) : buttonEvent(buttonEvent), buttonMatrixHandler(&buttonMatrixState),
-                                                      teaButtonHandler(&buttonMatrixState.tea), groupOneHandler(&(buttonMatrixState.groupOne), &(buttonEvent->groupOne)), groupTwoHandler(&(buttonMatrixState.groupTwo), &(buttonEvent->groupTwo)) {};
+                                                      teaButtonHandler(&buttonMatrixState.tea), groupOneHandler(&(buttonMatrixState.groupOne), &(buttonEvent->groupOne), 1), groupTwoHandler(&(buttonMatrixState.groupTwo), &(buttonEvent->groupTwo), 2) {};
 
     void readInputs()
     {
         // Read inputs
         buttonMatrixHandler.handle();
-
         // Write Events
         buttonEvent->tea = teaButtonHandler.handleButton(true);
         groupOneHandler.handle();

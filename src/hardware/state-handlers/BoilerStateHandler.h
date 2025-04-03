@@ -7,7 +7,9 @@
 
 #include "GenericStateHandler.h"
 #include "Arduino.h"
-#include "../../Config.h"
+#include "../../StaticConfig.h"
+
+#define BOILER_FILL_WAIT_TIME 3000
 
 class BoilerStateHandler : public GenericStateHandler
 {
@@ -24,46 +26,61 @@ private:
     unsigned long lastCheckTime = 0;
     unsigned long lastIsAboveTargetTime = 0;
 
+    bool hasTurnedOnBoilerProbeVoltage = false;
+
     BoilerState internalState = BOILER_ABOVE_TARGET_AND_FILLED;
 
     // TODO: Maybe Implement smoothing
     bool readBoilerProbe()
     {
-        lastCheckTime = millis();
+        if (!hasTurnedOnBoilerProbeVoltage)
+        {
+            digitalWrite(OUT_BOILER_VOLTAGE, HIGH);
+            hasTurnedOnBoilerProbeVoltage = true;
 
-        uint16_t rawValue = analogRead(BOILER_PROBE_PIN);
+            return internalState != BOILER_BELOW_TARGET;
+        }
+        else
+        {
+            lastCheckTime = millis();
 
-        Serial.print("Raw Value: ");
-        Serial.println(rawValue);
-        Serial.print("Stored Value: ");
-        Serial.println(BOILER_FILL_LEVEL);
+            uint16_t rawValue = analogRead(BOILER_PROBE_PIN);
 
-        return rawValue <= BOILER_FILL_LEVEL;
+            Serial.print("Boiler Fill Check: Raw Sensor Value: ");
+            Serial.println(rawValue);
+
+            digitalWrite(OUT_BOILER_VOLTAGE, LOW);
+            hasTurnedOnBoilerProbeVoltage = false;
+
+            return rawValue <= BOILER_FILL_LEVEL;
+        }
     }
 
 public:
     explicit BoilerStateHandler(bool *isFillingBoiler) : isFillingBoiler(isFillingBoiler)
     {
         pinMode(BOILER_PROBE_PIN, INPUT);
+        pinMode(OUT_BOILER_VOLTAGE, OUTPUT);
+
+        digitalWrite(OUT_BOILER_VOLTAGE, LOW);
     };
 
     void handleState() override
     {
-        // TODO: Add Debouncing here
         if (internalState == BOILER_ABOVE_TARGET_BUT_FILLING)
         {
-            if (millis() - lastIsAboveTargetTime > 500)
+            if (millis() - lastIsAboveTargetTime > BOILER_FILL_WAIT_TIME)
             {
                 bool isFilled = readBoilerProbe();
 
                 if (!isFilled)
                 {
-                    Serial.println("Boiler is below target");
+                    Serial.println("Boiler Fill Check: Boiler is below target");
                     internalState = BOILER_BELOW_TARGET;
                 }
                 else
                 {
-                    Serial.println("Boiler is above target and filled");
+                    Serial.println("Boiler Fill Check: Boiler is above target and filled");
                     internalState = BOILER_ABOVE_TARGET_AND_FILLED;
                     *isFillingBoiler = false;
 
@@ -73,7 +90,7 @@ public:
         }
         else
         {
-            if (millis() - lastCheckTime > 500 || lastCheckTime == 0)
+            if (millis() - lastCheckTime > BOILER_FILL_WAIT_TIME || lastCheckTime == 0)
             {
                 bool boilerIsFilled = readBoilerProbe();
 
@@ -82,7 +99,7 @@ public:
                 case BOILER_ABOVE_TARGET_AND_FILLED:
                     if (!boilerIsFilled)
                     {
-                        Serial.println("Boiler is below target");
+                        Serial.println("Boiler Fill Check: Boiler is below target");
                         *isFillingBoiler = true;
                         internalState = BOILER_BELOW_TARGET;
                     }
@@ -93,7 +110,7 @@ public:
                 case BOILER_BELOW_TARGET:
                     if (boilerIsFilled)
                     {
-                        Serial.println("Boiler is above target and filled");
+                        Serial.println("Boiler Fill Check: Boiler is above target and filled");
                         internalState = BOILER_ABOVE_TARGET_BUT_FILLING;
                     }
                     break;

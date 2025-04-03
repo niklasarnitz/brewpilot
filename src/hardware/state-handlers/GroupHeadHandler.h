@@ -23,13 +23,13 @@ class GroupHeadStateHandler : public GenericStateHandler
         switch (*event)
         {
         case LEFT_SINGLE_ESPRESSO:
-            return 0;
+            return 1;
         case RIGHT_SINGLE_ESPRESSO:
             return 1;
         case LEFT_DOUBLE_ESPRESSO:
-            return 2;
+            return 1;
         case RIGHT_DOUBLE_ESPRESSO:
-            return 3;
+            return 1;
         case CONTINUOUS:
             return LONG_MAX;
         default:
@@ -66,8 +66,7 @@ public:
             *isExtracting = false;
         }
 
-        // TODO: Implement "hold to program" handling
-        // TODO: Implement programming of the doses
+        // TODO: Implement Programming Mode
     }
 
     void flowMeterPulseInterrupt()

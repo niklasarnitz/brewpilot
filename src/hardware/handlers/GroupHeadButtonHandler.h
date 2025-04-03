@@ -21,18 +21,21 @@ private:
     ButtonHandler groupRightSingleDoseButtonHandler;
     ButtonHandler groupRightDoubleDoseButtonHandler;
 
+    int groupNumber;
+
 public:
-    explicit GroupHeadButtonHandler(GroupButtonMatrixState *groupState, GroupHeadButtonEvent *event) : event(event),
-                                                                                                       groupLeftSingleDoseButtonHandler(
-                                                                                                           &(groupState->leftSingleDose)),
-                                                                                                       groupLeftDoubleDoseButtonHandler(
-                                                                                                           &(groupState->leftDoubleDose)),
-                                                                                                       groupContinuousButtonHandler(
-                                                                                                           &groupState->continuous),
-                                                                                                       groupRightSingleDoseButtonHandler(
-                                                                                                           &groupState->rightSingleDose),
-                                                                                                       groupRightDoubleDoseButtonHandler(
-                                                                                                           &groupState->rightDoubleDose) {};
+    explicit GroupHeadButtonHandler(GroupButtonMatrixState *groupState, GroupHeadButtonEvent *event, int groupNumber) : event(event),
+                                                                                                                        groupLeftSingleDoseButtonHandler(
+                                                                                                                            &(groupState->leftSingleDose)),
+                                                                                                                        groupLeftDoubleDoseButtonHandler(
+                                                                                                                            &(groupState->leftDoubleDose)),
+                                                                                                                        groupContinuousButtonHandler(
+                                                                                                                            &groupState->continuous),
+                                                                                                                        groupRightSingleDoseButtonHandler(
+                                                                                                                            &groupState->rightSingleDose),
+                                                                                                                        groupRightDoubleDoseButtonHandler(
+                                                                                                                            &groupState->rightDoubleDose),
+                                                                                                                        groupNumber(groupNumber) {};
 
     void handle()
     {
@@ -45,22 +48,27 @@ public:
         if (continuousEvent)
         {
             *event = CONTINUOUS;
+            Serial.printf("GroupHeadButtonHandler %d: continuous\n", groupNumber);
         }
         else if (leftSingleDoseEvent)
         {
             *event = LEFT_SINGLE_ESPRESSO;
+            Serial.printf("GroupHeadButtonHandler %d: left single\n", groupNumber);
         }
         else if (leftDoubleDoseEvent)
         {
             *event = LEFT_DOUBLE_ESPRESSO;
+            Serial.printf("GroupHeadButtonHandler %d: left double\n", groupNumber);
         }
         else if (rightSingleDoseEvent)
         {
             *event = RIGHT_SINGLE_ESPRESSO;
+            Serial.printf("GroupHeadButtonHandler %d: right single\n", groupNumber);
         }
         else if (rightDoubleDoseEvent)
         {
             *event = RIGHT_DOUBLE_ESPRESSO;
+            Serial.printf("GroupHeadButtonHandler %d: right double\n", groupNumber);
         }
         else
         {

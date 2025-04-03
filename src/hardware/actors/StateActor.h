@@ -8,7 +8,7 @@
 #include "hardware/state/State.h"
 #include "hardware/devices/Relay.h"
 #include "hardware/devices/Solenoid.h"
-#include "Config.h"
+#include "StaticConfig.h"
 
 class StateActor
 {
