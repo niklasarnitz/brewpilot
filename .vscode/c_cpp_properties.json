@@ -10,6 +10,7 @@
             "includePath": [
                 "/Users/narnitz/privat/brewpilot/include",
                 "/Users/narnitz/privat/brewpilot/src",
+                "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/libraries/Preferences/src",
                 "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/newlib/platform_include",
                 "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include",
                 "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include/esp_additions/freertos",
@@ -225,7 +226,6 @@
                 "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/libraries/Insights/src",
                 "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/libraries/LittleFS/src",
                 "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/libraries/NetBIOS/src",
-                "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/libraries/Preferences/src",
                 "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/libraries/RainMaker/src",
                 "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/libraries/SD/src",
                 "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/libraries/SD_MMC/src",
@@ -247,6 +247,7 @@
                 "path": [
                     "/Users/narnitz/privat/brewpilot/include",
                     "/Users/narnitz/privat/brewpilot/src",
+                    "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/libraries/Preferences/src",
                     "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/newlib/platform_include",
                     "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include",
                     "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include/esp_additions/freertos",
@@ -462,7 +463,6 @@
                     "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/libraries/Insights/src",
                     "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/libraries/LittleFS/src",
                     "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/libraries/NetBIOS/src",
-                    "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/libraries/Preferences/src",
                     "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/libraries/RainMaker/src",
                     "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/libraries/SD/src",
                     "/Users/narnitz/.platformio/packages/framework-arduinoespressif32/libraries/SD_MMC/src",

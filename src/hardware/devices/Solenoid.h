@@ -16,11 +16,12 @@ private:
     bool open;
 
 public:
-    Solenoid(int pin, char *name)
+    Solenoid(int pin, char *name, bool isInverted = false)
     {
         this->pin = pin;
         this->open = false;
         this->name = name;
+        this->isInverted = isInverted;
 
         pinMode(pin, OUTPUT);
 
@@ -36,7 +37,14 @@ public:
 
         this->open = newState;
 
-        digitalWrite(pin, newState ? LOW : HIGH);
+        if (isInverted)
+        {
+            digitalWrite(pin, newState ? LOW : HIGH);
+        }
+        else
+        {
+            digitalWrite(pin, newState ? HIGH : LOW);
+        }
     }
 
     bool isOpen()

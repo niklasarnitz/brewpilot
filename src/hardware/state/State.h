@@ -5,13 +5,16 @@
 #ifndef BREWPILOT_STATE_H
 #define BREWPILOT_STATE_H
 
-struct State {
+struct State
+{
     bool isFillingBoiler = false;
 
     bool isExtractingTeaWater = false;
 
     bool groupOneIsExtracting = false;
     bool groupTwoIsExtracting = false;
+
+    bool isInProgrammingMode = false;
 };
 
-#endif //BREWPILOT_STATE_H
+#endif // BREWPILOT_STATE_H

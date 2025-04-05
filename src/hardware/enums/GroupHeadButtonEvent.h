@@ -12,6 +12,7 @@ enum GroupHeadButtonEvent
     RIGHT_SINGLE_ESPRESSO,
     RIGHT_DOUBLE_ESPRESSO,
     CONTINUOUS,
+    CONTINUOUS_HELD,
     NONE
 };
 
