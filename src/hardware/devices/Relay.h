@@ -7,15 +7,19 @@
 
 #include "Arduino.h"
 
-class Relay {
+class Relay
+{
 private:
+    char *name;
     int pin;
     bool isInverted;
     bool enabled;
+
 public:
-    Relay(int pin, bool isInverted) {
+    Relay(int pin, char *name)
+    {
+        this->name = name;
         this->pin = pin;
-        this->isInverted = isInverted;
         this->enabled = false;
 
         pinMode(pin, OUTPUT);
@@ -23,20 +27,22 @@ public:
         this->setEnabled(false);
     };
 
-    void setEnabled(bool newState) {
+    void setEnabled(bool newState)
+    {
+        if (newState != enabled)
+        {
+            Serial.printf("Setting Relay %s to %s\n", this->name, newState ? "true" : "false");
+        }
+
         enabled = newState;
 
-        if (isInverted) {
-            digitalWrite(pin, newState ? LOW : HIGH);
-        } else {
-            digitalWrite(pin, newState ? HIGH : LOW);
-        }
+        digitalWrite(pin, newState ? LOW : HIGH);
     }
 
-    bool isEnabled() {
+    bool isEnabled()
+    {
         return enabled;
     }
 };
 
-
-#endif //BREWPILOT_RELAY_H
+#endif // BREWPILOT_RELAY_H

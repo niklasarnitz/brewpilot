@@ -7,10 +7,11 @@
 
 #include "hardware/enums/GroupHeadButtonEvent.h"
 
-struct ButtonEvent {
+struct ButtonEvent
+{
     GroupHeadButtonEvent groupOne = NONE;
     bool tea = false;
     GroupHeadButtonEvent groupTwo = NONE;
 };
 
-#endif //BREWPILOT_BUTTONEVENT_H
+#endif // BREWPILOT_BUTTONEVENT_H

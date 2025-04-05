@@ -7,37 +7,42 @@
 
 #include "Arduino.h"
 
-class Solenoid {
+class Solenoid
+{
 private:
+    char *name;
     int pin;
     bool isInverted;
     bool open;
 
 public:
-    Solenoid(int pin, bool isInverted) {
+    Solenoid(int pin, char *name)
+    {
         this->pin = pin;
-        this->isInverted = isInverted;
         this->open = false;
+        this->name = name;
 
         pinMode(pin, OUTPUT);
 
         this->setOpen(false);
     };
 
-    void setOpen(bool newState) {
+    void setOpen(bool newState)
+    {
+        if (newState != open)
+        {
+            Serial.printf("Setting Solenoid %s to %s\n", this->name, newState ? "open" : "closed");
+        }
+
         this->open = newState;
 
-        if (isInverted) {
-            digitalWrite(pin, newState ? HIGH : LOW);
-        } else {
-            digitalWrite(pin, newState ? LOW : HIGH);
-        }
+        digitalWrite(pin, newState ? LOW : HIGH);
     }
 
-    bool isOpen() {
+    bool isOpen()
+    {
         return open;
     }
 };
 
-
-#endif //BREWPILOT_SOLENOID_H
+#endif // BREWPILOT_SOLENOID_H

@@ -7,9 +7,10 @@
 
 #include "hardware/state/State.h"
 
-class GenericStateHandler {
+class GenericStateHandler
+{
 public:
     virtual void handleState() = 0;
 };
 
-#endif //BREWPILOT_GENERICSTATEHANDLER_H
+#endif // BREWPILOT_GENERICSTATEHANDLER_H
