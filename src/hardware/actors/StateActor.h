@@ -23,11 +23,12 @@ private:
     State *state;
 
 public:
-    explicit StateActor(State *state) : state(state), pumpRelay(RELAY_PUMP, "Pump"),
-                                        boilerFillSolenoid(RELAY_BOILER_FILL, "Boiler Fill"),
-                                        groupOneSolenoid(RELAY_GROUP_ONE, "Group One"),
-                                        groupTwoSolenoid(RELAY_GROUP_TWO, "Group Two"),
-                                        teaWaterSolenoid(RELAY_TEA, "Tea Water Cold Water") {}
+    // TODO: Invert the relays by config
+    explicit StateActor(State *state) : state(state), pumpRelay(RELAY_PUMP, "Pump", true),
+                                        boilerFillSolenoid(RELAY_BOILER_FILL, "Boiler Fill", true),
+                                        groupOneSolenoid(RELAY_GROUP_ONE, "Group One", true),
+                                        groupTwoSolenoid(RELAY_GROUP_TWO, "Group Two", true),
+                                        teaWaterSolenoid(RELAY_TEA, "Tea Water Cold Water", true) {}
 
     void loop()
     {

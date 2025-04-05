@@ -41,6 +41,7 @@
 
 // Flow Meters
 #define GROUP_ONE_FLOW_METER_PIN 16
+// TODO: Move 35 to a pin with internall pull up resitor once we're using the bigger esp32 board
 #define GROUP_TWO_FLOW_METER_PIN 35
 
 // Boiler Stuff

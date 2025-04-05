@@ -7,10 +7,21 @@
 
 #include "Arduino.h"
 
+const unsigned int MAX_STREAK = 40;
+
+enum ButtonEventType
+{
+    BUTTON_PRESSED,
+    BUTTON_HELD,
+    BUTTON_NONE
+};
+
 class ButtonHandler
 {
 private:
     bool lastState;
+
+    unsigned int pressedStreak = 0;
 
     bool *matrixButtonState;
 
@@ -20,13 +31,34 @@ public:
         lastState = false;
     };
 
-    bool handleButton(bool foo = false)
+    ButtonEventType getEvent()
     {
-        bool returnValue = !lastState && *matrixButtonState;
+        if (*matrixButtonState)
+        {
+            if (pressedStreak <= MAX_STREAK)
+            {
+                pressedStreak++;
+            }
+        }
+        else
+        {
+            pressedStreak = 0;
+        }
+
+        if (pressedStreak == MAX_STREAK)
+        {
+            lastState = *matrixButtonState;
+            return ButtonEventType::BUTTON_HELD;
+        }
+
+        if (!lastState && *matrixButtonState)
+        {
+            lastState = *matrixButtonState;
+            return ButtonEventType::BUTTON_PRESSED;
+        }
 
         lastState = *matrixButtonState;
-
-        return returnValue;
+        return ButtonEventType::BUTTON_NONE;
     }
 };
 
