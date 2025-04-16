@@ -1,14 +1,14 @@
-#ifndef BREWPILOT_TARGETFLOWMETERPULSES_H
-#define BREWPILOT_TARGETFLOWMETERPULSES_H
+#ifndef BREWPILOT_VOLUMETRICSETTINGS_H
+#define BREWPILOT_VOLUMETRICSETTINGS_H
 
 struct VolumetricSettings
 {
-    long leftSingleEspressoPulses = 0;
-    long leftDoubleEspressoPulses = 0;
-    long rightSingleEspressoPulses = 0;
-    long rightDoubleEspressoPulses = 0;
+    unsigned long leftSingleEspressoPulses = 0;
+    unsigned long leftDoubleEspressoPulses = 0;
+    unsigned long rightSingleEspressoPulses = 0;
+    unsigned long rightDoubleEspressoPulses = 0;
 
-    long teaWaterMilliseconds = 0;
+    unsigned long teaWaterMilliseconds = 0;
 };
 
-#endif // BREWPILOT_TARGETFLOWMETERPULSES_H
+#endif // BREWPILOT_VOLUMETRICSETTINGS_H

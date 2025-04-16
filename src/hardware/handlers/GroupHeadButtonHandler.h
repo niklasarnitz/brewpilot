@@ -25,18 +25,19 @@ private:
     int groupNumber;
 
 public:
-    explicit GroupHeadButtonHandler(GroupButtonMatrixState *groupState, GroupHeadButtonEvent *event, int groupNumber, bool *isInProgrammingMode) : event(event),
-                                                                                                                                                   leftSingleDoseButtonHandler(
-                                                                                                                                                       &(groupState->leftSingleDose)),
-                                                                                                                                                   leftDoubleDoseButtonHandler(
-                                                                                                                                                       &(groupState->leftDoubleDose)),
-                                                                                                                                                   continuousButtonHandler(
-                                                                                                                                                       &groupState->continuous),
-                                                                                                                                                   rightSingleDoseButtonHandler(
-                                                                                                                                                       &groupState->rightSingleDose),
-                                                                                                                                                   rightDoubleDoseButtonHandler(
-                                                                                                                                                       &groupState->rightDoubleDose),
-                                                                                                                                                   groupNumber(groupNumber), isInProgrammingMode(isInProgrammingMode) {};
+    explicit GroupHeadButtonHandler(GroupButtonMatrixState *groupState, GroupHeadButtonEvent *event, int groupNumber, bool *isInProgrammingMode)
+        : event(event),
+          leftSingleDoseButtonHandler(
+              &(groupState->leftSingleDose)),
+          leftDoubleDoseButtonHandler(
+              &(groupState->leftDoubleDose)),
+          continuousButtonHandler(
+              &groupState->continuous),
+          rightSingleDoseButtonHandler(
+              &groupState->rightSingleDose),
+          rightDoubleDoseButtonHandler(
+              &groupState->rightDoubleDose),
+          groupNumber(groupNumber), isInProgrammingMode(isInProgrammingMode) {};
 
     void handle()
     {
@@ -46,6 +47,7 @@ public:
         ButtonEventType rightSingleDoseEvent = rightSingleDoseButtonHandler.getEvent();
         ButtonEventType rightDoubleDoseEvent = rightDoubleDoseButtonHandler.getEvent();
 
+        // Held events are emitted for all buttons but only handled for the continuous button
         if (continuousEvent == ButtonEventType::BUTTON_PRESSED)
         {
             *event = CONTINUOUS;

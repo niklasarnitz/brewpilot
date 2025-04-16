@@ -42,7 +42,8 @@ private:
     }
 
 public:
-    VolumetricsHelper(PreferenceHelper *preferenceHelper) : preferenceHelper(preferenceHelper) {};
+    VolumetricsHelper(PreferenceHelper *preferenceHelper)
+        : preferenceHelper(preferenceHelper) {};
 
     void setup()
     {
@@ -91,7 +92,7 @@ public:
         logVolumetricSettings(&volumetricSettings);
     }
 
-    unsigned long getFlowMeterSetting(GroupHeadButtonEvent key, unsigned long value)
+    unsigned long getFlowMeterSetting(GroupHeadButtonEvent key)
     {
         switch (key)
         {

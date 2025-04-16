@@ -35,7 +35,7 @@ private:
         }
 
         // This won't happen - it is just to suppress the compiler warning :D
-        return "";
+        return "INVALID";
     }
 
 public:

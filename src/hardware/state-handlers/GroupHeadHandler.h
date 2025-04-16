@@ -25,8 +25,9 @@ class GroupHeadStateHandler : public GenericStateHandler
     unsigned long currentPulses = 0;
 
 public:
-    GroupHeadStateHandler(bool *isExtracting, GroupHeadButtonEvent *event, VolumetricsHelper *volumetricsHelper, bool *isInProgrammingMode) : isExtracting(isExtracting),
-                                                                                                                                              event(event), volumetricsHelper(volumetricsHelper), isInProgrammingMode(isInProgrammingMode) {}
+    GroupHeadStateHandler(bool *isExtracting, GroupHeadButtonEvent *event, VolumetricsHelper *volumetricsHelper, bool *isInProgrammingMode)
+        : isExtracting(isExtracting),
+          event(event), volumetricsHelper(volumetricsHelper), isInProgrammingMode(isInProgrammingMode) {}
 
     void handleState() override
     {
@@ -76,7 +77,7 @@ public:
             }
             else
             {
-                targetPulses = volumetricsHelper->getFlowMeterSetting(*event, 0);
+                targetPulses = volumetricsHelper->getFlowMeterSetting(*event);
 
                 buttonToBeProgrammed = *event;
             }

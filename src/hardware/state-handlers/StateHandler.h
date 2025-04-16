@@ -20,13 +20,14 @@ private:
     TeaStateHandler teaStateHandler;
 
 public:
-    StateHandler(State *state, ButtonEvent *buttonEvent, VolumetricsHelper *volumetricsHelper) : boilerStateHandler(&state->isFillingBoiler),
-                                                                                                 groupOneStateHandler(&state->groupOneIsExtracting,
-                                                                                                                      &buttonEvent->groupOne, volumetricsHelper, &state->isInProgrammingMode),
-                                                                                                 groupTwoStateHandler(&state->groupTwoIsExtracting,
-                                                                                                                      &buttonEvent->groupTwo, volumetricsHelper, &state->isInProgrammingMode),
-                                                                                                 teaStateHandler(&buttonEvent->tea,
-                                                                                                                 &state->isExtractingTeaWater, volumetricsHelper, &state->isInProgrammingMode) {};
+    StateHandler(State *state, ButtonEvent *buttonEvent, VolumetricsHelper *volumetricsHelper)
+        : boilerStateHandler(&state->isFillingBoiler),
+          groupOneStateHandler(&state->groupOneIsExtracting,
+                               &buttonEvent->groupOne, volumetricsHelper, &state->isInProgrammingMode),
+          groupTwoStateHandler(&state->groupTwoIsExtracting,
+                               &buttonEvent->groupTwo, volumetricsHelper, &state->isInProgrammingMode),
+          teaStateHandler(&buttonEvent->tea,
+                          &state->isExtractingTeaWater, volumetricsHelper, &state->isInProgrammingMode) {};
 
     void handleState() override
     {

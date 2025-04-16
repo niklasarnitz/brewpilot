@@ -22,10 +22,11 @@ private:
     unsigned long startTime;
 
 public:
-    TeaStateHandler(bool *teaButtonPressed, bool *isExtractingTeaWater, VolumetricsHelper *volumetricsHelper, bool *isInProgrammingMode) : teaButtonPressed(teaButtonPressed),
-                                                                                                                                           isExtractingTeaWater(isExtractingTeaWater),
-                                                                                                                                           volumetricsHelper(volumetricsHelper),
-                                                                                                                                           isInProgrammingMode(isInProgrammingMode)
+    TeaStateHandler(bool *teaButtonPressed, bool *isExtractingTeaWater, VolumetricsHelper *volumetricsHelper, bool *isInProgrammingMode)
+        : teaButtonPressed(teaButtonPressed),
+          isExtractingTeaWater(isExtractingTeaWater),
+          volumetricsHelper(volumetricsHelper),
+          isInProgrammingMode(isInProgrammingMode)
     {
         startTime = 0;
     }

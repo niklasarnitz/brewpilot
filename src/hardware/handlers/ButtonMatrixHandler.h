@@ -14,7 +14,8 @@ private:
   ButtonMatrixState *buttonMatrixState;
 
 public:
-  ButtonMatrixHandler(ButtonMatrixState *buttonMatrixState) : buttonMatrixState(buttonMatrixState)
+  ButtonMatrixHandler(ButtonMatrixState *buttonMatrixState)
+      : buttonMatrixState(buttonMatrixState)
   {
     pinMode(OUT_GROUP_ONE_LEFT_HALF_AND_STOP, OUTPUT);
     pinMode(OUT_GROUP_ONE_RIGHT_HALF, OUTPUT);
