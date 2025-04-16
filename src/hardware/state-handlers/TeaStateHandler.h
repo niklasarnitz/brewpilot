@@ -19,17 +19,14 @@ private:
 
     VolumetricsHelper *volumetricsHelper;
 
-    unsigned long startTime;
+    unsigned long startTime = 0;
 
 public:
     TeaStateHandler(bool *teaButtonPressed, bool *isExtractingTeaWater, VolumetricsHelper *volumetricsHelper, bool *isInProgrammingMode)
         : teaButtonPressed(teaButtonPressed),
           isExtractingTeaWater(isExtractingTeaWater),
-          volumetricsHelper(volumetricsHelper),
-          isInProgrammingMode(isInProgrammingMode)
-    {
-        startTime = 0;
-    }
+          isInProgrammingMode(isInProgrammingMode),
+          volumetricsHelper(volumetricsHelper) {}
 
     void handleState() override
     {

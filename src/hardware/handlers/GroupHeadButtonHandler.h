@@ -27,6 +27,7 @@ private:
 public:
     explicit GroupHeadButtonHandler(GroupButtonMatrixState *groupState, GroupHeadButtonEvent *event, int groupNumber, bool *isInProgrammingMode)
         : event(event),
+          isInProgrammingMode(isInProgrammingMode),
           leftSingleDoseButtonHandler(
               &(groupState->leftSingleDose)),
           leftDoubleDoseButtonHandler(
@@ -37,7 +38,7 @@ public:
               &groupState->rightSingleDose),
           rightDoubleDoseButtonHandler(
               &groupState->rightDoubleDose),
-          groupNumber(groupNumber), isInProgrammingMode(isInProgrammingMode) {};
+          groupNumber(groupNumber) {};
 
     void handle()
     {

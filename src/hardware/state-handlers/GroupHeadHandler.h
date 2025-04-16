@@ -26,8 +26,7 @@ class GroupHeadStateHandler : public GenericStateHandler
 
 public:
     GroupHeadStateHandler(bool *isExtracting, GroupHeadButtonEvent *event, VolumetricsHelper *volumetricsHelper, bool *isInProgrammingMode)
-        : isExtracting(isExtracting),
-          event(event), volumetricsHelper(volumetricsHelper), isInProgrammingMode(isInProgrammingMode) {}
+        : volumetricsHelper(volumetricsHelper), event(event), isInProgrammingMode(isInProgrammingMode), isExtracting(isExtracting) {}
 
     void handleState() override
     {

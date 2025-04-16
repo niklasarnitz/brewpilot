@@ -13,14 +13,14 @@
 class StateActor
 {
 private:
+    State *state;
+
+    Relay pumpRelay;
+
     Solenoid boilerFillSolenoid;
     Solenoid groupOneSolenoid;
     Solenoid groupTwoSolenoid;
     Solenoid teaWaterSolenoid;
-
-    Relay pumpRelay;
-
-    State *state;
 
 public:
     // TODO: Invert the relays by config
@@ -29,7 +29,7 @@ public:
           boilerFillSolenoid(RELAY_BOILER_FILL, "Boiler Fill", true),
           groupOneSolenoid(RELAY_GROUP_ONE, "Group One", true),
           groupTwoSolenoid(RELAY_GROUP_TWO, "Group Two", true),
-          teaWaterSolenoid(RELAY_TEA, "Tea Water Cold Water", true) {}
+          teaWaterSolenoid(RELAY_TEA, "Tea Water Cold Water", true) {};
 
     void loop()
     {
