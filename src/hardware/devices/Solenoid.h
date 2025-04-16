@@ -10,19 +10,15 @@
 class Solenoid
 {
 private:
-    char *name;
+    const char *name;
     int pin;
     bool isInverted;
     bool open;
 
 public:
-    Solenoid(int pin, char *name, bool isInverted = false)
+    Solenoid(int pin, const char *name, bool isInverted = false)
+        : pin(pin), isInverted(isInverted), open(false), name(name)
     {
-        this->pin = pin;
-        this->open = false;
-        this->name = name;
-        this->isInverted = isInverted;
-
         pinMode(pin, OUTPUT);
 
         this->setOpen(false);

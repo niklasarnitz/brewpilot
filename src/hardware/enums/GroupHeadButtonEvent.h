@@ -5,7 +5,7 @@
 #ifndef BREWPILOT_GROUPHEADBUTTONEVENT_H
 #define BREWPILOT_GROUPHEADBUTTONEVENT_H
 
-enum GroupHeadButtonEvent
+enum class GroupHeadButtonEvent
 {
     LEFT_SINGLE_ESPRESSO,
     LEFT_DOUBLE_ESPRESSO,

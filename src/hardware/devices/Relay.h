@@ -10,19 +10,15 @@
 class Relay
 {
 private:
-    char *name;
+    const char *name;
     int pin;
     bool isInverted;
     bool enabled;
 
 public:
-    Relay(int pin, char *name, bool isInverted = false)
+    Relay(int pin, const char *name, bool isInverted = false)
+        : pin(pin), isInverted(isInverted), enabled(false), name(name)
     {
-        this->name = name;
-        this->pin = pin;
-        this->enabled = false;
-        this->isInverted = isInverted;
-
         pinMode(pin, OUTPUT);
 
         this->setEnabled(false);

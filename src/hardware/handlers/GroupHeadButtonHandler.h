@@ -50,37 +50,37 @@ public:
         // Held events are emitted for all buttons but only handled for the continuous button
         if (continuousEvent == ButtonEventType::BUTTON_PRESSED)
         {
-            *event = CONTINUOUS;
+            *event = GroupHeadButtonEvent::CONTINUOUS;
             Serial.printf("GroupHeadButtonHandler %d: continuous\n", groupNumber);
         }
         else if (continuousEvent == ButtonEventType::BUTTON_HELD)
         {
-            *event = CONTINUOUS_HELD;
+            *event = GroupHeadButtonEvent::CONTINUOUS_HELD;
             Serial.printf("GroupHeadButtonHandler %d: continuous held\n", groupNumber);
         }
         else if (leftSingleDoseEvent == ButtonEventType::BUTTON_PRESSED)
         {
-            *event = LEFT_SINGLE_ESPRESSO;
+            *event = GroupHeadButtonEvent::LEFT_SINGLE_ESPRESSO;
             Serial.printf("GroupHeadButtonHandler %d: left single\n", groupNumber);
         }
         else if (leftDoubleDoseEvent == ButtonEventType::BUTTON_PRESSED)
         {
-            *event = LEFT_DOUBLE_ESPRESSO;
+            *event = GroupHeadButtonEvent::LEFT_DOUBLE_ESPRESSO;
             Serial.printf("GroupHeadButtonHandler %d: left double\n", groupNumber);
         }
         else if (rightSingleDoseEvent == ButtonEventType::BUTTON_PRESSED)
         {
-            *event = RIGHT_SINGLE_ESPRESSO;
+            *event = GroupHeadButtonEvent::RIGHT_SINGLE_ESPRESSO;
             Serial.printf("GroupHeadButtonHandler %d: right single\n", groupNumber);
         }
         else if (rightDoubleDoseEvent == ButtonEventType::BUTTON_PRESSED)
         {
-            *event = RIGHT_DOUBLE_ESPRESSO;
+            *event = GroupHeadButtonEvent::RIGHT_DOUBLE_ESPRESSO;
             Serial.printf("GroupHeadButtonHandler %d: right double\n", groupNumber);
         }
         else
         {
-            *event = NONE;
+            *event = GroupHeadButtonEvent::NONE;
         }
     }
 };

@@ -19,7 +19,7 @@ class GroupHeadStateHandler : public GenericStateHandler
 
     bool *isInProgrammingMode;
 
-    GroupHeadButtonEvent buttonToBeProgrammed = NONE;
+    GroupHeadButtonEvent buttonToBeProgrammed = GroupHeadButtonEvent::NONE;
 
     unsigned long targetPulses = 0;
     unsigned long currentPulses = 0;
@@ -33,7 +33,7 @@ public:
     {
         if (*isExtracting)
         {
-            if (*event == CONTINUOUS_HELD && targetPulses == LONG_MAX && !(*isInProgrammingMode))
+            if (*event == GroupHeadButtonEvent::CONTINUOUS_HELD && targetPulses == LONG_MAX && !(*isInProgrammingMode))
             {
                 Serial.println("GroupHeadStateHandler: Entered Programming Mode");
                 *isInProgrammingMode = true;
@@ -43,7 +43,7 @@ public:
                 currentPulses = 0;
                 targetPulses = 0;
             }
-            else if (*event == CONTINUOUS)
+            else if (*event == GroupHeadButtonEvent::CONTINUOUS)
             {
                 *isExtracting = false;
 
@@ -67,11 +67,11 @@ public:
                 targetPulses = 0;
             }
         }
-        else if (*event != NONE && *event != CONTINUOUS_HELD)
+        else if (*event != GroupHeadButtonEvent::NONE && *event != GroupHeadButtonEvent::CONTINUOUS_HELD)
         {
             targetPulses = 0;
 
-            if (*event == CONTINUOUS)
+            if (*event == GroupHeadButtonEvent::CONTINUOUS)
             {
                 targetPulses = LONG_MAX;
             }
@@ -82,7 +82,7 @@ public:
                 buttonToBeProgrammed = *event;
             }
 
-            if (targetPulses != 0 || (*event != CONTINUOUS && *isInProgrammingMode))
+            if (targetPulses != 0 || (*event != GroupHeadButtonEvent::CONTINUOUS && *isInProgrammingMode))
             {
                 currentPulses = 0;
 

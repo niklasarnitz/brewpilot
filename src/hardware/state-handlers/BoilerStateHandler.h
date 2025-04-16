@@ -14,7 +14,7 @@
 class BoilerStateHandler : public GenericStateHandler
 {
 private:
-    enum BoilerState
+    enum class BoilerState
     {
         BOILER_ABOVE_TARGET_AND_FILLED,
         BOILER_ABOVE_TARGET_BUT_FILLING,
@@ -28,7 +28,7 @@ private:
 
     bool hasTurnedOnBoilerProbeVoltage = false;
 
-    BoilerState internalState = BOILER_ABOVE_TARGET_AND_FILLED;
+    BoilerState internalState = BoilerState::BOILER_ABOVE_TARGET_AND_FILLED;
 
     // TODO: Maybe Implement smoothing
     bool readBoilerProbe()
@@ -38,7 +38,7 @@ private:
             digitalWrite(OUT_BOILER_VOLTAGE, HIGH);
             hasTurnedOnBoilerProbeVoltage = true;
 
-            return internalState != BOILER_BELOW_TARGET;
+            return internalState != BoilerState::BOILER_BELOW_TARGET;
         }
         else
         {
@@ -68,7 +68,7 @@ public:
 
     void handleState() override
     {
-        if (internalState == BOILER_ABOVE_TARGET_BUT_FILLING)
+        if (internalState == BoilerState::BOILER_ABOVE_TARGET_BUT_FILLING)
         {
             if (millis() - lastIsAboveTargetTime > BOILER_FILL_WAIT_TIME)
             {
@@ -77,12 +77,12 @@ public:
                 if (!isFilled)
                 {
                     Serial.println("Boiler Fill Check: Boiler is below target");
-                    internalState = BOILER_BELOW_TARGET;
+                    internalState = BoilerState::BOILER_BELOW_TARGET;
                 }
                 else
                 {
                     Serial.println("Boiler Fill Check: Boiler is above target and filled");
-                    internalState = BOILER_ABOVE_TARGET_AND_FILLED;
+                    internalState = BoilerState::BOILER_ABOVE_TARGET_AND_FILLED;
                     *isFillingBoiler = false;
 
                     lastIsAboveTargetTime = 0;
@@ -97,22 +97,22 @@ public:
 
                 switch (internalState)
                 {
-                case BOILER_ABOVE_TARGET_AND_FILLED:
+                case BoilerState::BOILER_ABOVE_TARGET_AND_FILLED:
                     if (!boilerIsFilled)
                     {
                         Serial.println("Boiler Fill Check: Boiler is below target");
                         *isFillingBoiler = true;
-                        internalState = BOILER_BELOW_TARGET;
+                        internalState = BoilerState::BOILER_BELOW_TARGET;
                     }
                     break;
-                case BOILER_ABOVE_TARGET_BUT_FILLING:
+                case BoilerState::BOILER_ABOVE_TARGET_BUT_FILLING:
                     // Handler see above
                     break;
-                case BOILER_BELOW_TARGET:
+                case BoilerState::BOILER_BELOW_TARGET:
                     if (boilerIsFilled)
                     {
                         Serial.println("Boiler Fill Check: Boiler is above target and filled");
-                        internalState = BOILER_ABOVE_TARGET_BUT_FILLING;
+                        internalState = BoilerState::BOILER_ABOVE_TARGET_BUT_FILLING;
                     }
                     break;
                 }

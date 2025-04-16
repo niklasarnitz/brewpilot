@@ -9,9 +9,9 @@
 
 struct ButtonEvent
 {
-    GroupHeadButtonEvent groupOne = NONE;
+    GroupHeadButtonEvent groupOne = GroupHeadButtonEvent::NONE;
     bool tea = false;
-    GroupHeadButtonEvent groupTwo = NONE;
+    GroupHeadButtonEvent groupTwo = GroupHeadButtonEvent::NONE;
 };
 
 #endif // BREWPILOT_BUTTONEVENT_H
