@@ -9,6 +9,10 @@
 #include "hardware/devices/Relay.h"
 #include "hardware/devices/Solenoid.h"
 #include "StaticConfig.h"
+#include "configs/MachineConfig.h"
+#include "configs/getMachineConfig.h"
+
+const MachineConfig config = getMachineConfig();
 
 class StateActor
 {
@@ -23,13 +27,12 @@ private:
     Solenoid teaWaterSolenoid;
 
 public:
-    // TODO: Invert the relays by config
     explicit StateActor(State *state)
-        : state(state), pumpRelay(RELAY_PUMP, "Pump", true),
-          boilerFillSolenoid(RELAY_BOILER_FILL, "Boiler Fill", true),
-          groupOneSolenoid(RELAY_GROUP_ONE, "Group One", true),
-          groupTwoSolenoid(RELAY_GROUP_TWO, "Group Two", true),
-          teaWaterSolenoid(RELAY_TEA, "Tea Water Cold Water", true) {};
+        : state(state), pumpRelay(RELAY_PUMP, "Pump", config.relayConfig.pumpInverted),
+          boilerFillSolenoid(RELAY_BOILER_FILL, "Boiler Fill", config.relayConfig.boilerFillInverted),
+          groupOneSolenoid(RELAY_GROUP_ONE, "Group One", config.relayConfig.groupOneInverted),
+          groupTwoSolenoid(RELAY_GROUP_TWO, "Group Two", config.relayConfig.groupTwoInverted),
+          teaWaterSolenoid(RELAY_TEA, "Tea Water Cold Water", config.relayConfig.teaInverted) {};
 
     void loop()
     {
