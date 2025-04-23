@@ -40,8 +40,9 @@ public:
 
                     Serial.println("Deactivating Programming Mode because of Tea");
                     *isInProgrammingMode = false;
-                    *isExtractingTeaWater = false;
                 }
+
+                *isExtractingTeaWater = false;
             }
 
             if (!(*isInProgrammingMode) && ((millis() - startTime) >= volumetricsHelper->getTeaWaterSetting()))
