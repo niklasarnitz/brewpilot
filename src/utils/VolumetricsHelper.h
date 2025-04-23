@@ -42,7 +42,7 @@ private:
     }
 
 public:
-    VolumetricsHelper(PreferenceHelper *preferenceHelper)
+    explicit VolumetricsHelper(PreferenceHelper *preferenceHelper)
         : preferenceHelper(preferenceHelper) {};
 
     void setup()
