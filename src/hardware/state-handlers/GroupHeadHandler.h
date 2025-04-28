@@ -11,6 +11,8 @@
 
 #include <climits>
 
+extern void logMessage(const char *message);
+
 class GroupHeadStateHandler : public GenericStateHandler
 {
     VolumetricsHelper *volumetricsHelper;
@@ -34,7 +36,7 @@ public:
         {
             if (*event == GroupHeadButtonEvent::CONTINUOUS_HELD && targetPulses == LONG_MAX && !(*isInProgrammingMode))
             {
-                Serial.println("GroupHeadStateHandler: Entered Programming Mode");
+                logMessage("GroupHeadStateHandler: Entered Programming Mode");
                 *isInProgrammingMode = true;
 
                 *isExtracting = false;
@@ -50,7 +52,7 @@ public:
                 {
                     volumetricsHelper->writeFlowMeterSetting(buttonToBeProgrammed, currentPulses);
 
-                    Serial.println("GroupHeadStateHandler: Left Programming Mode");
+                    logMessage("GroupHeadStateHandler: Left Programming Mode");
                     *isInProgrammingMode = false;
                 }
 
@@ -61,7 +63,10 @@ public:
             {
                 *isExtracting = false;
 
-                Serial.printf("GroupHeadStateHandler: Finished Extraction - Current: %ld pulses; Target: %ld pulses; Difference: %ld pulses\n", currentPulses, targetPulses, currentPulses - targetPulses);
+                char buffer[128];
+                sprintf(buffer, "GroupHeadStateHandler: Finished Extraction - Current: %ld pulses; Target: %ld pulses; Difference: %ld pulses",
+                        currentPulses, targetPulses, currentPulses - targetPulses);
+                logMessage(buffer);
 
                 targetPulses = 0;
             }
@@ -91,7 +96,10 @@ public:
 
         if (*isExtracting && currentPulses != 0)
         {
-            Serial.printf("GroupHeadStateHandler: Current: %ld pulses; Target: %ld pulses; Difference: %ld pulses\n", currentPulses, targetPulses, currentPulses - targetPulses);
+            char buffer[128];
+            sprintf(buffer, "GroupHeadStateHandler: Current: %ld pulses; Target: %ld pulses; Difference: %ld pulses",
+                    currentPulses, targetPulses, currentPulses - targetPulses);
+            logMessage(buffer);
         }
     }
 

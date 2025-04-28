@@ -11,6 +11,8 @@
 
 #define BOILER_FILL_WAIT_TIME 3000
 
+extern void logMessage(const char *message);
+
 class BoilerStateHandler : public GenericStateHandler
 {
 private:
@@ -46,8 +48,9 @@ private:
 
             uint16_t rawValue = analogRead(BOILER_PROBE_PIN);
 
-            Serial.print("Boiler Fill Check: Raw Sensor Value: ");
-            Serial.println(rawValue);
+            char buffer[64];
+            sprintf(buffer, "Boiler Fill Check: Raw Sensor Value: %d", rawValue);
+            logMessage(buffer);
 
             digitalWrite(OUT_BOILER_VOLTAGE, LOW);
             hasTurnedOnBoilerProbeVoltage = false;
@@ -76,12 +79,12 @@ public:
 
                 if (!isFilled)
                 {
-                    Serial.println("Boiler Fill Check: Boiler is below target");
+                    logMessage("Boiler Fill Check: Boiler is below target");
                     internalState = BoilerState::BOILER_BELOW_TARGET;
                 }
                 else
                 {
-                    Serial.println("Boiler Fill Check: Boiler is above target and filled");
+                    logMessage("Boiler Fill Check: Boiler is above target and filled");
                     internalState = BoilerState::BOILER_ABOVE_TARGET_AND_FILLED;
                     *isFillingBoiler = false;
 
@@ -100,7 +103,7 @@ public:
                 case BoilerState::BOILER_ABOVE_TARGET_AND_FILLED:
                     if (!boilerIsFilled)
                     {
-                        Serial.println("Boiler Fill Check: Boiler is below target");
+                        logMessage("Boiler Fill Check: Boiler is below target");
                         *isFillingBoiler = true;
                         internalState = BoilerState::BOILER_BELOW_TARGET;
                     }
@@ -111,7 +114,7 @@ public:
                 case BoilerState::BOILER_BELOW_TARGET:
                     if (boilerIsFilled)
                     {
-                        Serial.println("Boiler Fill Check: Boiler is above target and filled");
+                        logMessage("Boiler Fill Check: Boiler is above target and filled");
                         internalState = BoilerState::BOILER_ABOVE_TARGET_BUT_FILLING;
                     }
                     break;

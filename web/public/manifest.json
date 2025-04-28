@@ -1,0 +1,47 @@
+{
+  "short_name": "BrewPilot",
+  "name": "BrewPilot Espresso Monitor",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "maskable_icon.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#0078ff",
+  "background_color": "#ffffff",
+  "prefer_related_applications": false,
+  "categories": ["utilities", "productivity"],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Status",
+      "description": "View machine status",
+      "url": "/"
+    },
+    {
+      "name": "Event Log",
+      "short_name": "Events",
+      "description": "View recent machine events",
+      "url": "/events"
+    }
+  ]
+}

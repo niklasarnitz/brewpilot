@@ -10,6 +10,8 @@
 #include "GenericStateHandler.h"
 #include "../../utils/VolumetricsHelper.h"
 
+extern void logMessage(const char *message);
+
 class TeaStateHandler : public GenericStateHandler
 {
 private:
@@ -38,7 +40,7 @@ public:
                 {
                     volumetricsHelper->writeTeaWaterSetting(millis() - startTime);
 
-                    Serial.println("Deactivating Programming Mode because of Tea");
+                    logMessage("Deactivating Programming Mode because of Tea");
                     *isInProgrammingMode = false;
                 }
 
@@ -47,13 +49,13 @@ public:
 
             if (!(*isInProgrammingMode) && ((millis() - startTime) >= volumetricsHelper->getTeaWaterSetting()))
             {
-                Serial.println("Tea water stops extracting");
+                logMessage("Tea water stops extracting");
                 *isExtractingTeaWater = false;
             }
         }
         else if ((volumetricsHelper->getTeaWaterSetting() != 0 || *isInProgrammingMode) && *teaButtonPressed && !*isExtractingTeaWater)
         {
-            Serial.println("Tea water starts extracting");
+            logMessage("Tea water starts extracting");
             *isExtractingTeaWater = true;
             startTime = millis();
         }

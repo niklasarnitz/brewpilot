@@ -9,6 +9,7 @@
 #include "structs/VolumetricSettings.h"
 #include "utils/PreferenceHelper.h"
 #include "utils/VolumetricsHelper.h"
+#include "hardware/ble/BLEManager.h"
 
 PreferenceHelper preferenceHelper;
 VolumetricsHelper volumetricsHelper(&preferenceHelper);
@@ -17,6 +18,7 @@ State state{};
 StateHandler stateHandler(&state, &buttonEvent, &volumetricsHelper);
 StateActor stateActor(&state);
 InputHandler inputHandler(&buttonEvent, &state.isInProgrammingMode);
+BLEManager bleManager(&state, &volumetricsHelper);
 
 unsigned long counter = 0;
 
@@ -28,6 +30,13 @@ void IRAM_ATTR groupOneFlowMeterHandler()
 void IRAM_ATTR groupTwoFlowMeterHandler()
 {
     stateHandler.groupTwoFlowMeterPulseInterrupt();
+}
+
+// Custom Serial.println that also logs events to BLE
+void logMessage(const char *message)
+{
+    Serial.println(message);
+    bleManager.logEvent(message);
 }
 
 void setup()
@@ -42,6 +51,11 @@ void setup()
 
     // Load Volumetric Settings
     volumetricsHelper.setup();
+
+    // Initialize BLE
+    bleManager.setup();
+
+    logMessage("BrewPilot started");
 }
 
 void loop()
