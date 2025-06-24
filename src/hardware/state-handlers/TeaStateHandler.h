@@ -5,35 +5,53 @@
 #ifndef BREWPILOT_TEASTATEHANDLER_H
 #define BREWPILOT_TEASTATEHANDLER_H
 
+#include <Arduino.h>
+
 #include "GenericStateHandler.h"
-#include "Arduino.h"
+#include "../../utils/VolumetricsHelper.h"
 
 class TeaStateHandler : public GenericStateHandler
 {
 private:
     bool *teaButtonPressed;
     bool *isExtractingTeaWater;
-    unsigned long startTime;
+    bool *isInProgrammingMode;
+
+    VolumetricsHelper *volumetricsHelper;
+
+    unsigned long startTime = 0;
 
 public:
-    TeaStateHandler(bool *teaButtonPressed, bool *isExtractingTeaWater) : teaButtonPressed(teaButtonPressed),
-                                                                          isExtractingTeaWater(isExtractingTeaWater)
-    {
-        startTime = 0;
-    }
+    TeaStateHandler(bool *teaButtonPressed, bool *isExtractingTeaWater, VolumetricsHelper *volumetricsHelper, bool *isInProgrammingMode)
+        : teaButtonPressed(teaButtonPressed),
+          isExtractingTeaWater(isExtractingTeaWater),
+          isInProgrammingMode(isInProgrammingMode),
+          volumetricsHelper(volumetricsHelper) {}
 
     void handleState() override
     {
         if (*isExtractingTeaWater)
         {
-            // TODO: Implement to read this from the FS + programming
-            if (millis() - startTime > 2000)
+            if (*teaButtonPressed)
+            {
+                if (*isInProgrammingMode)
+                {
+                    volumetricsHelper->writeTeaWaterSetting(millis() - startTime);
+
+                    Serial.println("Deactivating Programming Mode because of Tea");
+                    *isInProgrammingMode = false;
+                }
+
+                *isExtractingTeaWater = false;
+            }
+
+            if (!(*isInProgrammingMode) && ((millis() - startTime) >= volumetricsHelper->getTeaWaterSetting()))
             {
                 Serial.println("Tea water stops extracting");
                 *isExtractingTeaWater = false;
             }
         }
-        else if (*teaButtonPressed && !*isExtractingTeaWater)
+        else if ((volumetricsHelper->getTeaWaterSetting() != 0 || *isInProgrammingMode) && *teaButtonPressed && !*isExtractingTeaWater)
         {
             Serial.println("Tea water starts extracting");
             *isExtractingTeaWater = true;

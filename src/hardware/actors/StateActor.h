@@ -9,25 +9,30 @@
 #include "hardware/devices/Relay.h"
 #include "hardware/devices/Solenoid.h"
 #include "StaticConfig.h"
+#include "configs/MachineConfig.h"
+#include "configs/getMachineConfig.h"
+
+const MachineConfig config = getMachineConfig();
 
 class StateActor
 {
 private:
+    State *state;
+
+    Relay pumpRelay;
+
     Solenoid boilerFillSolenoid;
     Solenoid groupOneSolenoid;
     Solenoid groupTwoSolenoid;
     Solenoid teaWaterSolenoid;
 
-    Relay pumpRelay;
-
-    State *state;
-
 public:
-    explicit StateActor(State *state) : state(state), pumpRelay(RELAY_PUMP, "Pump"),
-                                        boilerFillSolenoid(RELAY_BOILER_FILL, "Boiler Fill"),
-                                        groupOneSolenoid(RELAY_GROUP_ONE, "Group One"),
-                                        groupTwoSolenoid(RELAY_GROUP_TWO, "Group Two"),
-                                        teaWaterSolenoid(RELAY_TEA, "Tea Water Cold Water") {}
+    explicit StateActor(State *state)
+        : state(state), pumpRelay(RELAY_PUMP, "Pump", config.relayConfig.pumpInverted),
+          boilerFillSolenoid(RELAY_BOILER_FILL, "Boiler Fill", config.relayConfig.boilerFillInverted),
+          groupOneSolenoid(RELAY_GROUP_ONE, "Group One", config.relayConfig.groupOneInverted),
+          groupTwoSolenoid(RELAY_GROUP_TWO, "Group Two", config.relayConfig.groupTwoInverted),
+          teaWaterSolenoid(RELAY_TEA, "Tea Water Cold Water", config.relayConfig.teaInverted) {};
 
     void loop()
     {

@@ -10,18 +10,17 @@
 class Relay
 {
 private:
-    char *name;
     int pin;
+
+    const char *name;
+
     bool isInverted;
-    bool enabled;
+    bool enabled = false;
 
 public:
-    Relay(int pin, char *name)
+    Relay(int pin, const char *name, bool isInverted = false)
+        : pin(pin), name(name), isInverted(isInverted)
     {
-        this->name = name;
-        this->pin = pin;
-        this->enabled = false;
-
         pinMode(pin, OUTPUT);
 
         this->setEnabled(false);
@@ -36,7 +35,14 @@ public:
 
         enabled = newState;
 
-        digitalWrite(pin, newState ? LOW : HIGH);
+        if (isInverted)
+        {
+            digitalWrite(pin, newState ? LOW : HIGH);
+        }
+        else
+        {
+            digitalWrite(pin, newState ? HIGH : LOW);
+        }
     }
 
     bool isEnabled()

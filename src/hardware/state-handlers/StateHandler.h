@@ -9,6 +9,7 @@
 #include "BoilerStateHandler.h"
 #include "GroupHeadHandler.h"
 #include "TeaStateHandler.h"
+#include "../../utils/VolumetricsHelper.h"
 
 class StateHandler : public GenericStateHandler
 {
@@ -19,13 +20,14 @@ private:
     TeaStateHandler teaStateHandler;
 
 public:
-    StateHandler(State *state, ButtonEvent *buttonEvent) : boilerStateHandler(&state->isFillingBoiler),
-                                                           groupOneStateHandler(&state->groupOneIsExtracting,
-                                                                                &buttonEvent->groupOne),
-                                                           groupTwoStateHandler(&state->groupTwoIsExtracting,
-                                                                                &buttonEvent->groupTwo),
-                                                           teaStateHandler(&buttonEvent->tea,
-                                                                           &state->isExtractingTeaWater) {};
+    StateHandler(State *state, ButtonEvent *buttonEvent, VolumetricsHelper *volumetricsHelper)
+        : boilerStateHandler(&state->isFillingBoiler),
+          groupOneStateHandler(&state->groupOneIsExtracting,
+                               &buttonEvent->groupOne, volumetricsHelper, &state->isInProgrammingMode),
+          groupTwoStateHandler(&state->groupTwoIsExtracting,
+                               &buttonEvent->groupTwo, volumetricsHelper, &state->isInProgrammingMode),
+          teaStateHandler(&buttonEvent->tea,
+                          &state->isExtractingTeaWater, volumetricsHelper, &state->isInProgrammingMode) {};
 
     void handleState() override
     {

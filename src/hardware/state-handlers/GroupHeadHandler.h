@@ -7,73 +7,99 @@
 
 #include "GenericStateHandler.h"
 #include "hardware/enums/GroupHeadButtonEvent.h"
+#include "utils/VolumetricsHelper.h"
 
 #include <climits>
 
 class GroupHeadStateHandler : public GenericStateHandler
 {
+    VolumetricsHelper *volumetricsHelper;
     GroupHeadButtonEvent *event;
     bool *isExtracting;
 
-    long remainingPulses;
+    bool *isInProgrammingMode;
 
-    long getRemainingPulses()
-    {
-        // TODO: Get this from memory/FS
-        switch (*event)
-        {
-        case LEFT_SINGLE_ESPRESSO:
-            return 1;
-        case RIGHT_SINGLE_ESPRESSO:
-            return 1;
-        case LEFT_DOUBLE_ESPRESSO:
-            return 1;
-        case RIGHT_DOUBLE_ESPRESSO:
-            return 1;
-        case CONTINUOUS:
-            return LONG_MAX;
-        default:
-            return 0;
-        };
-    }
+    GroupHeadButtonEvent buttonToBeProgrammed = GroupHeadButtonEvent::NONE;
+
+    unsigned long targetPulses = 0;
+    unsigned long currentPulses = 0;
 
 public:
-    GroupHeadStateHandler(bool *isExtracting, GroupHeadButtonEvent *event) : isExtracting(isExtracting),
-                                                                             event(event)
-    {
-        remainingPulses = 0;
-    }
+    GroupHeadStateHandler(bool *isExtracting, GroupHeadButtonEvent *event, VolumetricsHelper *volumetricsHelper, bool *isInProgrammingMode)
+        : volumetricsHelper(volumetricsHelper), event(event), isExtracting(isExtracting), isInProgrammingMode(isInProgrammingMode) {}
 
     void handleState() override
     {
         if (*isExtracting)
         {
-            if (*event == CONTINUOUS)
+            if (*event == GroupHeadButtonEvent::CONTINUOUS_HELD && targetPulses == LONG_MAX && !(*isInProgrammingMode))
+            {
+                Serial.println("GroupHeadStateHandler: Entered Programming Mode");
+                *isInProgrammingMode = true;
+
+                *isExtracting = false;
+
+                currentPulses = 0;
+                targetPulses = 0;
+            }
+            else if (*event == GroupHeadButtonEvent::CONTINUOUS)
             {
                 *isExtracting = false;
-                remainingPulses = 0;
+
+                if (*isInProgrammingMode)
+                {
+                    volumetricsHelper->writeFlowMeterSetting(buttonToBeProgrammed, currentPulses);
+
+                    Serial.println("GroupHeadStateHandler: Left Programming Mode");
+                    *isInProgrammingMode = false;
+                }
+
+                currentPulses = 0;
+                targetPulses = 0;
+            }
+            else if (!(*isInProgrammingMode) && currentPulses >= targetPulses)
+            {
+                *isExtracting = false;
+
+                Serial.printf("GroupHeadStateHandler: Finished Extraction - Current: %ld pulses; Target: %ld pulses; Difference: %ld pulses\n", currentPulses, targetPulses, currentPulses - targetPulses);
+
+                targetPulses = 0;
             }
         }
-        else if (*event != NONE)
+        else if (*event != GroupHeadButtonEvent::NONE && *event != GroupHeadButtonEvent::CONTINUOUS_HELD)
         {
-            *isExtracting = true;
+            targetPulses = 0;
 
-            remainingPulses = getRemainingPulses();
+            if (*event == GroupHeadButtonEvent::CONTINUOUS)
+            {
+                targetPulses = LONG_MAX;
+            }
+            else
+            {
+                targetPulses = volumetricsHelper->getFlowMeterSetting(*event);
+
+                buttonToBeProgrammed = *event;
+            }
+
+            if (targetPulses != 0 || (*event != GroupHeadButtonEvent::CONTINUOUS && *isInProgrammingMode))
+            {
+                currentPulses = 0;
+
+                *isExtracting = true;
+            }
         }
 
-        if (remainingPulses == 0)
+        if (*isExtracting && currentPulses != 0)
         {
-            *isExtracting = false;
+            Serial.printf("GroupHeadStateHandler: Current: %ld pulses; Target: %ld pulses; Difference: %ld pulses\n", currentPulses, targetPulses, currentPulses - targetPulses);
         }
-
-        // TODO: Implement Programming Mode
     }
 
     void flowMeterPulseInterrupt()
     {
-        if (remainingPulses > 0)
+        if (*isExtracting)
         {
-            remainingPulses--;
+            currentPulses++;
         }
     }
 };

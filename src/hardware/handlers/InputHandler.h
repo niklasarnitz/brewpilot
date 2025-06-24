@@ -21,21 +21,22 @@ private:
     GroupHeadButtonHandler groupOneHandler;
     GroupHeadButtonHandler groupTwoHandler;
 
-    // Tea
     ButtonHandler teaButtonHandler;
 
     ButtonEvent *buttonEvent;
 
 public:
-    explicit InputHandler(ButtonEvent *buttonEvent) : buttonEvent(buttonEvent), buttonMatrixHandler(&buttonMatrixState),
-                                                      teaButtonHandler(&buttonMatrixState.tea), groupOneHandler(&(buttonMatrixState.groupOne), &(buttonEvent->groupOne), 1), groupTwoHandler(&(buttonMatrixState.groupTwo), &(buttonEvent->groupTwo), 2) {};
+    explicit InputHandler(ButtonEvent *buttonEvent, bool *isInProgrammingMode)
+        : buttonEvent(buttonEvent), buttonMatrixHandler(&buttonMatrixState),
+          teaButtonHandler(&buttonMatrixState.tea), groupOneHandler(&(buttonMatrixState.groupOne), &(buttonEvent->groupOne), 1, isInProgrammingMode), groupTwoHandler(&(buttonMatrixState.groupTwo), &(buttonEvent->groupTwo), 2, isInProgrammingMode) {};
 
     void readInputs()
     {
         // Read inputs
         buttonMatrixHandler.handle();
+
         // Write Events
-        buttonEvent->tea = teaButtonHandler.handleButton(true);
+        buttonEvent->tea = teaButtonHandler.getEvent() == ButtonEventType::BUTTON_PRESSED;
         groupOneHandler.handle();
         groupTwoHandler.handle();
     };
