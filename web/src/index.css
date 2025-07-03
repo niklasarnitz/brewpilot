@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+/* Add global dark theme styles */
+html,
+body {
+  background-color: #121212; /* bg-background-dark */
+  color: #e2e8f0; /* text-text-dark */
+  color-scheme: dark;
+}
+
+#root {
+  min-height: 100vh;
+  background-color: #121212; /* bg-background-dark */
+}
+
+/* Ensure scrollbars match dark theme */
+::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #111827; /* bg-gray-900 */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #374151; /* bg-gray-700 */
+  border-radius: 0.25rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #4b5563; /* bg-gray-600 */
+}

@@ -3,9 +3,11 @@
 
 #include <Arduino.h>
 
-#include "structs/VolumetricSettings.h"
-#include "hardware/enums/GroupHeadButtonEvent.h"
+#include "../structs/VolumetricSettings.h"
+#include "../hardware/enums/GroupHeadButtonEvent.h"
 #include "PreferenceHelper.h"
+
+extern void logMessage(const char *message);
 
 class VolumetricsHelper
 {
@@ -16,12 +18,24 @@ private:
 
     void logVolumetricSettings(VolumetricSettings *volumetricSettings)
     {
-        Serial.printf("Volumetric Settings:\n");
-        Serial.printf("Left Single Espresso: %ld pulses\n", volumetricSettings->leftSingleEspressoPulses);
-        Serial.printf("Left Double Espresso: %ld pulses\n", volumetricSettings->leftDoubleEspressoPulses);
-        Serial.printf("Right Single Espresso: %ld pulses\n", volumetricSettings->rightSingleEspressoPulses);
-        Serial.printf("Right Double Espresso: %ld pulses\n", volumetricSettings->rightDoubleEspressoPulses);
-        Serial.printf("Tea Water: %ld ms\n", volumetricSettings->teaWaterMilliseconds);
+        char buffer[512]; // Buffer to build the log message
+
+        logMessage("Volumetric Settings:");
+
+        sprintf(buffer, "Left Single Espresso: %ld pulses", volumetricSettings->leftSingleEspressoPulses);
+        logMessage(buffer);
+
+        sprintf(buffer, "Left Double Espresso: %ld pulses", volumetricSettings->leftDoubleEspressoPulses);
+        logMessage(buffer);
+
+        sprintf(buffer, "Right Single Espresso: %ld pulses", volumetricSettings->rightSingleEspressoPulses);
+        logMessage(buffer);
+
+        sprintf(buffer, "Right Double Espresso: %ld pulses", volumetricSettings->rightDoubleEspressoPulses);
+        logMessage(buffer);
+
+        sprintf(buffer, "Tea Water: %ld ms", volumetricSettings->teaWaterMilliseconds);
+        logMessage(buffer);
     }
 
     PreferenceKey convertButtonEventToPreferenceKey(GroupHeadButtonEvent event)
@@ -114,6 +128,11 @@ public:
     {
         return volumetricSettings.teaWaterMilliseconds;
     }
+
+    VolumetricSettings *getVolumetricSettings()
+    {
+        return &volumetricSettings;
+    }
 };
 
-#endif // BREWPILOT_PREFERENCEHELPER_H
+#endif // BREWPILOT_VOLUMETRICSHELPER_H

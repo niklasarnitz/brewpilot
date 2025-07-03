@@ -9,6 +9,8 @@
 #include "structs/ButtonMatrixState.h"
 #include "hardware/enums/GroupHeadButtonEvent.h"
 
+extern void logMessage(const char *message);
+
 class GroupHeadButtonHandler
 {
 private:
@@ -52,32 +54,44 @@ public:
         if (continuousEvent == ButtonEventType::BUTTON_PRESSED)
         {
             *event = GroupHeadButtonEvent::CONTINUOUS;
-            Serial.printf("GroupHeadButtonHandler %d: continuous\n", groupNumber);
+            char buffer[64];
+            sprintf(buffer, "GroupHeadButtonHandler %d: continuous", groupNumber);
+            logMessage(buffer);
         }
         else if (continuousEvent == ButtonEventType::BUTTON_HELD)
         {
             *event = GroupHeadButtonEvent::CONTINUOUS_HELD;
-            Serial.printf("GroupHeadButtonHandler %d: continuous held\n", groupNumber);
+            char buffer[64];
+            sprintf(buffer, "GroupHeadButtonHandler %d: continuous held", groupNumber);
+            logMessage(buffer);
         }
         else if (leftSingleDoseEvent == ButtonEventType::BUTTON_PRESSED)
         {
             *event = GroupHeadButtonEvent::LEFT_SINGLE_ESPRESSO;
-            Serial.printf("GroupHeadButtonHandler %d: left single\n", groupNumber);
+            char buffer[64];
+            sprintf(buffer, "GroupHeadButtonHandler %d: left single", groupNumber);
+            logMessage(buffer);
         }
         else if (leftDoubleDoseEvent == ButtonEventType::BUTTON_PRESSED)
         {
             *event = GroupHeadButtonEvent::LEFT_DOUBLE_ESPRESSO;
-            Serial.printf("GroupHeadButtonHandler %d: left double\n", groupNumber);
+            char buffer[64];
+            sprintf(buffer, "GroupHeadButtonHandler %d: left double", groupNumber);
+            logMessage(buffer);
         }
         else if (rightSingleDoseEvent == ButtonEventType::BUTTON_PRESSED)
         {
             *event = GroupHeadButtonEvent::RIGHT_SINGLE_ESPRESSO;
-            Serial.printf("GroupHeadButtonHandler %d: right single\n", groupNumber);
+            char buffer[64];
+            sprintf(buffer, "GroupHeadButtonHandler %d: right single", groupNumber);
+            logMessage(buffer);
         }
         else if (rightDoubleDoseEvent == ButtonEventType::BUTTON_PRESSED)
         {
             *event = GroupHeadButtonEvent::RIGHT_DOUBLE_ESPRESSO;
-            Serial.printf("GroupHeadButtonHandler %d: right double\n", groupNumber);
+            char buffer[64];
+            sprintf(buffer, "GroupHeadButtonHandler %d: right double", groupNumber);
+            logMessage(buffer);
         }
         else
         {
