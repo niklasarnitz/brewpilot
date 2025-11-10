@@ -48,6 +48,15 @@ public:
         ButtonEventType rightSingleDoseEvent = rightSingleDoseButtonHandler.getEvent();
         ButtonEventType rightDoubleDoseEvent = rightDoubleDoseButtonHandler.getEvent();
 
+        // Check for auto backflush combo: left single + right double simultaneously held
+        if ((leftSingleDoseEvent == ButtonEventType::BUTTON_HELD) &&
+            (rightDoubleDoseEvent == ButtonEventType::BUTTON_HELD))
+        {
+            *event = GroupHeadButtonEvent::AUTO_BACKFLUSH;
+            Serial.printf("GroupHeadButtonHandler %d: auto backflush combo detected\n", groupNumber);
+            return;
+        }
+
         // Held events are emitted for all buttons but only handled for the continuous button
         if (continuousEvent == ButtonEventType::BUTTON_PRESSED)
         {
