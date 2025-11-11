@@ -7,10 +7,10 @@
 #include "../../utils/noop.h"
 #include "../../configs/MachineDefines.h"
 
-#ifndef BREWPILOT_MACHINE_BUTTON_MATRIX_HANDLER_H
-#define BREWPILOT_MACHINE_BUTTON_MATRIX_HANDLER_H
+#ifndef BREWPILOT_BUTTONMATRIXHANDLER_H
+#define BREWPILOT_BUTTONMATRIXHANDLER_H
 
-class MachineButtonMatrixHandler
+class ButtonMatrixHandler
 {
 private:
         ButtonMatrixState *buttonMatrixState;
