@@ -1,5 +1,5 @@
-#ifndef LACIMBALIM29SELECT_H
-#define LACIMBALIM29SELECT_H
+#ifndef MACHINE_CONFIG_H
+#define MACHINE_CONFIG_H
 
 #include "./MachineConfigType.h"
 

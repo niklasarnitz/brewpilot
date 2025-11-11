@@ -51,8 +51,14 @@ public:
         // Tea Water
         teaWaterSolenoid.setOpen(state->isExtractingTeaWater);
 
-        // Pump
+// Pump
+#ifdef MACHINE_HAS_DUAL_GROUP
+        // Dual Groups
         pumpRelay.setEnabled(state->isFillingBoiler || state->groupOneIsExtracting || state->groupTwoIsExtracting);
+#else
+        // Single Group
+        pumpRelay.setEnabled(state->isFillingBoiler || state->groupOneIsExtracting);
+#endif
     };
 };
 

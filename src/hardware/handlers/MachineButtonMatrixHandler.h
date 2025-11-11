@@ -50,7 +50,7 @@ public:
         void handle()
         {
 #ifdef MACHINE_LA_CIMBALI_M29_SELECT
-                /// Group One handling
+                // Group One handling
                 digitalWrite(OUT_GROUP_ONE_LEFT_HALF_AND_STOP, LOW);
                 noop();
 
@@ -91,6 +91,8 @@ public:
                 buttonMatrixState->tea = !digitalRead(IN_TEA_WATER);
 
                 digitalWrite(OUT_TEA_WATER, HIGH);
+#else
+#error "Machine not defined."
 #endif
         };
 };

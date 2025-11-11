@@ -1,7 +1,5 @@
-#ifndef MACHINE_CONFIG_H
-#define MACHINE_CONFIG_H
-
-#include "./hardware/MachineType.h"
+#ifndef MACHINE_CONFIG_TYPE_H
+#define MACHINE_CONFIG_TYPE_H
 
 struct RelayConfig
 {
