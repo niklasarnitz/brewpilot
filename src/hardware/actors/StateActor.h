@@ -10,9 +10,6 @@
 #include "hardware/devices/Solenoid.h"
 #include "StaticConfig.h"
 #include "configs/MachineConfig.h"
-#include "configs/getMachineConfig.h"
-
-const MachineConfig config = getMachineConfig();
 
 class StateActor
 {
@@ -23,16 +20,21 @@ private:
 
     Solenoid boilerFillSolenoid;
     Solenoid groupOneSolenoid;
+#ifdef MACHINE_HAS_DUAL_GROUP
     Solenoid groupTwoSolenoid;
+#endif
+
     Solenoid teaWaterSolenoid;
 
 public:
     explicit StateActor(State *state)
-        : state(state), pumpRelay(RELAY_PUMP, "Pump", config.relayConfig.pumpInverted),
-          boilerFillSolenoid(RELAY_BOILER_FILL, "Boiler Fill", config.relayConfig.boilerFillInverted),
-          groupOneSolenoid(RELAY_GROUP_ONE, "Group One", config.relayConfig.groupOneInverted),
-          groupTwoSolenoid(RELAY_GROUP_TWO, "Group Two", config.relayConfig.groupTwoInverted),
-          teaWaterSolenoid(RELAY_TEA, "Tea Water Cold Water", config.relayConfig.teaInverted) {};
+        : state(state), pumpRelay(RELAY_PUMP, "Pump", machineConfig.relayConfig.pumpInverted),
+          boilerFillSolenoid(RELAY_BOILER_FILL, "Boiler Fill", machineConfig.relayConfig.boilerFillInverted),
+          groupOneSolenoid(RELAY_GROUP_ONE, "Group One", machineConfig.relayConfig.groupOneInverted),
+#ifdef MACHINE_HAS_DUAL_GROUP
+          groupTwoSolenoid(RELAY_GROUP_TWO, "Group Two", machineConfig.relayConfig.groupTwoInverted),
+#endif
+          teaWaterSolenoid(RELAY_TEA, "Tea Water Cold Water", machineConfig.relayConfig.teaInverted) {};
 
     void loop()
     {
@@ -41,7 +43,10 @@ public:
 
         // Group Heads
         groupOneSolenoid.setOpen(state->groupOneIsExtracting);
+
+#ifdef MACHINE_HAS_DUAL_GROUP
         groupTwoSolenoid.setOpen(state->groupTwoIsExtracting);
+#endif
 
         // Tea Water
         teaWaterSolenoid.setOpen(state->isExtractingTeaWater);

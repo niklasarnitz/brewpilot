@@ -1,20 +1,18 @@
-#ifndef MACHINE_CONFIG_H
-#define MACHINE_CONFIG_H
+#ifndef LACIMBALIM29SELECT_H
+#define LACIMBALIM29SELECT_H
 
-#include "./hardware/MachineType.h"
+#include "./MachineConfigType.h"
 
-struct RelayConfig
-{
-    bool pumpInverted;
-    bool groupOneInverted;
-    bool groupTwoInverted;
-    bool boilerFillInverted;
-    bool teaInverted;
+#ifdef MACHINE_LA_CIMBALI_M29_SELECT
+const MachineConfigType machineConfig = {
+    .relayConfig = {
+        .pumpInverted = true,
+        .groupOneInverted = true,
+        .groupTwoInverted = true,
+        .boilerFillInverted = true,
+        .teaInverted = true,
+    },
 };
-
-struct MachineConfig
-{
-    RelayConfig relayConfig;
-};
-
 #endif
+
+#endif // LACIMBALIM29SELECT_H

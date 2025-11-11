@@ -12,7 +12,10 @@ struct State
     bool isExtractingTeaWater = false;
 
     bool groupOneIsExtracting = false;
+
+#ifdef MACHINE_HAS_DUAL_GROUP
     bool groupTwoIsExtracting = false;
+#endif
 
     bool isInProgrammingMode = false;
 };
