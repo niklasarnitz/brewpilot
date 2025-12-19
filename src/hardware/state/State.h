@@ -8,11 +8,9 @@
 struct State
 {
     bool isFillingBoiler = false;
-
-    bool isExtractingTeaWater = false;
-
     bool groupOneIsExtracting = false;
     bool groupTwoIsExtracting = false;
+    bool isExtractingTeaWater = false;
 
     bool isInProgrammingMode = false;
 };

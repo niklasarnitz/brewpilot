@@ -13,6 +13,7 @@ enum class GroupHeadButtonEvent
     RIGHT_DOUBLE_ESPRESSO,
     CONTINUOUS,
     CONTINUOUS_HELD,
+    AUTO_BACKFLUSH,
     NONE
 };
 
