@@ -18,8 +18,6 @@ StateHandler stateHandler(&state, &buttonEvent, &volumetricsHelper);
 StateActor stateActor(&state);
 InputHandler inputHandler(&buttonEvent, &state.isInProgrammingMode);
 
-unsigned long counter = 0;
-
 void IRAM_ATTR groupOneFlowMeterHandler()
 {
     stateHandler.groupOneFlowMeterPulseInterrupt();

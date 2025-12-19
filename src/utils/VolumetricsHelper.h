@@ -116,4 +116,4 @@ public:
     }
 };
 
-#endif // BREWPILOT_PREFERENCEHELPER_H
+#endif // BREWPILOT_VOLUMETRICSHELPER_H

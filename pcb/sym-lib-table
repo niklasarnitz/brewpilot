@@ -1,0 +1,5 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "local")(type "Legacy")(uri "${KIPRJMOD}/library/mighty_esp32_38_pins-custom_library.lib")(options "")(descr ""))
+  (lib (name "new_local")(type "KiCad")(uri "${KIPRJMOD}/new_local.kicad_sym")(options "")(descr ""))
+)
