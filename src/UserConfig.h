@@ -3,6 +3,6 @@
 
 #include "hardware/MachineType.h"
 
-const MachineType HARDWARE_MODEL = MachineType::LA_CIMBALI_M29_SELECT;
+const MachineType HARDWARE_MODEL = MachineType::RANCILIO_S27;
 
 #endif

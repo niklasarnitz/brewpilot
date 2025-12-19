@@ -37,6 +37,7 @@ private:
         {
             digitalWrite(OUT_BOILER_VOLTAGE, HIGH);
             hasTurnedOnBoilerProbeVoltage = true;
+            delay(10); // Wait for voltage to stabilize
 
             return internalState != BoilerState::BOILER_BELOW_TARGET;
         }
@@ -111,8 +112,9 @@ public:
                 case BoilerState::BOILER_BELOW_TARGET:
                     if (boilerIsFilled)
                     {
-                        Serial.println("Boiler Fill Check: Boiler is above target and filled");
+                        Serial.println("Boiler Fill Check: Boiler is above target, waiting for it to settle");
                         internalState = BoilerState::BOILER_ABOVE_TARGET_BUT_FILLING;
+                        lastIsAboveTargetTime = millis();
                     }
                     break;
                 }

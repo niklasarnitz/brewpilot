@@ -13,9 +13,11 @@ protected:
     ButtonMatrixState *buttonMatrixState;
 
 public:
-    virtual void initializePins();
+    MachineButtonMatrixHandler(ButtonMatrixState *buttonMatrixState) : buttonMatrixState(buttonMatrixState) {}
 
-    virtual void handle();
+    virtual void initializePins() = 0;
+
+    virtual void handle() = 0;
 };
 
 #endif // BREWPILOT_MACHINEBUTTONMATRIXHANDLER_H

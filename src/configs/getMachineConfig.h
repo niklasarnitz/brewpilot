@@ -4,6 +4,7 @@
 #include "MachineConfig.h"
 #include "../UserConfig.h"
 #include "machineConfigs/LaCimbaliM29Select.h"
+#include "machineConfigs/RancilioS27.h"
 
 MachineConfig getMachineConfig()
 {
@@ -11,6 +12,11 @@ MachineConfig getMachineConfig()
     {
     case MachineType::LA_CIMBALI_M29_SELECT:
         return laCimbaliM29SelectMachineConfig;
+    case MachineType::RANCILIO_S27:
+        return rancilioS27MachineConfig;
+    default:
+        // Default config if unknown machine type
+        return { { false, false, false, false, false } };
     }
 }
 
