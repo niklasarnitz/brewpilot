@@ -30,7 +30,7 @@ public:
     {
         if (newState != enabled)
         {
-            Serial.printf("Setting Relay %s to %s\n", this->name, newState ? "true" : "false");
+            Serial.printf("Relay: %s %s\n", newState ? "Enable" : "Disable", this->name);
         }
 
         enabled = newState;

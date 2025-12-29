@@ -38,7 +38,7 @@ public:
                 {
                     volumetricsHelper->writeTeaWaterSetting(millis() - startTime);
 
-                    Serial.println("Deactivating Programming Mode because of Tea");
+                    Serial.println("TeaStateHandler: Stored tea extraction time. Left Programming Mode");
                     *isInProgrammingMode = false;
                 }
 
@@ -47,13 +47,13 @@ public:
 
             if (!(*isInProgrammingMode) && ((millis() - startTime) >= volumetricsHelper->getTeaWaterSetting()))
             {
-                Serial.println("Tea water stops extracting");
+                Serial.println("TeaStateHandler: Stop extracting");
                 *isExtractingTeaWater = false;
             }
         }
         else if ((volumetricsHelper->getTeaWaterSetting() != 0 || *isInProgrammingMode) && *teaButtonPressed && !*isExtractingTeaWater)
         {
-            Serial.println("Tea water starts extracting");
+            Serial.println("TeaStateHandler: Start extracting");
             *isExtractingTeaWater = true;
             startTime = millis();
         }

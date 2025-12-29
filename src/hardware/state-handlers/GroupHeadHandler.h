@@ -24,9 +24,11 @@ class GroupHeadStateHandler : public GenericStateHandler
     unsigned long targetPulses = 0;
     unsigned long currentPulses = 0;
 
+    int groupNumber;
+
 public:
-    GroupHeadStateHandler(bool *isExtracting, GroupHeadButtonEvent *event, VolumetricsHelper *volumetricsHelper, bool *isInProgrammingMode)
-        : volumetricsHelper(volumetricsHelper), event(event), isExtracting(isExtracting), isInProgrammingMode(isInProgrammingMode) {}
+    GroupHeadStateHandler(bool *isExtracting, GroupHeadButtonEvent *event, VolumetricsHelper *volumetricsHelper, bool *isInProgrammingMode, int groupNumber)
+        : volumetricsHelper(volumetricsHelper), event(event), isExtracting(isExtracting), isInProgrammingMode(isInProgrammingMode), groupNumber(groupNumber) {}
 
     void handleState() override
     {
@@ -34,7 +36,7 @@ public:
         {
             if (*event == GroupHeadButtonEvent::CONTINUOUS_HELD && targetPulses == LONG_MAX && !(*isInProgrammingMode))
             {
-                Serial.println("GroupHeadStateHandler: Entered Programming Mode");
+                Serial.printf("GroupHeadStateHandler %d: Entered Programming Mode\n", groupNumber);
                 *isInProgrammingMode = true;
 
                 *isExtracting = false;
@@ -50,8 +52,12 @@ public:
                 {
                     volumetricsHelper->writeFlowMeterSetting(buttonToBeProgrammed, currentPulses);
 
-                    Serial.println("GroupHeadStateHandler: Left Programming Mode");
+                    Serial.printf("GroupHeadStateHandler %d: Stored %ld target pulses. Left Programming Mode\n", groupNumber, currentPulses);
                     *isInProgrammingMode = false;
+                }
+                else
+                {
+                    Serial.printf("GroupHeadStateHandler %d: Cancelled Extraction at %ld of %ld pulses\n", groupNumber, currentPulses, targetPulses);
                 }
 
                 currentPulses = 0;
@@ -61,7 +67,7 @@ public:
             {
                 *isExtracting = false;
 
-                Serial.printf("GroupHeadStateHandler: Finished Extraction - Current: %ld pulses; Target: %ld pulses; Difference: %ld pulses\n", currentPulses, targetPulses, currentPulses - targetPulses);
+                Serial.printf("GroupHeadStateHandler %d: Finished Extraction - Current: %ld pulses; Target: %ld pulses; Difference: %ld pulses\n", groupNumber, currentPulses, targetPulses, currentPulses - targetPulses);
 
                 targetPulses = 0;
             }
@@ -86,12 +92,8 @@ public:
                 currentPulses = 0;
 
                 *isExtracting = true;
+                Serial.printf("GroupHeadStateHandler %d: Start extracting targeting %ld pulses\n", groupNumber, targetPulses);
             }
-        }
-
-        if (*isExtracting && currentPulses != 0)
-        {
-            Serial.printf("GroupHeadStateHandler: Current: %ld pulses; Target: %ld pulses; Difference: %ld pulses\n", currentPulses, targetPulses, currentPulses - targetPulses);
         }
     }
 

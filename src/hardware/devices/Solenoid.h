@@ -30,7 +30,7 @@ public:
     {
         if (newState != open)
         {
-            Serial.printf("Setting Solenoid %s to %s\n", this->name, newState ? "open" : "closed");
+            Serial.printf("Solenoid: %s %s\n", newState ? "Open" : "Close", this->name);
         }
 
         this->open = newState;
