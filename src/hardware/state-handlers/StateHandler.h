@@ -23,9 +23,9 @@ public:
     StateHandler(State *state, ButtonEvent *buttonEvent, VolumetricsHelper *volumetricsHelper)
         : boilerStateHandler(&state->isFillingBoiler),
           groupOneStateHandler(&state->groupOneIsExtracting,
-                               &buttonEvent->groupOne, volumetricsHelper, &state->isInProgrammingMode),
+                               &buttonEvent->groupOne, volumetricsHelper, &state->isInProgrammingMode, 1),
           groupTwoStateHandler(&state->groupTwoIsExtracting,
-                               &buttonEvent->groupTwo, volumetricsHelper, &state->isInProgrammingMode),
+                               &buttonEvent->groupTwo, volumetricsHelper, &state->isInProgrammingMode, 2),
           teaStateHandler(&buttonEvent->tea,
                           &state->isExtractingTeaWater, volumetricsHelper, &state->isInProgrammingMode) {};
 

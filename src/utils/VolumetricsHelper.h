@@ -16,7 +16,7 @@ private:
 
     void logVolumetricSettings(VolumetricSettings *volumetricSettings)
     {
-        Serial.printf("Volumetric Settings:\n");
+        Serial.println("Volumetric Settings:");
         Serial.printf("Left Single Espresso: %ld pulses\n", volumetricSettings->leftSingleEspressoPulses);
         Serial.printf("Left Double Espresso: %ld pulses\n", volumetricSettings->leftDoubleEspressoPulses);
         Serial.printf("Right Single Espresso: %ld pulses\n", volumetricSettings->rightSingleEspressoPulses);

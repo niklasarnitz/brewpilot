@@ -44,14 +44,19 @@ private:
             lastCheckTime = millis();
 
             uint16_t rawValue = analogRead(BOILER_PROBE_PIN);
+            bool full = rawValue <= BOILER_FILL_LEVEL;
 
-            Serial.print("Boiler Fill Check: Raw Sensor Value: ");
+            Serial.print("BoilerStateHandler: Boiler is ");
+            if (!full) {
+                Serial.print("not ");
+            }
+            Serial.print("full; Raw value: ");
             Serial.println(rawValue);
 
             digitalWrite(OUT_BOILER_VOLTAGE, LOW);
             hasTurnedOnBoilerProbeVoltage = false;
 
-            return rawValue <= BOILER_FILL_LEVEL;
+            return full;
         }
     }
 
@@ -80,7 +85,7 @@ public:
             case BoilerState::BOILER_ABOVE_TARGET_AND_FILLED:
                 if (!boilerIsFilled)
                 {
-                    Serial.println("Boiler Fill Check: Boiler is below target");
+                    Serial.println("BoilerStateHandler: Start filling");
                     *isFillingBoiler = true;
                     internalState = BoilerState::BOILER_BELOW_TARGET;
                 }
@@ -88,14 +93,14 @@ public:
             case BoilerState::BOILER_ABOVE_TARGET_BUT_FILLING:
                 // intentionally ignores the read value. This state is only a delay to overfill a little.
                 // if it's already underfilled again, it will start filling again on next cycle
-                Serial.println("Boiler Fill Check: Boiler filled and completed delay cycle");
+                Serial.println("BoilerStateHandler: Stop filling");
                 internalState = BoilerState::BOILER_ABOVE_TARGET_AND_FILLED;
                 *isFillingBoiler = false;
                 break;
             case BoilerState::BOILER_BELOW_TARGET:
                 if (boilerIsFilled)
                 {
-                    Serial.println("Boiler Fill Check: Boiler is above target, waiting for it to settle");
+                    Serial.println("BoilerStateHandler: Overfill a little");
                     internalState = BoilerState::BOILER_ABOVE_TARGET_BUT_FILLING;
                 }
                 break;
