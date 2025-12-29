@@ -70,6 +70,10 @@ public:
         if (millis() - lastCheckTime > BOILER_FILL_WAIT_TIME || lastCheckTime == 0)
         {
             bool boilerIsFilled = readBoilerProbe();
+            if (hasTurnedOnBoilerProbeVoltage) {
+                // read prepared, will actually read on next cycle
+                return;
+            }
 
             switch (internalState)
             {
@@ -82,8 +86,9 @@ public:
                 }
                 break;
             case BoilerState::BOILER_ABOVE_TARGET_BUT_FILLING:
-                // Handler see above
-                Serial.println("Boiler Fill Check: Boiler is above target and filled");
+                // intentionally ignores the read value. This state is only a delay to overfill a little.
+                // if it's already underfilled again, it will start filling again on next cycle
+                Serial.println("Boiler Fill Check: Boiler filled and completed delay cycle");
                 internalState = BoilerState::BOILER_ABOVE_TARGET_AND_FILLED;
                 *isFillingBoiler = false;
                 break;
