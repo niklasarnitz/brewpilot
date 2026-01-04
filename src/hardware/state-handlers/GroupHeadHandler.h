@@ -142,36 +142,36 @@ private:
         unsigned long elapsed = millis() - autoBackflushStartTime;
         int cyclePosition = autoBackflushCycle % 2; // 0 = extract, 1 = pause
 
+        int currentCycle = (autoBackflushCycle / 2) + 1;
         if (cyclePosition == 0) // Extract phase
         {
             if (elapsed >= EXTRACT_DURATION_MS)
             {
-                Serial.printf("GroupHeadStateHandler %d: Extract phase %d complete, starting pause\n",
-                              groupNumber, (autoBackflushCycle / 2) + 1);
-                *isExtracting = false;
-                autoBackflushCycle++;
-                autoBackflushStartTime = millis();
+                if (currentCycle >= TOTAL_CYCLES)
+                {
+                    Serial.printf("GroupHeadStateHandler %d: Auto backflush complete after %d cycles\n",
+                                  groupNumber, currentCycle);
+                    stopAutoBackflush();
+                }
+                else
+                {
+                    Serial.printf("GroupHeadStateHandler %d: Extract phase %d complete, starting pause\n",
+                                  groupNumber, currentCycle);
+                    *isExtracting = false;
+                    autoBackflushCycle++;
+                    autoBackflushStartTime = millis();
+                }
             }
         }
         else // Pause phase
         {
             if (elapsed >= PAUSE_DURATION_MS)
             {
-                int completedCycles = (autoBackflushCycle / 2) + 1;
-                if (completedCycles >= TOTAL_CYCLES)
-                {
-                    Serial.printf("GroupHeadStateHandler %d: Auto backflush complete after %d cycles\n",
-                                  groupNumber, TOTAL_CYCLES);
-                    stopAutoBackflush();
-                }
-                else
-                {
-                    Serial.printf("GroupHeadStateHandler %d: Pause phase complete, starting extract phase %d\n",
-                                  groupNumber, completedCycles + 1);
-                    *isExtracting = true;
-                    autoBackflushCycle++;
-                    autoBackflushStartTime = millis();
-                }
+                Serial.printf("GroupHeadStateHandler %d: Pause phase complete, starting extract phase %d\n",
+                              groupNumber, currentCycle + 1);
+                *isExtracting = true;
+                autoBackflushCycle++;
+                autoBackflushStartTime = millis();
             }
         }
     }

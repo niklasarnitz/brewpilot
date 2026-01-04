@@ -17,10 +17,16 @@ enum class ButtonEventType
     BUTTON_NONE
 };
 
+struct ButtonState
+{
+    ButtonEventType event = ButtonEventType::BUTTON_NONE;
+    bool currentState = false;
+};
+
 class ButtonHandler
 {
 private:
-    bool lastState;
+    ButtonState buttonState = {};
 
     unsigned int pressedStreak = 0;
 
@@ -30,10 +36,10 @@ public:
     explicit ButtonHandler(bool *matrixButtonState)
         : matrixButtonState(matrixButtonState)
     {
-        lastState = false;
+        buttonState.currentState = false;
     };
 
-    ButtonEventType getEvent()
+    ButtonState getEvent()
     {
         if (*matrixButtonState)
         {
@@ -49,18 +55,18 @@ public:
 
         if (pressedStreak == MAX_STREAK)
         {
-            lastState = *matrixButtonState;
-            return ButtonEventType::BUTTON_HELD;
+            buttonState.event = ButtonEventType::BUTTON_HELD;
         }
-
-        if (!lastState && *matrixButtonState)
+        else if (!buttonState.currentState && *matrixButtonState)
         {
-            lastState = *matrixButtonState;
-            return ButtonEventType::BUTTON_PRESSED;
+            buttonState.event = ButtonEventType::BUTTON_PRESSED;
         }
-
-        lastState = *matrixButtonState;
-        return ButtonEventType::BUTTON_NONE;
+        else
+        {
+            buttonState.event = ButtonEventType::BUTTON_NONE;
+        }
+        buttonState.currentState = *matrixButtonState;
+        return buttonState;
     }
 };
 
