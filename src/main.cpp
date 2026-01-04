@@ -9,6 +9,7 @@
 #include "structs/VolumetricSettings.h"
 #include "utils/PreferenceHelper.h"
 #include "utils/VolumetricsHelper.h"
+#include "hardware/ble/BLECoreManager.h"
 
 PreferenceHelper preferenceHelper;
 VolumetricsHelper volumetricsHelper(&preferenceHelper);
@@ -17,6 +18,7 @@ State state{};
 StateHandler stateHandler(&state, &buttonEvent, &volumetricsHelper);
 StateActor stateActor(&state);
 InputHandler inputHandler(&buttonEvent, &state.isInProgrammingMode);
+BLECoreManager bleCoreManager(&state, &preferenceHelper);
 
 void IRAM_ATTR groupOneFlowMeterHandler()
 {
@@ -26,6 +28,25 @@ void IRAM_ATTR groupOneFlowMeterHandler()
 void IRAM_ATTR groupTwoFlowMeterHandler()
 {
     stateHandler.groupTwoFlowMeterPulseInterrupt();
+}
+
+// Task handle for BLE core
+TaskHandle_t bleTaskHandle = nullptr;
+
+// BLE core task (runs on core 1)
+void bleCore1Task(void *pvParameters)
+{
+    BLECoreManager *pBleManager = (BLECoreManager *)pvParameters;
+    
+    // Initialize BLE on core 1
+    pBleManager->begin("BrewPilot");
+    
+    // Main loop for BLE
+    while (true)
+    {
+        pBleManager->loop();
+        delay(100);
+    }
 }
 
 void setup()
@@ -40,6 +61,17 @@ void setup()
 
     // Load Volumetric Settings
     volumetricsHelper.setup();
+    
+    // Start BLE on core 1
+    xTaskCreatePinnedToCore(
+        bleCore1Task,           // Task function
+        "BLECore1",             // Task name
+        4096,                   // Stack size
+        &bleCoreManager,        // Parameters
+        1,                      // Priority
+        &bleTaskHandle,         // Task handle
+        1                       // Core ID (1 = second core)
+    );
 }
 
 void loop()
