@@ -47,7 +47,7 @@ public:
         }
 
         // Check for auto backflush activation
-        if (*event == GroupHeadButtonEvent::AUTO_BACKFLUSH)
+        if (*event == GroupHeadButtonEvent::AUTO_BACKFLUSH && !(*isInProgrammingMode))
         {
             startAutoBackflush();
             return;
@@ -121,7 +121,7 @@ public:
 
     void flowMeterPulseInterrupt()
     {
-        if (*isExtracting)
+        if (*isExtracting && !isAutoBackflushing)
         {
             currentPulses++;
         }
@@ -135,10 +135,19 @@ private:
         autoBackflushCycle = 0;
         autoBackflushStartTime = millis();
         *isExtracting = true; // Start with extraction
+        currentPulses = 0;
+        targetPulses = 0;
     }
 
     void handleAutoBackflush()
     {
+        if (*event == GroupHeadButtonEvent::CONTINUOUS)
+        {
+            Serial.printf("GroupHeadStateHandler %d: Auto backflush canceled\n", groupNumber);
+            stopAutoBackflush();
+            return;
+        }
+
         unsigned long elapsed = millis() - autoBackflushStartTime;
         int cyclePosition = autoBackflushCycle % 2; // 0 = extract, 1 = pause
 
@@ -181,6 +190,8 @@ private:
         isAutoBackflushing = false;
         autoBackflushCycle = 0;
         *isExtracting = false;
+        currentPulses = 0;
+        targetPulses = 0;
     }
 };
 
