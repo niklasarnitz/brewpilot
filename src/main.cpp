@@ -9,6 +9,7 @@
 #include "structs/VolumetricSettings.h"
 #include "utils/PreferenceHelper.h"
 #include "utils/VolumetricsHelper.h"
+#include "hardware/scales/ScaleHandler.h"
 
 PreferenceHelper preferenceHelper;
 VolumetricsHelper volumetricsHelper(&preferenceHelper);
@@ -17,6 +18,7 @@ State state{};
 StateHandler stateHandler(&state, &buttonEvent, &volumetricsHelper);
 StateActor stateActor(&state);
 InputHandler inputHandler(&buttonEvent, &state.isInProgrammingMode);
+ScaleHandler scaleHandler{};
 
 void IRAM_ATTR groupOneFlowMeterHandler()
 {
@@ -31,6 +33,8 @@ void IRAM_ATTR groupTwoFlowMeterHandler()
 void setup()
 {
     Serial.begin(115200);
+    BLE.begin();
+    BLE.setLocalName("BrewPilot");
 
     pinMode(GROUP_ONE_FLOW_METER_PIN, INPUT_PULLUP);
     // TODO: has external pullup
@@ -44,6 +48,7 @@ void setup()
 
 void loop()
 {
+    scaleHandler.handleScale();
     inputHandler.readInputs();
     stateHandler.handleState();
     stateActor.loop();
