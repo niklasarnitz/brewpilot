@@ -11,6 +11,8 @@ enum class PreferenceKey
     FlowMeterPulsesLeftDoubleEspresso,
     FlowMeterPulsesRightDoubleEspresso,
     TeaWaterMilliseconds,
+    BackflushActivationTimeMs,
+    BackflushDeactivationTimeMs,
 };
 
 class PreferenceHelper
@@ -32,6 +34,10 @@ private:
             return "FM_P_R_D";
         case PreferenceKey::TeaWaterMilliseconds:
             return "T_M";
+        case PreferenceKey::BackflushActivationTimeMs:
+            return "BF_ACT_MS";
+        case PreferenceKey::BackflushDeactivationTimeMs:
+            return "BF_DEACT_MS";
         }
 
         // This won't happen - it is just to suppress the compiler warning :D

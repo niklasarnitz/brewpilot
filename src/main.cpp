@@ -9,6 +9,7 @@
 #include "structs/VolumetricSettings.h"
 #include "utils/PreferenceHelper.h"
 #include "utils/VolumetricsHelper.h"
+#include "hardware/ble/BLECoreManager.h"
 
 PreferenceHelper preferenceHelper;
 VolumetricsHelper volumetricsHelper(&preferenceHelper);
@@ -17,6 +18,7 @@ State state{};
 StateHandler stateHandler(&state, &buttonEvent, &volumetricsHelper);
 StateActor stateActor(&state);
 InputHandler inputHandler(&buttonEvent, &state.isInProgrammingMode);
+BLECoreManager bleCoreManager(&state, &preferenceHelper, &volumetricsHelper);
 
 void IRAM_ATTR groupOneFlowMeterHandler()
 {
@@ -40,6 +42,8 @@ void setup()
 
     // Load Volumetric Settings
     volumetricsHelper.setup();
+
+    bleCoreManager.begin("BrewPilot");
 }
 
 void loop()
@@ -47,6 +51,8 @@ void loop()
     inputHandler.readInputs();
     stateHandler.handleState();
     stateActor.loop();
+    // NimBLE is non blocking so it can run in the main loop
+    bleCoreManager.loop();
 
     delay(50);
 }
