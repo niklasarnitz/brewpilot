@@ -85,10 +85,10 @@ public:
         std::string rxValue = pCharacteristic->getValue();
         if (rxValue.length() >= sizeof(uint32_t))
         {
-            uint32_t value = (uint32_t)rxValue[0] | 
-                           ((uint32_t)rxValue[1] << 8) |
-                           ((uint32_t)rxValue[2] << 16) |
-                           ((uint32_t)rxValue[3] << 24);
+            uint32_t value = (uint32_t)rxValue[0] |
+                             ((uint32_t)rxValue[1] << 8) |
+                             ((uint32_t)rxValue[2] << 16) |
+                             ((uint32_t)rxValue[3] << 24);
             preferenceHelper->setULong(preferenceKey, value);
             Serial.printf("BLE: Updated setting via BLE, stored value: %lu\n", value);
         }
