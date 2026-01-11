@@ -34,6 +34,15 @@ public:
     BLECoreManager(State *state, PreferenceHelper *preferenceHelper, VolumetricsHelper *volumetricsHelper)
         : state(state), preferenceHelper(preferenceHelper), volumetricsHelper(volumetricsHelper), bleService(nullptr) {}
 
+    ~BLECoreManager()
+    {
+        if (bleService != nullptr)
+        {
+            delete bleService;
+            bleService = nullptr;
+        }
+    }
+
     void begin(const char *deviceName = "BrewPilot")
     {
         bleService = new BrewPilotBLEService(state, preferenceHelper, volumetricsHelper);

@@ -30,25 +30,6 @@ void IRAM_ATTR groupTwoFlowMeterHandler()
     stateHandler.groupTwoFlowMeterPulseInterrupt();
 }
 
-// Task handle for BLE core
-TaskHandle_t bleTaskHandle = nullptr;
-
-// BLE core task (runs on core 1)
-void bleCore1Task(void *pvParameters)
-{
-    BLECoreManager *pBleManager = (BLECoreManager *)pvParameters;
-
-    // Initialize BLE on core 1
-    pBleManager->begin("BrewPilot");
-
-    // Main loop for BLE
-    while (true)
-    {
-        pBleManager->loop();
-        delay(100);
-    }
-}
-
 void setup()
 {
     Serial.begin(115200);
@@ -62,16 +43,7 @@ void setup()
     // Load Volumetric Settings
     volumetricsHelper.setup();
 
-    // Start BLE on core 1
-    xTaskCreatePinnedToCore(
-        bleCore1Task,    // Task function
-        "BLECore1",      // Task name
-        8192,            // Stack size (8KB for BLE operations)
-        &bleCoreManager, // Parameters
-        1,               // Priority
-        &bleTaskHandle,  // Task handle
-        1                // Core ID (1 = second core)
-    );
+    bleCoreManager.begin("BrewPilot");
 }
 
 void loop()
@@ -79,6 +51,8 @@ void loop()
     inputHandler.readInputs();
     stateHandler.handleState();
     stateActor.loop();
+    // NimBLE is non blocking so it can run in the main loop
+    bleCoreManager.loop();
 
     delay(50);
 }

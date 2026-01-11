@@ -35,6 +35,15 @@ public:
     machineButtonMatrixHandler->initializePins();
   };
 
+  ~ButtonMatrixHandler()
+  {
+    if (machineButtonMatrixHandler != nullptr)
+    {
+      delete machineButtonMatrixHandler;
+      machineButtonMatrixHandler = nullptr;
+    }
+  }
+
   void handle()
   {
     machineButtonMatrixHandler->handle();

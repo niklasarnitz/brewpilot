@@ -178,6 +178,16 @@ public:
         : state(state), preferenceHelper(preferenceHelper), volumetricsHelper(volumetricsHelper),
           pServer(nullptr), pService(nullptr) {}
 
+    ~BrewPilotBLEService()
+    {
+        // Delete all dynamically allocated callbacks
+        for (NimBLECharacteristicCallbacks *callback : callbackPtrs)
+        {
+            delete callback;
+        }
+        callbackPtrs.clear();
+    }
+
     void begin(const char *deviceName = "BrewPilot")
     {
         // Initialize BLE
