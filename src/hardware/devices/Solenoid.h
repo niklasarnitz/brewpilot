@@ -18,37 +18,11 @@ private:
     bool open = false;
 
 public:
-    Solenoid(int pin, const char *name, bool isInverted = false)
-        : pin(pin), name(name), isInverted(isInverted)
-    {
-        pinMode(pin, OUTPUT);
+    Solenoid(int pin, const char *name, bool isInverted = false);
 
-        this->setOpen(false);
-    };
+    void setOpen(bool newState);
 
-    void setOpen(bool newState)
-    {
-        if (newState != open)
-        {
-            Serial.printf("Solenoid: %s %s\n", newState ? "Open" : "Close", this->name);
-        }
-
-        this->open = newState;
-
-        if (isInverted)
-        {
-            digitalWrite(pin, newState ? LOW : HIGH);
-        }
-        else
-        {
-            digitalWrite(pin, newState ? HIGH : LOW);
-        }
-    }
-
-    bool isOpen()
-    {
-        return open;
-    }
+    bool isOpen();
 };
 
 #endif // BREWPILOT_SOLENOID_H
