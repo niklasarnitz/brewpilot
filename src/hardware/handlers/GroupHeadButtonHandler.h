@@ -42,39 +42,48 @@ public:
 
     void handle()
     {
-        ButtonEventType leftSingleDoseEvent = leftSingleDoseButtonHandler.getEvent();
-        ButtonEventType leftDoubleDoseEvent = leftDoubleDoseButtonHandler.getEvent();
-        ButtonEventType continuousEvent = continuousButtonHandler.getEvent();
-        ButtonEventType rightSingleDoseEvent = rightSingleDoseButtonHandler.getEvent();
-        ButtonEventType rightDoubleDoseEvent = rightDoubleDoseButtonHandler.getEvent();
+        ButtonState leftSingleDoseState = leftSingleDoseButtonHandler.getEvent();
+        ButtonState leftDoubleDoseState = leftDoubleDoseButtonHandler.getEvent();
+        ButtonState continuousState = continuousButtonHandler.getEvent();
+        ButtonState rightSingleDoseState = rightSingleDoseButtonHandler.getEvent();
+        ButtonState rightDoubleDoseState = rightDoubleDoseButtonHandler.getEvent();
+
+        // Check for auto backflush combo: left single + right double simultaneously held
+        if (((leftSingleDoseState.event == ButtonEventType::BUTTON_PRESSED) && rightDoubleDoseState.currentState) ||
+            ((rightDoubleDoseState.event == ButtonEventType::BUTTON_PRESSED) && leftSingleDoseState.currentState))
+        {
+            *event = GroupHeadButtonEvent::AUTO_BACKFLUSH;
+            Serial.printf("GroupHeadButtonHandler %d: auto backflush combo detected\n", groupNumber);
+            return;
+        }
 
         // Held events are emitted for all buttons but only handled for the continuous button
-        if (continuousEvent == ButtonEventType::BUTTON_PRESSED)
+        if (continuousState.event == ButtonEventType::BUTTON_PRESSED)
         {
             *event = GroupHeadButtonEvent::CONTINUOUS;
             Serial.printf("GroupHeadButtonHandler %d: continuous\n", groupNumber);
         }
-        else if (continuousEvent == ButtonEventType::BUTTON_HELD)
+        else if (continuousState.event == ButtonEventType::BUTTON_HELD)
         {
             *event = GroupHeadButtonEvent::CONTINUOUS_HELD;
             Serial.printf("GroupHeadButtonHandler %d: continuous held\n", groupNumber);
         }
-        else if (leftSingleDoseEvent == ButtonEventType::BUTTON_PRESSED)
+        else if (leftSingleDoseState.event == ButtonEventType::BUTTON_PRESSED)
         {
             *event = GroupHeadButtonEvent::LEFT_SINGLE_ESPRESSO;
             Serial.printf("GroupHeadButtonHandler %d: left single\n", groupNumber);
         }
-        else if (leftDoubleDoseEvent == ButtonEventType::BUTTON_PRESSED)
+        else if (leftDoubleDoseState.event == ButtonEventType::BUTTON_PRESSED)
         {
             *event = GroupHeadButtonEvent::LEFT_DOUBLE_ESPRESSO;
             Serial.printf("GroupHeadButtonHandler %d: left double\n", groupNumber);
         }
-        else if (rightSingleDoseEvent == ButtonEventType::BUTTON_PRESSED)
+        else if (rightSingleDoseState.event == ButtonEventType::BUTTON_PRESSED)
         {
             *event = GroupHeadButtonEvent::RIGHT_SINGLE_ESPRESSO;
             Serial.printf("GroupHeadButtonHandler %d: right single\n", groupNumber);
         }
-        else if (rightDoubleDoseEvent == ButtonEventType::BUTTON_PRESSED)
+        else if (rightDoubleDoseState.event == ButtonEventType::BUTTON_PRESSED)
         {
             *event = GroupHeadButtonEvent::RIGHT_DOUBLE_ESPRESSO;
             Serial.printf("GroupHeadButtonHandler %d: right double\n", groupNumber);

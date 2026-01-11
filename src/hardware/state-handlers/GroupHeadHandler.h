@@ -26,12 +26,34 @@ class GroupHeadStateHandler : public GenericStateHandler
 
     int groupNumber;
 
+    bool isAutoBackflushing = false;
+    int autoBackflushCycle = 0;
+    unsigned long autoBackflushStartTime = 0;
+    static const int EXTRACT_DURATION_MS = 10000; // 10 seconds
+    static const int PAUSE_DURATION_MS = 5000;    // 5 seconds
+    static const int TOTAL_CYCLES = 5;
+
 public:
     GroupHeadStateHandler(bool *isExtracting, GroupHeadButtonEvent *event, VolumetricsHelper *volumetricsHelper, bool *isInProgrammingMode, int groupNumber)
         : volumetricsHelper(volumetricsHelper), event(event), isExtracting(isExtracting), isInProgrammingMode(isInProgrammingMode), groupNumber(groupNumber) {}
 
     void handleState() override
     {
+        // Handle auto backflush mode
+        if (isAutoBackflushing)
+        {
+            handleAutoBackflush();
+            return; // Auto backflush takes priority over normal operations
+        }
+
+        // Check for auto backflush activation
+        if (*event == GroupHeadButtonEvent::AUTO_BACKFLUSH && !(*isInProgrammingMode))
+        {
+            startAutoBackflush();
+            return;
+        }
+
+        // Normal extraction handling
         if (*isExtracting)
         {
             if (*event == GroupHeadButtonEvent::CONTINUOUS_HELD && targetPulses == LONG_MAX && !(*isInProgrammingMode))
@@ -72,7 +94,7 @@ public:
                 targetPulses = 0;
             }
         }
-        else if (*event != GroupHeadButtonEvent::NONE && *event != GroupHeadButtonEvent::CONTINUOUS_HELD)
+        else if (*event != GroupHeadButtonEvent::NONE && *event != GroupHeadButtonEvent::CONTINUOUS_HELD && *event != GroupHeadButtonEvent::AUTO_BACKFLUSH)
         {
             targetPulses = 0;
 
@@ -99,10 +121,77 @@ public:
 
     void flowMeterPulseInterrupt()
     {
-        if (*isExtracting)
+        if (*isExtracting && !isAutoBackflushing)
         {
             currentPulses++;
         }
+    }
+
+private:
+    void startAutoBackflush()
+    {
+        Serial.printf("GroupHeadStateHandler %d: Starting auto backflush sequence\n", groupNumber);
+        isAutoBackflushing = true;
+        autoBackflushCycle = 0;
+        autoBackflushStartTime = millis();
+        *isExtracting = true; // Start with extraction
+        currentPulses = 0;
+        targetPulses = 0;
+    }
+
+    void handleAutoBackflush()
+    {
+        if (*event == GroupHeadButtonEvent::CONTINUOUS)
+        {
+            Serial.printf("GroupHeadStateHandler %d: Auto backflush canceled\n", groupNumber);
+            stopAutoBackflush();
+            return;
+        }
+
+        unsigned long elapsed = millis() - autoBackflushStartTime;
+        int cyclePosition = autoBackflushCycle % 2; // 0 = extract, 1 = pause
+
+        int currentCycle = (autoBackflushCycle / 2) + 1;
+        if (cyclePosition == 0) // Extract phase
+        {
+            if (elapsed >= EXTRACT_DURATION_MS)
+            {
+                if (currentCycle >= TOTAL_CYCLES)
+                {
+                    Serial.printf("GroupHeadStateHandler %d: Auto backflush complete after %d cycles\n",
+                                  groupNumber, currentCycle);
+                    stopAutoBackflush();
+                }
+                else
+                {
+                    Serial.printf("GroupHeadStateHandler %d: Extract phase %d complete, starting pause\n",
+                                  groupNumber, currentCycle);
+                    *isExtracting = false;
+                    autoBackflushCycle++;
+                    autoBackflushStartTime = millis();
+                }
+            }
+        }
+        else // Pause phase
+        {
+            if (elapsed >= PAUSE_DURATION_MS)
+            {
+                Serial.printf("GroupHeadStateHandler %d: Pause phase complete, starting extract phase %d\n",
+                              groupNumber, currentCycle + 1);
+                *isExtracting = true;
+                autoBackflushCycle++;
+                autoBackflushStartTime = millis();
+            }
+        }
+    }
+
+    void stopAutoBackflush()
+    {
+        isAutoBackflushing = false;
+        autoBackflushCycle = 0;
+        *isExtracting = false;
+        currentPulses = 0;
+        targetPulses = 0;
     }
 };
 
