@@ -13,10 +13,8 @@ protected:
     ButtonMatrixState *buttonMatrixState;
 
 public:
-    MachineButtonMatrixHandler(ButtonMatrixState *buttonMatrixState) : buttonMatrixState(buttonMatrixState) {}
-
+    MachineButtonMatrixHandler(ButtonMatrixState *buttonMatrixState);
     virtual void initializePins() = 0;
-
     virtual void handle() = 0;
 };
 
