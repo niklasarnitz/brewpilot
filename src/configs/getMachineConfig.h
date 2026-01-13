@@ -6,7 +6,7 @@
 #include "machineConfigs/LaCimbaliM29Select.h"
 #include "machineConfigs/RancilioS27.h"
 
-MachineConfig getMachineConfig()
+inline MachineConfig getMachineConfig()
 {
     switch (HARDWARE_MODEL)
     {

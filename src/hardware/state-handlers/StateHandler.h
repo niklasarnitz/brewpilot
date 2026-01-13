@@ -6,6 +6,7 @@
 #define BREWPILOT_STATEHANDLER_H
 
 #include "../state/State.h"
+#include "../../structs/ButtonEvent.h"
 #include "BoilerStateHandler.h"
 #include "GroupHeadHandler.h"
 #include "TeaStateHandler.h"
@@ -20,32 +21,10 @@ private:
     TeaStateHandler teaStateHandler;
 
 public:
-    StateHandler(State *state, ButtonEvent *buttonEvent, VolumetricsHelper *volumetricsHelper)
-        : boilerStateHandler(&state->isFillingBoiler),
-          groupOneStateHandler(&state->groupOneIsExtracting,
-                               &buttonEvent->groupOne, volumetricsHelper, &state->isInProgrammingMode, 1),
-          groupTwoStateHandler(&state->groupTwoIsExtracting,
-                               &buttonEvent->groupTwo, volumetricsHelper, &state->isInProgrammingMode, 2),
-          teaStateHandler(&buttonEvent->tea,
-                          &state->isExtractingTeaWater, volumetricsHelper, &state->isInProgrammingMode) {};
-
-    void handleState() override
-    {
-        boilerStateHandler.handleState();
-        groupOneStateHandler.handleState();
-        groupTwoStateHandler.handleState();
-        teaStateHandler.handleState();
-    }
-
-    void groupOneFlowMeterPulseInterrupt()
-    {
-        groupOneStateHandler.flowMeterPulseInterrupt();
-    }
-
-    void groupTwoFlowMeterPulseInterrupt()
-    {
-        groupTwoStateHandler.flowMeterPulseInterrupt();
-    }
+    StateHandler(State *state, ButtonEvent *buttonEvent, VolumetricsHelper *volumetricsHelper);
+    void handleState() override;
+    void groupOneFlowMeterPulseInterrupt();
+    void groupTwoFlowMeterPulseInterrupt();
 };
 
 #endif // BREWPILOT_STATEHANDLER_H
