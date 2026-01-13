@@ -16,7 +16,7 @@ inline MachineConfig getMachineConfig()
         return rancilioS27MachineConfig;
     default:
         // Default config if unknown machine type
-        return { { false, false, false, false, false } };
+        return {{false, false, false, false, false}};
     }
 }
 
