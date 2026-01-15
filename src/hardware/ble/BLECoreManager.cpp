@@ -11,7 +11,7 @@ BLECoreManager::BLECoreManager(State *state, StateHandler *stateHandler, Prefere
 
 void BLECoreManager::begin()
 {
-    bleService = std::make_unique<BrewPilotBLEService>(state, preferenceHelper, volumetricsHelper, deviceNameHelper);
+    bleService = std::make_unique<BrewPilotBLEService>(state, preferenceHelper, volumetricsHelper, deviceNameHelper, stateHandler);
     bleService->begin(deviceNameHelper->getFullDeviceName().c_str());
 
     // Load and send initial backflush settings (same for both groups initially)
@@ -22,6 +22,16 @@ void BLECoreManager::begin()
 
     bleService->updateBackflushSettings(groupOneBackflush, groupTwoBackflush);
     bleService->updateVolumetricSettings();
+
+    // Load and send initial auto-backflush settings
+    auto extractDuration = (uint16_t)preferenceHelper->getULong(
+        PreferenceKey::AutoBackflushExtractDurationMs, DEFAULT_EXTRACT_DURATION_MS);
+    auto pauseDuration = (uint16_t)preferenceHelper->getULong(
+        PreferenceKey::AutoBackflushPauseDurationMs, DEFAULT_PAUSE_DURATION_MS);
+    auto cycles = (uint16_t)preferenceHelper->getULong(
+        PreferenceKey::AutoBackflushCycles, DEFAULT_TOTAL_CYCLES);
+
+    bleService->updateAutoBackflushSettings(extractDuration, pauseDuration, cycles);
 
     Serial.printf("BLE: Initialized - Group 1 backflush: %u ms, Group 2 backflush: %u ms\n",
                   groupOneBackflush, groupTwoBackflush);

@@ -10,6 +10,7 @@
 #include "BLEService.h"
 #include "hardware/state/State.h"
 #include "hardware/state-handlers/StateHandler.h"
+#include "hardware/state-handlers/GroupHeadHandler.h"
 #include "utils/PreferenceHelper.h"
 #include "utils/VolumetricsHelper.h"
 #include "utils/DeviceNameHelper.h"

@@ -5,9 +5,11 @@
 #include "GroupHeadHandler.h"
 #include <climits>
 
-GroupHeadStateHandler::GroupHeadStateHandler(bool *isExtracting, GroupHeadButtonEvent *event, VolumetricsHelper *volumetricsHelper, bool *isInProgrammingMode, int groupNumber)
-    : volumetricsHelper(volumetricsHelper), event(event), isExtracting(isExtracting), isInProgrammingMode(isInProgrammingMode), groupNumber(groupNumber)
+GroupHeadStateHandler::GroupHeadStateHandler(bool *isExtracting, GroupHeadButtonEvent *event, VolumetricsHelper *volumetricsHelper, PreferenceHelper *preferenceHelper, bool *isInProgrammingMode, int groupNumber)
+    : volumetricsHelper(volumetricsHelper), preferenceHelper(preferenceHelper), event(event), isExtracting(isExtracting), isInProgrammingMode(isInProgrammingMode), groupNumber(groupNumber)
 {
+    // Load auto-backflush settings at startup
+    reloadAutoBackflushSettings();
 }
 
 void GroupHeadStateHandler::handleState()
@@ -111,15 +113,16 @@ void GroupHeadStateHandler::startAutoBackflush()
 
 void GroupHeadStateHandler::handleAutoBackflush()
 {
+    // Use cached auto-backflush settings
     unsigned long elapsed = millis() - autoBackflushStartTime;
     int cyclePosition = autoBackflushCycle % 2; // 0 = extract, 1 = pause
 
     int currentCycle = (autoBackflushCycle / 2) + 1;
     if (cyclePosition == 0) // Extract phase
     {
-        if (elapsed >= EXTRACT_DURATION_MS)
+        if (elapsed >= cachedExtractDuration)
         {
-            if (currentCycle >= TOTAL_CYCLES)
+            if (currentCycle >= cachedTotalCycles)
             {
                 Serial.printf("GroupHeadStateHandler %d: Auto backflush complete after %d cycles\n",
                               groupNumber, currentCycle);
@@ -137,7 +140,7 @@ void GroupHeadStateHandler::handleAutoBackflush()
     }
     else // Pause phase
     {
-        if (elapsed >= PAUSE_DURATION_MS)
+        if (elapsed >= cachedPauseDuration)
         {
             Serial.printf("GroupHeadStateHandler %d: Pause phase complete, starting extract phase %d\n",
                           groupNumber, currentCycle + 1);
@@ -153,4 +156,14 @@ void GroupHeadStateHandler::stopAutoBackflush()
     isAutoBackflushing = false;
     autoBackflushCycle = 0;
     *isExtracting = false;
+}
+
+void GroupHeadStateHandler::reloadAutoBackflushSettings()
+{
+    cachedExtractDuration = preferenceHelper->getULong(PreferenceKey::AutoBackflushExtractDurationMs, DEFAULT_EXTRACT_DURATION_MS);
+    cachedPauseDuration = preferenceHelper->getULong(PreferenceKey::AutoBackflushPauseDurationMs, DEFAULT_PAUSE_DURATION_MS);
+    cachedTotalCycles = preferenceHelper->getULong(PreferenceKey::AutoBackflushCycles, DEFAULT_TOTAL_CYCLES);
+
+    Serial.printf("GroupHeadStateHandler %d: Loaded auto-backflush settings - Extract: %lu ms, Pause: %lu ms, Cycles: %lu\n",
+                  groupNumber, cachedExtractDuration, cachedPauseDuration, cachedTotalCycles);
 }

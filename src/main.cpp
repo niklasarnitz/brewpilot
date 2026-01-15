@@ -17,7 +17,7 @@ VolumetricsHelper volumetricsHelper(&preferenceHelper);
 DeviceNameHelper deviceNameHelper(&preferenceHelper);
 ButtonEvent buttonEvent{};
 State state{};
-StateHandler stateHandler(&state, &buttonEvent, &volumetricsHelper);
+StateHandler stateHandler(&state, &buttonEvent, &volumetricsHelper, &preferenceHelper);
 StateActor stateActor(&state);
 InputHandler inputHandler(&buttonEvent, &state.isInProgrammingMode);
 BLECoreManager bleCoreManager(&state, &stateHandler, &preferenceHelper, &volumetricsHelper, &deviceNameHelper);

@@ -22,6 +22,12 @@ const char *PreferenceHelper::toString(PreferenceKey key) const
         return "BF_ACT_MS";
     case PreferenceKey::BackflushDeactivationTimeMs:
         return "BF_DEACT_MS";
+    case PreferenceKey::AutoBackflushExtractDurationMs:
+        return "ABF_EXT_MS";
+    case PreferenceKey::AutoBackflushPauseDurationMs:
+        return "ABF_PSE_MS";
+    case PreferenceKey::AutoBackflushCycles:
+        return "ABF_CYCLES";
     case PreferenceKey::DeviceNameSuffix:
         return "DEV_NAME";
     }

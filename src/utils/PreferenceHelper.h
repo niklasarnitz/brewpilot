@@ -13,6 +13,9 @@ enum class PreferenceKey
     TeaWaterMilliseconds,
     BackflushActivationTimeMs,
     BackflushDeactivationTimeMs,
+    AutoBackflushExtractDurationMs,
+    AutoBackflushPauseDurationMs,
+    AutoBackflushCycles,
     DeviceNameSuffix,
 };
 

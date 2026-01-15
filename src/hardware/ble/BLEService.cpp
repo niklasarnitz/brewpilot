@@ -4,7 +4,26 @@
 
 #include "BLEService.h"
 #include "UserConfig.h"
+#include "hardware/state-handlers/StateHandler.h"
 #include <array>
+
+// Implementation of AutoBackflushSettingCallback
+void AutoBackflushSettingCallback::onWrite(NimBLECharacteristic *pCharacteristic)
+{
+    std::string rxValue = pCharacteristic->getValue();
+    if (rxValue.length() >= sizeof(uint16_t))
+    {
+        uint16_t value = (uint16_t)rxValue[0] | ((uint16_t)rxValue[1] << 8);
+        preferenceHelper->setULong(preferenceKey, value);
+        Serial.printf("BLE: Set auto-backflush setting to %u, reloading cached values\n", value);
+
+        // Reload cached values in state handlers
+        if (stateHandler != nullptr)
+        {
+            stateHandler->reloadAutoBackflushSettings();
+        }
+    }
+}
 
 void BrewPilotBLEService::begin(const char *deviceName)
 {
@@ -74,6 +93,31 @@ void BrewPilotBLEService::begin(const char *deviceName)
         preferenceHelper, PreferenceKey::BackflushDeactivationTimeMs);
     pGroupTwoBackflushCharacteristic->setCallbacks(groupTwoBackflushCallback.get());
     callbackPtrs.push_back(std::move(groupTwoBackflushCallback));
+
+    // Create auto-backflush settings characteristics (read + write)
+    pAutoBackflushExtractDurCharacteristic = pService->createCharacteristic(
+        AUTO_BACKFLUSH_EXTRACT_DUR_UUID,
+        NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE);
+    auto extractDurCallback = std::make_unique<AutoBackflushSettingCallback>(
+        preferenceHelper, PreferenceKey::AutoBackflushExtractDurationMs, stateHandler);
+    pAutoBackflushExtractDurCharacteristic->setCallbacks(extractDurCallback.get());
+    callbackPtrs.push_back(std::move(extractDurCallback));
+
+    pAutoBackflushPauseDurCharacteristic = pService->createCharacteristic(
+        AUTO_BACKFLUSH_PAUSE_DUR_UUID,
+        NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE);
+    auto pauseDurCallback = std::make_unique<AutoBackflushSettingCallback>(
+        preferenceHelper, PreferenceKey::AutoBackflushPauseDurationMs, stateHandler);
+    pAutoBackflushPauseDurCharacteristic->setCallbacks(pauseDurCallback.get());
+    callbackPtrs.push_back(std::move(pauseDurCallback));
+
+    pAutoBackflushCyclesCharacteristic = pService->createCharacteristic(
+        AUTO_BACKFLUSH_CYCLES_UUID,
+        NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE);
+    auto cyclesCallback = std::make_unique<AutoBackflushSettingCallback>(
+        preferenceHelper, PreferenceKey::AutoBackflushCycles, stateHandler);
+    pAutoBackflushCyclesCharacteristic->setCallbacks(cyclesCallback.get());
+    callbackPtrs.push_back(std::move(cyclesCallback));
 
     // Create volumetric settings characteristics (READ ONLY)
     pLeftSingleCharacteristic = pService->createCharacteristic(
@@ -254,6 +298,25 @@ void BrewPilotBLEService::updateBackflushSettings(uint16_t groupOneBackflush, ui
     {
         std::array<uint8_t, 2> data = {(uint8_t)(groupTwoBackflush & 0xFF), (uint8_t)((groupTwoBackflush >> 8) & 0xFF)};
         pGroupTwoBackflushCharacteristic->setValue(data.data(), data.size());
+    }
+}
+
+void BrewPilotBLEService::updateAutoBackflushSettings(uint16_t extractDuration, uint16_t pauseDuration, uint16_t cycles)
+{
+    if (pAutoBackflushExtractDurCharacteristic != nullptr)
+    {
+        std::array<uint8_t, 2> data = {(uint8_t)(extractDuration & 0xFF), (uint8_t)((extractDuration >> 8) & 0xFF)};
+        pAutoBackflushExtractDurCharacteristic->setValue(data.data(), data.size());
+    }
+    if (pAutoBackflushPauseDurCharacteristic != nullptr)
+    {
+        std::array<uint8_t, 2> data = {(uint8_t)(pauseDuration & 0xFF), (uint8_t)((pauseDuration >> 8) & 0xFF)};
+        pAutoBackflushPauseDurCharacteristic->setValue(data.data(), data.size());
+    }
+    if (pAutoBackflushCyclesCharacteristic != nullptr)
+    {
+        std::array<uint8_t, 2> data = {(uint8_t)(cycles & 0xFF), (uint8_t)((cycles >> 8) & 0xFF)};
+        pAutoBackflushCyclesCharacteristic->setValue(data.data(), data.size());
     }
 }
 

@@ -17,6 +17,9 @@
 #include "utils/DeviceNameHelper.h"
 #include "structs/VolumetricSettings.h"
 
+// Forward declaration
+class StateHandler;
+
 // Main UUIDs
 constexpr const char *BREWPILOT_SERVICE_UUID = "d330fed9-bbcc-4afe-89bc-367caef99ccc";
 
@@ -148,6 +151,21 @@ public:
     }
 };
 
+// Callback for auto-backflush settings (reloads cached values on write)
+class AutoBackflushSettingCallback : public NimBLECharacteristicCallbacks
+{
+private:
+    PreferenceHelper *preferenceHelper;
+    PreferenceKey preferenceKey;
+    StateHandler *stateHandler;
+
+public:
+    AutoBackflushSettingCallback(PreferenceHelper *preferenceHelper, PreferenceKey key, StateHandler *stateHandler)
+        : preferenceHelper(preferenceHelper), preferenceKey(key), stateHandler(stateHandler) {}
+
+    void onWrite(NimBLECharacteristic *pCharacteristic) override;
+};
+
 // Callback for programming mode control
 class ProgrammingModeCallback : public NimBLECharacteristicCallbacks
 {
@@ -207,6 +225,11 @@ private:
     NimBLECharacteristic *pGroupOneBackflushCharacteristic;
     NimBLECharacteristic *pGroupTwoBackflushCharacteristic;
 
+    // Auto-backflush settings (read + write)
+    NimBLECharacteristic *pAutoBackflushExtractDurCharacteristic;
+    NimBLECharacteristic *pAutoBackflushPauseDurCharacteristic;
+    NimBLECharacteristic *pAutoBackflushCyclesCharacteristic;
+
     // Volumetric settings (read-only)
     NimBLECharacteristic *pLeftSingleCharacteristic;
     NimBLECharacteristic *pLeftDoubleCharacteristic;
@@ -229,13 +252,14 @@ private:
     PreferenceHelper *preferenceHelper;
     VolumetricsHelper *volumetricsHelper;
     DeviceNameHelper *deviceNameHelper;
+    StateHandler *stateHandler;
 
     std::vector<std::unique_ptr<NimBLECharacteristicCallbacks>> callbackPtrs;
     std::unique_ptr<ServerCallbacks> serverCallbacks;
 
 public:
-    BrewPilotBLEService(State *state, PreferenceHelper *preferenceHelper, VolumetricsHelper *volumetricsHelper, DeviceNameHelper *deviceNameHelper)
-        : state(state), preferenceHelper(preferenceHelper), volumetricsHelper(volumetricsHelper), deviceNameHelper(deviceNameHelper),
+    BrewPilotBLEService(State *state, PreferenceHelper *preferenceHelper, VolumetricsHelper *volumetricsHelper, DeviceNameHelper *deviceNameHelper, StateHandler *stateHandler)
+        : state(state), preferenceHelper(preferenceHelper), volumetricsHelper(volumetricsHelper), deviceNameHelper(deviceNameHelper), stateHandler(stateHandler),
           pServer(nullptr), pService(nullptr) {}
 
     void begin(const char *deviceName = "BrewPilot");
@@ -251,6 +275,8 @@ public:
     void updateProgrammingMode(bool enabled);
 
     void updateBackflushSettings(uint16_t groupOneBackflush, uint16_t groupTwoBackflush);
+
+    void updateAutoBackflushSettings(uint16_t extractDuration, uint16_t pauseDuration, uint16_t cycles);
 
     void updateCustomDeviceName(const char *suffix);
 };

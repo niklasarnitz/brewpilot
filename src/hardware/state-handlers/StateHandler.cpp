@@ -4,10 +4,10 @@
 
 #include "StateHandler.h"
 
-StateHandler::StateHandler(State *state, ButtonEvent *buttonEvent, VolumetricsHelper *volumetricsHelper)
+StateHandler::StateHandler(State *state, ButtonEvent *buttonEvent, VolumetricsHelper *volumetricsHelper, PreferenceHelper *preferenceHelper)
     : boilerStateHandler(&state->isFillingBoiler),
-      groupOneStateHandler(&state->groupOneIsExtracting, &buttonEvent->groupOne, volumetricsHelper, &state->isInProgrammingMode, 1),
-      groupTwoStateHandler(&state->groupTwoIsExtracting, &buttonEvent->groupTwo, volumetricsHelper, &state->isInProgrammingMode, 2),
+      groupOneStateHandler(&state->groupOneIsExtracting, &buttonEvent->groupOne, volumetricsHelper, preferenceHelper, &state->isInProgrammingMode, 1),
+      groupTwoStateHandler(&state->groupTwoIsExtracting, &buttonEvent->groupTwo, volumetricsHelper, preferenceHelper, &state->isInProgrammingMode, 2),
       teaStateHandler(&buttonEvent->tea, &state->isExtractingTeaWater, volumetricsHelper, &state->isInProgrammingMode)
 {
 }
@@ -28,4 +28,10 @@ void StateHandler::groupOneFlowMeterPulseInterrupt()
 void StateHandler::groupTwoFlowMeterPulseInterrupt()
 {
     groupTwoStateHandler.flowMeterPulseInterrupt();
+}
+
+void StateHandler::reloadAutoBackflushSettings()
+{
+    groupOneStateHandler.reloadAutoBackflushSettings();
+    groupTwoStateHandler.reloadAutoBackflushSettings();
 }

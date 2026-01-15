@@ -21,14 +21,17 @@ private:
     TeaStateHandler teaStateHandler;
 
 public:
-    StateHandler(State *state, ButtonEvent *buttonEvent, VolumetricsHelper *volumetricsHelper);
+    StateHandler(State *state, ButtonEvent *buttonEvent, VolumetricsHelper *volumetricsHelper, PreferenceHelper *preferenceHelper);
     void handleState() override;
     void groupOneFlowMeterPulseInterrupt();
     void groupTwoFlowMeterPulseInterrupt();
-    
+
+    // Reload auto-backflush settings for both groups
+    void reloadAutoBackflushSettings();
+
     // BLE access to group head progress
-    const GroupHeadStateHandler& getGroupOneHandler() const { return groupOneStateHandler; }
-    const GroupHeadStateHandler& getGroupTwoHandler() const { return groupTwoStateHandler; }
+    const GroupHeadStateHandler &getGroupOneHandler() const { return groupOneStateHandler; }
+    const GroupHeadStateHandler &getGroupTwoHandler() const { return groupTwoStateHandler; }
 };
 
 #endif // BREWPILOT_STATEHANDLER_H
