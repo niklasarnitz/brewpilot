@@ -109,6 +109,8 @@ void GroupHeadStateHandler::startAutoBackflush()
     autoBackflushCycle = 0;
     autoBackflushStartTime = millis();
     *isExtracting = true; // Start with extraction
+    currentPulses = 0;
+    targetPulses = 0;
 }
 
 void GroupHeadStateHandler::handleAutoBackflush()
@@ -156,6 +158,8 @@ void GroupHeadStateHandler::stopAutoBackflush()
     isAutoBackflushing = false;
     autoBackflushCycle = 0;
     *isExtracting = false;
+    currentPulses = 0;
+    targetPulses = 0;
 }
 
 void GroupHeadStateHandler::reloadAutoBackflushSettings()
