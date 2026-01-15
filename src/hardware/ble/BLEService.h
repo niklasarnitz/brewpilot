@@ -18,6 +18,13 @@
 // Main UUIDs
 #define BREWPILOT_SERVICE_UUID "d330fed9-bbcc-4afe-89bc-367caef99ccc"
 
+// Boiler state enum
+enum class BoilerHeatingState : uint8_t
+{
+    READY = 0,          // Boiler is above target and filled
+    BELOW_TARGET = 1    // Boiler is below target and filling
+};
+
 // State characteristics
 #define STATE_CHARACTERISTIC_UUID "9ea67743-2f51-4152-9ffc-f373d87a8671"
 #define BOILER_STATE_UUID "840ce997-807e-4552-976d-0f3240456e42"
@@ -82,7 +89,7 @@ struct BLEBoilerStateData
 {
     uint8_t isFillingBoiler;
     uint16_t boilerProbeRawValue;
-    uint8_t boilerState; // 0=above_filled, 1=above_filling, 2=below_target
+    uint8_t boilerState; // 0=READY, 1=BELOW_TARGET
 } __attribute__((packed));
 
 struct BLEProgressData
