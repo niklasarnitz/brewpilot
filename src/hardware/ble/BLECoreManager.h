@@ -6,6 +6,7 @@
 #define BREWPILOT_BLE_CORE_MANAGER_H
 
 #include <Arduino.h>
+#include <memory>
 #include "BLEService.h"
 #include "hardware/state/State.h"
 #include "utils/PreferenceHelper.h"
@@ -19,7 +20,7 @@ private:
     PreferenceHelper *preferenceHelper;
     VolumetricsHelper *volumetricsHelper;
     DeviceNameHelper *deviceNameHelper;
-    BrewPilotBLEService *bleService = nullptr;
+    std::unique_ptr<BrewPilotBLEService> bleService;
 
     // Tracking for state changes
     bool lastIsFillingBoiler = false;
@@ -34,8 +35,6 @@ private:
 
 public:
     BLECoreManager(State *state, PreferenceHelper *preferenceHelper, VolumetricsHelper *volumetricsHelper, DeviceNameHelper *deviceNameHelper);
-
-    ~BLECoreManager();
 
     void begin();
 

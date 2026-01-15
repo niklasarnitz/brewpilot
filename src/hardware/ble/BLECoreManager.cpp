@@ -9,24 +9,15 @@ BLECoreManager::BLECoreManager(State *state, PreferenceHelper *preferenceHelper,
 {
 }
 
-BLECoreManager::~BLECoreManager()
-{
-    if (bleService != nullptr)
-    {
-        delete bleService;
-        bleService = nullptr;
-    }
-}
-
 void BLECoreManager::begin()
 {
-    bleService = new BrewPilotBLEService(state, preferenceHelper, volumetricsHelper, deviceNameHelper);
+    bleService = std::make_unique<BrewPilotBLEService>(state, preferenceHelper, volumetricsHelper, deviceNameHelper);
     bleService->begin(deviceNameHelper->getFullDeviceName().c_str());
 
     // Load and send initial backflush settings (same for both groups initially)
-    uint16_t groupOneBackflush = (uint16_t)preferenceHelper->getULong(
+    auto groupOneBackflush = (uint16_t)preferenceHelper->getULong(
         PreferenceKey::BackflushActivationTimeMs, 500);
-    uint16_t groupTwoBackflush = (uint16_t)preferenceHelper->getULong(
+    auto groupTwoBackflush = (uint16_t)preferenceHelper->getULong(
         PreferenceKey::BackflushDeactivationTimeMs, 500);
 
     bleService->updateBackflushSettings(groupOneBackflush, groupTwoBackflush);
@@ -53,9 +44,9 @@ void BLECoreManager::loop()
     unsigned long currentTime = millis();
     if (currentTime - lastSettingsUpdateTime > SETTINGS_UPDATE_INTERVAL)
     {
-        uint16_t groupOneBackflush = (uint16_t)preferenceHelper->getULong(
+        auto groupOneBackflush = (uint16_t)preferenceHelper->getULong(
             PreferenceKey::BackflushActivationTimeMs, 500);
-        uint16_t groupTwoBackflush = (uint16_t)preferenceHelper->getULong(
+        auto groupTwoBackflush = (uint16_t)preferenceHelper->getULong(
             PreferenceKey::BackflushDeactivationTimeMs, 500);
 
         bleService->updateBackflushSettings(groupOneBackflush, groupTwoBackflush);

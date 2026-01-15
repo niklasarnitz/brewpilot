@@ -59,19 +59,19 @@ void BrewPilotBLEService::begin(const char *deviceName)
     pGroupOneBackflushCharacteristic = pService->createCharacteristic(
         GROUP_ONE_BACKFLUSH_UUID,
         NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE);
-    UInt16SettingCallback *groupOneBackflushCallback = new UInt16SettingCallback(
+    auto groupOneBackflushCallback = std::make_unique<UInt16SettingCallback>(
         preferenceHelper, PreferenceKey::BackflushActivationTimeMs);
-    pGroupOneBackflushCharacteristic->setCallbacks(groupOneBackflushCallback);
-    callbackPtrs.push_back(groupOneBackflushCallback);
+    pGroupOneBackflushCharacteristic->setCallbacks(groupOneBackflushCallback.get());
+    callbackPtrs.push_back(std::move(groupOneBackflushCallback));
 
     // Create group two backflush mode characteristic (read + write)
     pGroupTwoBackflushCharacteristic = pService->createCharacteristic(
         GROUP_TWO_BACKFLUSH_UUID,
         NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE);
-    UInt16SettingCallback *groupTwoBackflushCallback = new UInt16SettingCallback(
+    auto groupTwoBackflushCallback = std::make_unique<UInt16SettingCallback>(
         preferenceHelper, PreferenceKey::BackflushDeactivationTimeMs);
-    pGroupTwoBackflushCharacteristic->setCallbacks(groupTwoBackflushCallback);
-    callbackPtrs.push_back(groupTwoBackflushCallback);
+    pGroupTwoBackflushCharacteristic->setCallbacks(groupTwoBackflushCallback.get());
+    callbackPtrs.push_back(std::move(groupTwoBackflushCallback));
 
     // Create volumetric settings characteristics (READ ONLY)
     pLeftSingleCharacteristic = pService->createCharacteristic(
@@ -103,17 +103,17 @@ void BrewPilotBLEService::begin(const char *deviceName)
     pProgrammingModeCharacteristic = pService->createCharacteristic(
         PROGRAMMING_MODE_UUID,
         NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE);
-    ProgrammingModeCallback *progModeCallback = new ProgrammingModeCallback(&state->isInProgrammingMode);
-    pProgrammingModeCharacteristic->setCallbacks(progModeCallback);
-    callbackPtrs.push_back(progModeCallback);
+    auto progModeCallback = std::make_unique<ProgrammingModeCallback>(&state->isInProgrammingMode);
+    pProgrammingModeCharacteristic->setCallbacks(progModeCallback.get());
+    callbackPtrs.push_back(std::move(progModeCallback));
 
     // Create custom device name characteristic (read + write)
     pCustomDeviceNameCharacteristic = pService->createCharacteristic(
         CUSTOM_DEVICE_NAME_UUID,
         NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE);
-    auto *customNameCallback = new CustomDeviceNameCallback(deviceNameHelper);
-    pCustomDeviceNameCharacteristic->setCallbacks(customNameCallback);
-    callbackPtrs.push_back(customNameCallback);
+    auto customNameCallback = std::make_unique<CustomDeviceNameCallback>(deviceNameHelper);
+    pCustomDeviceNameCharacteristic->setCallbacks(customNameCallback.get());
+    callbackPtrs.push_back(std::move(customNameCallback));
     // Set initial value to current suffix with explicit length
     String suffix = deviceNameHelper->getDeviceNameSuffix();
     pCustomDeviceNameCharacteristic->setValue(reinterpret_cast<const uint8_t *>(suffix.c_str()), suffix.length());

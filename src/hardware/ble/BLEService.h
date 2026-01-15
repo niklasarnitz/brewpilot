@@ -9,6 +9,8 @@
 #include <NimBLEServer.h>
 #include <NimBLEService.h>
 #include <NimBLECharacteristic.h>
+#include <memory>
+#include <vector>
 #include "hardware/state/State.h"
 #include "utils/PreferenceHelper.h"
 #include "utils/VolumetricsHelper.h"
@@ -229,22 +231,12 @@ private:
     VolumetricsHelper *volumetricsHelper;
     DeviceNameHelper *deviceNameHelper;
 
-    std::vector<NimBLECharacteristicCallbacks *> callbackPtrs;
+    std::vector<std::unique_ptr<NimBLECharacteristicCallbacks>> callbackPtrs;
 
 public:
     BrewPilotBLEService(State *state, PreferenceHelper *preferenceHelper, VolumetricsHelper *volumetricsHelper, DeviceNameHelper *deviceNameHelper)
         : state(state), preferenceHelper(preferenceHelper), volumetricsHelper(volumetricsHelper), deviceNameHelper(deviceNameHelper),
           pServer(nullptr), pService(nullptr) {}
-
-    ~BrewPilotBLEService()
-    {
-        // Delete all dynamically allocated callbacks
-        for (NimBLECharacteristicCallbacks *callback : callbackPtrs)
-        {
-            delete callback;
-        }
-        callbackPtrs.clear();
-    }
 
     void begin(const char *deviceName = "BrewPilot");
 

@@ -19,12 +19,12 @@ class StateActor
 private:
     State *state;
 
-    Relay pumpRelay;
+    Relay pumpRelay{RELAY_PUMP, "Pump", config.relayConfig.pumpInverted};
 
-    Solenoid boilerFillSolenoid;
-    Solenoid groupOneSolenoid;
-    Solenoid groupTwoSolenoid;
-    Solenoid teaWaterSolenoid;
+    Solenoid boilerFillSolenoid{RELAY_BOILER_FILL, "Boiler Fill", config.relayConfig.boilerFillInverted};
+    Solenoid groupOneSolenoid{RELAY_GROUP_ONE, "Group One", config.relayConfig.groupOneInverted};
+    Solenoid groupTwoSolenoid{RELAY_GROUP_TWO, "Group Two", config.relayConfig.groupTwoInverted};
+    Solenoid teaWaterSolenoid{RELAY_TEA, "Tea Water Cold Water", config.relayConfig.teaInverted};
 
 public:
     explicit StateActor(State *state);
