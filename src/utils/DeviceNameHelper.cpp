@@ -1,7 +1,7 @@
 #include "DeviceNameHelper.h"
 
 DeviceNameHelper::DeviceNameHelper(PreferenceHelper *preferenceHelper)
-    : preferenceHelper(preferenceHelper), fullDeviceName(""), deviceNameSuffix("") {}
+    : preferenceHelper(preferenceHelper) {}
 
 String DeviceNameHelper::generateRandomSuffix()
 {

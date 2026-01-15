@@ -8,13 +8,13 @@ class DeviceNameHelper
 {
 private:
     PreferenceHelper *preferenceHelper;
-    String fullDeviceName;
-    String deviceNameSuffix;
+    String fullDeviceName = "";
+    String deviceNameSuffix = "";
 
     String generateRandomSuffix();
 
 public:
-    DeviceNameHelper(PreferenceHelper *preferenceHelper);
+    explicit DeviceNameHelper(PreferenceHelper *preferenceHelper);
 
     void initialize();
 
