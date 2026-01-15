@@ -10,14 +10,16 @@
 #include "hardware/state/State.h"
 #include "utils/PreferenceHelper.h"
 #include "utils/VolumetricsHelper.h"
+#include "utils/DeviceNameHelper.h"
 
 class BLECoreManager
 {
 private:
-    BrewPilotBLEService *bleService;
     State *state;
     PreferenceHelper *preferenceHelper;
     VolumetricsHelper *volumetricsHelper;
+    DeviceNameHelper *deviceNameHelper;
+    BrewPilotBLEService *bleService = nullptr;
 
     // Tracking for state changes
     bool lastIsFillingBoiler = false;
@@ -31,11 +33,11 @@ private:
     const unsigned long SETTINGS_UPDATE_INTERVAL = 5000; // 5 seconds
 
 public:
-    BLECoreManager(State *state, PreferenceHelper *preferenceHelper, VolumetricsHelper *volumetricsHelper);
+    BLECoreManager(State *state, PreferenceHelper *preferenceHelper, VolumetricsHelper *volumetricsHelper, DeviceNameHelper *deviceNameHelper);
 
     ~BLECoreManager();
 
-    void begin(const char *deviceName = "BrewPilot");
+    void begin();
 
     void loop();
 

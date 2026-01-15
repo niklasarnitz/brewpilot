@@ -9,7 +9,7 @@
 #include "Arduino.h"
 #include "../../StaticConfig.h"
 
-#define BOILER_FILL_WAIT_TIME 2000
+constexpr uint16_t BOILER_FILL_WAIT_TIME = 2000;
 
 class BoilerStateHandler : public GenericStateHandler
 {

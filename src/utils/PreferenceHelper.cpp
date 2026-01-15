@@ -22,6 +22,8 @@ const char *PreferenceHelper::toString(PreferenceKey key) const
         return "BF_ACT_MS";
     case PreferenceKey::BackflushDeactivationTimeMs:
         return "BF_DEACT_MS";
+    case PreferenceKey::DeviceNameSuffix:
+        return "DEV_NAME";
     }
 
     // This won't happen - it is just to suppress the compiler warning :D
@@ -50,6 +52,32 @@ unsigned long PreferenceHelper::getULong(PreferenceKey key, unsigned long defaul
     }
 
     unsigned long returnValue = preferences.getULong(toString(key), defaultValue);
+
+    return returnValue;
+}
+
+void PreferenceHelper::setString(PreferenceKey key, const char *value)
+{
+    if (key == PreferenceKey::INVALID)
+    {
+        Serial.println("PreferenceHelper::setString::Invalid_Key");
+        return;
+    }
+
+    open();
+    preferences.putString(toString(key), value);
+    close();
+}
+
+String PreferenceHelper::getString(PreferenceKey key, const char *defaultValue)
+{
+    if (key == PreferenceKey::INVALID)
+    {
+        Serial.println("PreferenceHelper::getString::Invalid_Key");
+        return String(defaultValue);
+    }
+
+    String returnValue = preferences.getString(toString(key), defaultValue);
 
     return returnValue;
 }

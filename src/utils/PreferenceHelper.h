@@ -13,6 +13,7 @@ enum class PreferenceKey
     TeaWaterMilliseconds,
     BackflushActivationTimeMs,
     BackflushDeactivationTimeMs,
+    DeviceNameSuffix,
 };
 
 class PreferenceHelper
@@ -26,6 +27,10 @@ public:
     void setULong(PreferenceKey key, unsigned long value);
 
     unsigned long getULong(PreferenceKey key, unsigned long defaultValue = 0);
+
+    void setString(PreferenceKey key, const char *value);
+
+    String getString(PreferenceKey key, const char *defaultValue = "");
 
     void open();
 
