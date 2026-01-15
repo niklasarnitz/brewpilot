@@ -1,5 +1,8 @@
 #include "RancilioS27ButtonMatrixHandler.h"
 
+using Rancilio::IN_TEA_WATER;
+using Rancilio::OUT_TEA_WATER;
+
 RancilioS27ButtonMatrixHandler::RancilioS27ButtonMatrixHandler(ButtonMatrixState *buttonMatrixState) : MachineButtonMatrixHandler(buttonMatrixState) {}
 
 void RancilioS27ButtonMatrixHandler::initializePins()

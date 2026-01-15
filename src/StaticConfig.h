@@ -5,6 +5,8 @@
 #ifndef BREWPILOT_CONFIG_H
 #define BREWPILOT_CONFIG_H
 
+#include <cstdint>
+
 constexpr bool DEBUG = true;
 
 // Pins

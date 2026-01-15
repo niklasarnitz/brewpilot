@@ -1,5 +1,8 @@
 #include "LaCimbaliM29ButtonMatrixHandler.h"
 
+using LaCimbali::IN_TEA_WATER;
+using LaCimbali::OUT_TEA_WATER;
+
 LaCimbaliM29ButtonMatrixHandler::LaCimbaliM29ButtonMatrixHandler(ButtonMatrixState *buttonMatrixState) : MachineButtonMatrixHandler(buttonMatrixState) {}
 
 void LaCimbaliM29ButtonMatrixHandler::initializePins()
