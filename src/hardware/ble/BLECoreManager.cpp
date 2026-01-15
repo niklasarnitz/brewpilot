@@ -4,8 +4,8 @@
 
 #include "BLECoreManager.h"
 
-BLECoreManager::BLECoreManager(State *state, PreferenceHelper *preferenceHelper, VolumetricsHelper *volumetricsHelper, DeviceNameHelper *deviceNameHelper)
-    : state(state), preferenceHelper(preferenceHelper), volumetricsHelper(volumetricsHelper), deviceNameHelper(deviceNameHelper)
+BLECoreManager::BLECoreManager(State *state, StateHandler *stateHandler, PreferenceHelper *preferenceHelper, VolumetricsHelper *volumetricsHelper, DeviceNameHelper *deviceNameHelper)
+    : state(state), stateHandler(stateHandler), preferenceHelper(preferenceHelper), volumetricsHelper(volumetricsHelper), deviceNameHelper(deviceNameHelper)
 {
 }
 
@@ -38,6 +38,19 @@ void BLECoreManager::loop()
     if (hasStateChanged())
     {
         bleService->updateState();
+    }
+
+    // Update progress if extraction is active
+    if (state->groupOneIsExtracting)
+    {
+        const auto &groupOne = stateHandler->getGroupOneHandler();
+        bleService->updateGroupProgress(true, groupOne.getCurrentPulses(), groupOne.getTargetPulses());
+    }
+
+    if (state->groupTwoIsExtracting)
+    {
+        const auto &groupTwo = stateHandler->getGroupTwoHandler();
+        bleService->updateGroupProgress(false, groupTwo.getCurrentPulses(), groupTwo.getTargetPulses());
     }
 
     // Periodically refresh settings

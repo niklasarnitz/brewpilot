@@ -30,6 +30,10 @@ public:
     GroupHeadStateHandler(bool *isExtracting, GroupHeadButtonEvent *event, VolumetricsHelper *volumetricsHelper, bool *isInProgrammingMode, int groupNumber);
     void handleState() override;
     void flowMeterPulseInterrupt();
+    
+    // BLE access to progress data
+    unsigned long getCurrentPulses() const { return currentPulses; }
+    unsigned long getTargetPulses() const { return targetPulses; }
 
 private:
     void startAutoBackflush();

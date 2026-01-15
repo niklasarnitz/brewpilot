@@ -14,7 +14,8 @@ void BrewPilotBLEService::begin(const char *deviceName)
 
     // Create server
     pServer = NimBLEDevice::createServer();
-    pServer->setCallbacks(new ServerCallbacks());
+    serverCallbacks = std::make_unique<ServerCallbacks>();
+    pServer->setCallbacks(serverCallbacks.get());
 
     // Create service
     pService = pServer->createService(BREWPILOT_SERVICE_UUID);
@@ -35,7 +36,7 @@ void BrewPilotBLEService::begin(const char *deviceName)
         BOILER_STATE_UUID,
         NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY);
     // Initialize boiler state
-    BLEBoilerStateData initialBoilerState{0, 0, 0};
+    BLEBoilerStateData initialBoilerState{0, 0};
     pBoilerStateCharacteristic->setValue((uint8_t *)&initialBoilerState, sizeof(BLEBoilerStateData));
     pBoilerStateCharacteristic->setCallbacks(nullptr);
 
@@ -173,11 +174,11 @@ void BrewPilotBLEService::updateState()
     }
 }
 
-void BrewPilotBLEService::updateBoilerState(bool isFilling, uint16_t probeValue, uint8_t boilerState)
+void BrewPilotBLEService::updateBoilerState(bool isFilling, uint8_t boilerState)
 {
     if (pBoilerStateCharacteristic != nullptr)
     {
-        BLEBoilerStateData data{(uint8_t)(isFilling ? 1 : 0), probeValue, boilerState};
+        BLEBoilerStateData data{(uint8_t)(isFilling ? 1 : 0), boilerState};
         pBoilerStateCharacteristic->setValue((uint8_t *)&data, sizeof(BLEBoilerStateData));
         pBoilerStateCharacteristic->notify();
     }

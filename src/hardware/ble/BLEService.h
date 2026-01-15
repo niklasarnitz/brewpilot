@@ -90,7 +90,6 @@ struct BLEStateData
 struct BLEBoilerStateData
 {
     uint8_t isFillingBoiler;
-    uint16_t boilerProbeRawValue;
     uint8_t boilerState; // 0=READY, 1=BELOW_TARGET
 } __attribute__((packed));
 
@@ -232,6 +231,7 @@ private:
     DeviceNameHelper *deviceNameHelper;
 
     std::vector<std::unique_ptr<NimBLECharacteristicCallbacks>> callbackPtrs;
+    std::unique_ptr<ServerCallbacks> serverCallbacks;
 
 public:
     BrewPilotBLEService(State *state, PreferenceHelper *preferenceHelper, VolumetricsHelper *volumetricsHelper, DeviceNameHelper *deviceNameHelper)
@@ -242,7 +242,7 @@ public:
 
     void updateState();
 
-    void updateBoilerState(bool isFilling, uint16_t probeValue, uint8_t boilerState);
+    void updateBoilerState(bool isFilling, uint8_t boilerState);
 
     void updateGroupProgress(bool isGroupOne, uint32_t currentPulses, uint32_t targetPulses);
 

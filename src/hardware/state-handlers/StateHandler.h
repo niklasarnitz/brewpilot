@@ -25,6 +25,10 @@ public:
     void handleState() override;
     void groupOneFlowMeterPulseInterrupt();
     void groupTwoFlowMeterPulseInterrupt();
+    
+    // BLE access to group head progress
+    const GroupHeadStateHandler& getGroupOneHandler() const { return groupOneStateHandler; }
+    const GroupHeadStateHandler& getGroupTwoHandler() const { return groupTwoStateHandler; }
 };
 
 #endif // BREWPILOT_STATEHANDLER_H

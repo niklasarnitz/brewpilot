@@ -20,7 +20,7 @@ State state{};
 StateHandler stateHandler(&state, &buttonEvent, &volumetricsHelper);
 StateActor stateActor(&state);
 InputHandler inputHandler(&buttonEvent, &state.isInProgrammingMode);
-BLECoreManager bleCoreManager(&state, &preferenceHelper, &volumetricsHelper, &deviceNameHelper);
+BLECoreManager bleCoreManager(&state, &stateHandler, &preferenceHelper, &volumetricsHelper, &deviceNameHelper);
 
 void IRAM_ATTR groupOneFlowMeterHandler()
 {
