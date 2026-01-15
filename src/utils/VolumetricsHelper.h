@@ -14,7 +14,7 @@ private:
 
     PreferenceHelper *preferenceHelper;
 
-    void logVolumetricSettings(VolumetricSettings *volumetricSettings);
+    void logVolumetricSettings(VolumetricSettings *settings);
 
     PreferenceKey convertButtonEventToPreferenceKey(GroupHeadButtonEvent event);
 

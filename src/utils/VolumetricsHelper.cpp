@@ -1,13 +1,13 @@
 #include "VolumetricsHelper.h"
 
-void VolumetricsHelper::logVolumetricSettings(VolumetricSettings *volumetricSettings)
+void VolumetricsHelper::logVolumetricSettings(VolumetricSettings *settings)
 {
     Serial.println("Volumetric Settings:");
-    Serial.printf("Left Single Espresso: %ld pulses\n", volumetricSettings->leftSingleEspressoPulses);
-    Serial.printf("Left Double Espresso: %ld pulses\n", volumetricSettings->leftDoubleEspressoPulses);
-    Serial.printf("Right Single Espresso: %ld pulses\n", volumetricSettings->rightSingleEspressoPulses);
-    Serial.printf("Right Double Espresso: %ld pulses\n", volumetricSettings->rightDoubleEspressoPulses);
-    Serial.printf("Tea Water: %ld ms\n", volumetricSettings->teaWaterMilliseconds);
+    Serial.printf("Left Single Espresso: %ld pulses\n", settings->leftSingleEspressoPulses);
+    Serial.printf("Left Double Espresso: %ld pulses\n", settings->leftDoubleEspressoPulses);
+    Serial.printf("Right Single Espresso: %ld pulses\n", settings->rightSingleEspressoPulses);
+    Serial.printf("Right Double Espresso: %ld pulses\n", settings->rightDoubleEspressoPulses);
+    Serial.printf("Tea Water: %ld ms\n", settings->teaWaterMilliseconds);
 }
 
 PreferenceKey VolumetricsHelper::convertButtonEventToPreferenceKey(GroupHeadButtonEvent event)

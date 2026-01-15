@@ -55,29 +55,28 @@ void BoilerStateHandler::handleState()
             return;
         }
 
-        using enum BoilerState;
         switch (internalState)
         {
-        case BOILER_ABOVE_TARGET_AND_FILLED:
+        case BoilerState::BOILER_ABOVE_TARGET_AND_FILLED:
             if (!boilerIsFilled)
             {
                 Serial.println("BoilerStateHandler: Start filling");
                 *isFillingBoiler = true;
-                internalState = BOILER_BELOW_TARGET;
+                internalState = BoilerState::BOILER_BELOW_TARGET;
             }
             break;
-        case BOILER_ABOVE_TARGET_BUT_FILLING:
+        case BoilerState::BOILER_ABOVE_TARGET_BUT_FILLING:
             // intentionally ignores the read value. This state is only a delay to overfill a little.
             // if it's already underfilled again, it will start filling again on next cycle
             Serial.println("BoilerStateHandler: Stop filling");
-            internalState = BOILER_ABOVE_TARGET_AND_FILLED;
+            internalState = BoilerState::BOILER_ABOVE_TARGET_AND_FILLED;
             *isFillingBoiler = false;
             break;
-        case BOILER_BELOW_TARGET:
+        case BoilerState::BOILER_BELOW_TARGET:
             if (boilerIsFilled)
             {
                 Serial.println("BoilerStateHandler: Overfill a little");
-                internalState = BOILER_ABOVE_TARGET_BUT_FILLING;
+                internalState = BoilerState::BOILER_ABOVE_TARGET_BUT_FILLING;
             }
             break;
         }
