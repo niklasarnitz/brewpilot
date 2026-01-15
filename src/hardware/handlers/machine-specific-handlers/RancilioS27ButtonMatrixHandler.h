@@ -19,11 +19,11 @@ constexpr uint8_t IN_TEA_WATER = FLEXIBLE_IO_12;
 class RancilioS27ButtonMatrixHandler : public MachineButtonMatrixHandler
 {
 public:
-    RancilioS27ButtonMatrixHandler(ButtonMatrixState *buttonMatrixState);
+    explicit RancilioS27ButtonMatrixHandler(ButtonMatrixState *buttonMatrixState);
 
-    void initializePins();
+    void initializePins() override;
 
-    void handle();
+    void handle() override;
 };
 
 #endif // BREWPILOT_RANCILIOS27BUTTONMATRIXHANDLER_H

@@ -28,9 +28,9 @@ class LaCimbaliM29ButtonMatrixHandler : public MachineButtonMatrixHandler
 public:
     LaCimbaliM29ButtonMatrixHandler(ButtonMatrixState *buttonMatrixState);
 
-    void initializePins();
+    void initializePins() override;
 
-    void handle();
+    void handle() override;
 };
 
 #endif // BREWPILOT_LACIMBALIM29BUTTONMATRIXHANDLER_H

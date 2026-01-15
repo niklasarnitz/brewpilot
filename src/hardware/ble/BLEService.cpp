@@ -200,35 +200,35 @@ void BrewPilotBLEService::updateVolumetricSettings()
     {
         uint32_t val = volumetricsHelper->getFlowMeterSetting(GroupHeadButtonEvent::LEFT_SINGLE_ESPRESSO);
         std::array<uint8_t, 4> data = {(uint8_t)(val & 0xFF), (uint8_t)((val >> 8) & 0xFF),
-                           (uint8_t)((val >> 16) & 0xFF), (uint8_t)((val >> 24) & 0xFF)};
+                                       (uint8_t)((val >> 16) & 0xFF), (uint8_t)((val >> 24) & 0xFF)};
         pLeftSingleCharacteristic->setValue(data.data(), data.size());
     }
     if (pLeftDoubleCharacteristic != nullptr)
     {
         uint32_t val = volumetricsHelper->getFlowMeterSetting(GroupHeadButtonEvent::LEFT_DOUBLE_ESPRESSO);
         std::array<uint8_t, 4> data = {(uint8_t)(val & 0xFF), (uint8_t)((val >> 8) & 0xFF),
-                           (uint8_t)((val >> 16) & 0xFF), (uint8_t)((val >> 24) & 0xFF)};
+                                       (uint8_t)((val >> 16) & 0xFF), (uint8_t)((val >> 24) & 0xFF)};
         pLeftDoubleCharacteristic->setValue(data.data(), data.size());
     }
     if (pRightSingleCharacteristic != nullptr)
     {
         uint32_t val = volumetricsHelper->getFlowMeterSetting(GroupHeadButtonEvent::RIGHT_SINGLE_ESPRESSO);
         std::array<uint8_t, 4> data = {(uint8_t)(val & 0xFF), (uint8_t)((val >> 8) & 0xFF),
-                           (uint8_t)((val >> 16) & 0xFF), (uint8_t)((val >> 24) & 0xFF)};
+                                       (uint8_t)((val >> 16) & 0xFF), (uint8_t)((val >> 24) & 0xFF)};
         pRightSingleCharacteristic->setValue(data.data(), data.size());
     }
     if (pRightDoubleCharacteristic != nullptr)
     {
         uint32_t val = volumetricsHelper->getFlowMeterSetting(GroupHeadButtonEvent::RIGHT_DOUBLE_ESPRESSO);
         std::array<uint8_t, 4> data = {(uint8_t)(val & 0xFF), (uint8_t)((val >> 8) & 0xFF),
-                           (uint8_t)((val >> 16) & 0xFF), (uint8_t)((val >> 24) & 0xFF)};
+                                       (uint8_t)((val >> 16) & 0xFF), (uint8_t)((val >> 24) & 0xFF)};
         pRightDoubleCharacteristic->setValue(data.data(), data.size());
     }
     if (pTeaWaterCharacteristic != nullptr)
     {
         uint32_t val = volumetricsHelper->getTeaWaterSetting();
         std::array<uint8_t, 4> data = {(uint8_t)(val & 0xFF), (uint8_t)((val >> 8) & 0xFF),
-                           (uint8_t)((val >> 16) & 0xFF), (uint8_t)((val >> 24) & 0xFF)};
+                                       (uint8_t)((val >> 16) & 0xFF), (uint8_t)((val >> 24) & 0xFF)};
         pTeaWaterCharacteristic->setValue(data.data(), data.size());
     }
 }
@@ -246,13 +246,13 @@ void BrewPilotBLEService::updateBackflushSettings(uint16_t groupOneBackflush, ui
 {
     if (pGroupOneBackflushCharacteristic != nullptr)
     {
-        uint8_t data[2] = {(uint8_t)(groupOneBackflush & 0xFF), (uint8_t)((groupOneBackflush >> 8) & 0xFF)};
-        pGroupOneBackflushCharacteristic->setValue(data, sizeof(data));
+        std::array<uint8_t, 2> data = {(uint8_t)(groupOneBackflush & 0xFF), (uint8_t)((groupOneBackflush >> 8) & 0xFF)};
+        pGroupOneBackflushCharacteristic->setValue(data.data(), data.size());
     }
     if (pGroupTwoBackflushCharacteristic != nullptr)
     {
-        uint8_t data[2] = {(uint8_t)(groupTwoBackflush & 0xFF), (uint8_t)((groupTwoBackflush >> 8) & 0xFF)};
-        pGroupTwoBackflushCharacteristic->setValue(data, sizeof(data));
+        std::array<uint8_t, 2> data = {(uint8_t)(groupTwoBackflush & 0xFF), (uint8_t)((groupTwoBackflush >> 8) & 0xFF)};
+        pGroupTwoBackflushCharacteristic->setValue(data.data(), data.size());
     }
 }
 
