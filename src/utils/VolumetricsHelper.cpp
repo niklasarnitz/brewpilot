@@ -22,7 +22,7 @@ PreferenceKey VolumetricsHelper::convertButtonEventToPreferenceKey(GroupHeadButt
         return PreferenceKey::FlowMeterPulsesLeftDoubleEspresso;
     case GroupHeadButtonEvent::RIGHT_DOUBLE_ESPRESSO:
         return PreferenceKey::FlowMeterPulsesRightDoubleEspresso;
-    };
+    }
 
     return PreferenceKey::INVALID;
 }
@@ -65,7 +65,7 @@ void VolumetricsHelper::writeFlowMeterSetting(GroupHeadButtonEvent event, unsign
     case GroupHeadButtonEvent::RIGHT_DOUBLE_ESPRESSO:
         volumetricSettings.rightDoubleEspressoPulses = value;
         break;
-    };
+    }
 
     logVolumetricSettings(&volumetricSettings);
 }
@@ -91,7 +91,7 @@ unsigned long VolumetricsHelper::getFlowMeterSetting(GroupHeadButtonEvent key)
         return volumetricSettings.leftDoubleEspressoPulses;
     case GroupHeadButtonEvent::RIGHT_DOUBLE_ESPRESSO:
         return volumetricSettings.rightDoubleEspressoPulses;
-    };
+    }
 
     // This won't happen - it is just to suppress the compiler warning :D
     return 0;
