@@ -114,8 +114,9 @@ void BrewPilotBLEService::begin(const char *deviceName)
     CustomDeviceNameCallback *customNameCallback = new CustomDeviceNameCallback(deviceNameHelper);
     pCustomDeviceNameCharacteristic->setCallbacks(customNameCallback);
     callbackPtrs.push_back(customNameCallback);
-    // Set initial value to current suffix
-    pCustomDeviceNameCharacteristic->setValue(deviceNameHelper->getDeviceNameSuffix().c_str());
+    // Set initial value to current suffix with explicit length
+    String suffix = deviceNameHelper->getDeviceNameSuffix();
+    pCustomDeviceNameCharacteristic->setValue((uint8_t *)suffix.c_str(), suffix.length());
 
     // Create device info characteristics (read-only)
     pDeviceNameCharacteristic = pService->createCharacteristic(
