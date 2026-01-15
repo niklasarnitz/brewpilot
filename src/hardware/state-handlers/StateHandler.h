@@ -6,6 +6,7 @@
 #define BREWPILOT_STATEHANDLER_H
 
 #include "../state/State.h"
+#include "../../structs/ButtonEvent.h"
 #include "BoilerStateHandler.h"
 #include "GroupHeadHandler.h"
 #include "TeaStateHandler.h"
@@ -20,32 +21,17 @@ private:
     TeaStateHandler teaStateHandler;
 
 public:
-    StateHandler(State *state, ButtonEvent *buttonEvent, VolumetricsHelper *volumetricsHelper)
-        : boilerStateHandler(&state->isFillingBoiler),
-          groupOneStateHandler(&state->groupOneIsExtracting,
-                               &buttonEvent->groupOne, volumetricsHelper, &state->isInProgrammingMode, 1),
-          groupTwoStateHandler(&state->groupTwoIsExtracting,
-                               &buttonEvent->groupTwo, volumetricsHelper, &state->isInProgrammingMode, 2),
-          teaStateHandler(&buttonEvent->tea,
-                          &state->isExtractingTeaWater, volumetricsHelper, &state->isInProgrammingMode) {};
+    StateHandler(State *state, ButtonEvent *buttonEvent, VolumetricsHelper *volumetricsHelper, PreferenceHelper *preferenceHelper);
+    void handleState() override;
+    void groupOneFlowMeterPulseInterrupt();
+    void groupTwoFlowMeterPulseInterrupt();
 
-    void handleState() override
-    {
-        boilerStateHandler.handleState();
-        groupOneStateHandler.handleState();
-        groupTwoStateHandler.handleState();
-        teaStateHandler.handleState();
-    }
+    // Reload auto-backflush settings for both groups
+    void reloadAutoBackflushSettings();
 
-    void groupOneFlowMeterPulseInterrupt()
-    {
-        groupOneStateHandler.flowMeterPulseInterrupt();
-    }
-
-    void groupTwoFlowMeterPulseInterrupt()
-    {
-        groupTwoStateHandler.flowMeterPulseInterrupt();
-    }
+    // BLE access to group head progress
+    const GroupHeadStateHandler &getGroupOneHandler() const { return groupOneStateHandler; }
+    const GroupHeadStateHandler &getGroupTwoHandler() const { return groupTwoStateHandler; }
 };
 
 #endif // BREWPILOT_STATEHANDLER_H

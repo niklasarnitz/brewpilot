@@ -19,36 +19,17 @@ class StateActor
 private:
     State *state;
 
-    Relay pumpRelay;
+    Relay pumpRelay{RELAY_PUMP, "Pump", config.relayConfig.pumpInverted};
 
-    Solenoid boilerFillSolenoid;
-    Solenoid groupOneSolenoid;
-    Solenoid groupTwoSolenoid;
-    Solenoid teaWaterSolenoid;
+    Solenoid boilerFillSolenoid{RELAY_BOILER_FILL, "Boiler Fill", config.relayConfig.boilerFillInverted};
+    Solenoid groupOneSolenoid{RELAY_GROUP_ONE, "Group One", config.relayConfig.groupOneInverted};
+    Solenoid groupTwoSolenoid{RELAY_GROUP_TWO, "Group Two", config.relayConfig.groupTwoInverted};
+    Solenoid teaWaterSolenoid{RELAY_TEA, "Tea Water Cold Water", config.relayConfig.teaInverted};
 
 public:
-    explicit StateActor(State *state)
-        : state(state), pumpRelay(RELAY_PUMP, "Pump", config.relayConfig.pumpInverted),
-          boilerFillSolenoid(RELAY_BOILER_FILL, "Boiler Fill", config.relayConfig.boilerFillInverted),
-          groupOneSolenoid(RELAY_GROUP_ONE, "Group One", config.relayConfig.groupOneInverted),
-          groupTwoSolenoid(RELAY_GROUP_TWO, "Group Two", config.relayConfig.groupTwoInverted),
-          teaWaterSolenoid(RELAY_TEA, "Tea Water Cold Water", config.relayConfig.teaInverted) {};
+    explicit StateActor(State *state);
 
-    void loop()
-    {
-        // Boiler
-        boilerFillSolenoid.setOpen(state->isFillingBoiler);
-
-        // Group Heads
-        groupOneSolenoid.setOpen(state->groupOneIsExtracting);
-        groupTwoSolenoid.setOpen(state->groupTwoIsExtracting);
-
-        // Tea Water
-        teaWaterSolenoid.setOpen(state->isExtractingTeaWater);
-
-        // Pump
-        pumpRelay.setEnabled(state->isFillingBoiler || state->groupOneIsExtracting || state->groupTwoIsExtracting);
-    };
+    void loop();
 };
 
 #endif // BREWPILOT_STATEACTOR_H

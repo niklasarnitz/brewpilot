@@ -6,7 +6,7 @@
 #include "machineConfigs/LaCimbaliM29Select.h"
 #include "machineConfigs/RancilioS27.h"
 
-MachineConfig getMachineConfig()
+inline MachineConfig getMachineConfig()
 {
     switch (HARDWARE_MODEL)
     {
@@ -16,7 +16,7 @@ MachineConfig getMachineConfig()
         return rancilioS27MachineConfig;
     default:
         // Default config if unknown machine type
-        return { { false, false, false, false, false } };
+        return {{false, false, false, false, false}};
     }
 }
 

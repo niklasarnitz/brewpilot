@@ -6,18 +6,24 @@
 #define BREWPILOT_BLE_CORE_MANAGER_H
 
 #include <Arduino.h>
+#include <memory>
 #include "BLEService.h"
 #include "hardware/state/State.h"
+#include "hardware/state-handlers/StateHandler.h"
+#include "hardware/state-handlers/GroupHeadHandler.h"
 #include "utils/PreferenceHelper.h"
 #include "utils/VolumetricsHelper.h"
+#include "utils/DeviceNameHelper.h"
 
 class BLECoreManager
 {
 private:
-    BrewPilotBLEService *bleService;
     State *state;
+    StateHandler *stateHandler;
     PreferenceHelper *preferenceHelper;
     VolumetricsHelper *volumetricsHelper;
+    DeviceNameHelper *deviceNameHelper;
+    std::unique_ptr<BrewPilotBLEService> bleService;
 
     // Tracking for state changes
     bool lastIsFillingBoiler = false;
@@ -31,86 +37,14 @@ private:
     const unsigned long SETTINGS_UPDATE_INTERVAL = 5000; // 5 seconds
 
 public:
-    BLECoreManager(State *state, PreferenceHelper *preferenceHelper, VolumetricsHelper *volumetricsHelper)
-        : state(state), preferenceHelper(preferenceHelper), volumetricsHelper(volumetricsHelper), bleService(nullptr) {}
+    BLECoreManager(State *state, StateHandler *stateHandler, PreferenceHelper *preferenceHelper, VolumetricsHelper *volumetricsHelper, DeviceNameHelper *deviceNameHelper);
 
-    ~BLECoreManager()
-    {
-        if (bleService != nullptr)
-        {
-            delete bleService;
-            bleService = nullptr;
-        }
-    }
+    void begin();
 
-    void begin(const char *deviceName = "BrewPilot")
-    {
-        bleService = new BrewPilotBLEService(state, preferenceHelper, volumetricsHelper);
-        bleService->begin(deviceName);
-
-        // Load and send initial backflush settings (same for both groups initially)
-        uint16_t groupOneBackflush = (uint16_t)preferenceHelper->getULong(
-            PreferenceKey::BackflushActivationTimeMs, 500);
-        uint16_t groupTwoBackflush = (uint16_t)preferenceHelper->getULong(
-            PreferenceKey::BackflushDeactivationTimeMs, 500);
-
-        bleService->updateBackflushSettings(groupOneBackflush, groupTwoBackflush);
-        bleService->updateVolumetricSettings();
-
-        Serial.printf("BLE: Initialized - Group 1 backflush: %u ms, Group 2 backflush: %u ms\n",
-                      groupOneBackflush, groupTwoBackflush);
-    }
-
-    void loop()
-    {
-        if (bleService == nullptr)
-        {
-            return;
-        }
-
-        // Check if state has changed
-        if (hasStateChanged())
-        {
-            bleService->updateState();
-        }
-
-        // Periodically refresh settings
-        unsigned long currentTime = millis();
-        if (currentTime - lastSettingsUpdateTime > SETTINGS_UPDATE_INTERVAL)
-        {
-            uint16_t groupOneBackflush = (uint16_t)preferenceHelper->getULong(
-                PreferenceKey::BackflushActivationTimeMs, 500);
-            uint16_t groupTwoBackflush = (uint16_t)preferenceHelper->getULong(
-                PreferenceKey::BackflushDeactivationTimeMs, 500);
-
-            bleService->updateBackflushSettings(groupOneBackflush, groupTwoBackflush);
-            bleService->updateVolumetricSettings();
-            lastSettingsUpdateTime = currentTime;
-        }
-    }
+    void loop();
 
 private:
-    bool hasStateChanged()
-    {
-        bool stateChanged =
-            lastIsFillingBoiler != state->isFillingBoiler ||
-            lastGroupOneIsExtracting != state->groupOneIsExtracting ||
-            lastGroupTwoIsExtracting != state->groupTwoIsExtracting ||
-            lastIsExtractingTeaWater != state->isExtractingTeaWater ||
-            lastIsInProgrammingMode != state->isInProgrammingMode;
-
-        if (stateChanged)
-        {
-            // Update tracking variables
-            lastIsFillingBoiler = state->isFillingBoiler;
-            lastGroupOneIsExtracting = state->groupOneIsExtracting;
-            lastGroupTwoIsExtracting = state->groupTwoIsExtracting;
-            lastIsExtractingTeaWater = state->isExtractingTeaWater;
-            lastIsInProgrammingMode = state->isInProgrammingMode;
-        }
-
-        return stateChanged;
-    }
+    bool hasStateChanged();
 };
 
 #endif // BREWPILOT_BLE_CORE_MANAGER_H

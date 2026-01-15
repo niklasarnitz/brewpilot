@@ -18,37 +18,11 @@ private:
     bool enabled = false;
 
 public:
-    Relay(int pin, const char *name, bool isInverted = false)
-        : pin(pin), name(name), isInverted(isInverted)
-    {
-        pinMode(pin, OUTPUT);
+    Relay(int pin, const char *name, bool isInverted = false);
 
-        this->setEnabled(false);
-    };
+    void setEnabled(bool newState);
 
-    void setEnabled(bool newState)
-    {
-        if (newState != enabled)
-        {
-            Serial.printf("Relay: %s %s\n", newState ? "Enable" : "Disable", this->name);
-        }
-
-        enabled = newState;
-
-        if (isInverted)
-        {
-            digitalWrite(pin, newState ? LOW : HIGH);
-        }
-        else
-        {
-            digitalWrite(pin, newState ? HIGH : LOW);
-        }
-    }
-
-    bool isEnabled()
-    {
-        return enabled;
-    }
+    bool isEnabled();
 };
 
 #endif // BREWPILOT_RELAY_H
