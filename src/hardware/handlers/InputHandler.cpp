@@ -5,11 +5,11 @@
 #include "InputHandler.h"
 
 InputHandler::InputHandler(ButtonEvent *buttonEvent, bool *isInProgrammingMode)
-    : buttonEvent(buttonEvent),
-      buttonMatrixHandler(&buttonMatrixState),
-      teaButtonHandler(&buttonMatrixState.tea),
+    : buttonMatrixHandler(&buttonMatrixState),
       groupOneHandler(&(buttonMatrixState.groupOne), &(buttonEvent->groupOne), 1, isInProgrammingMode),
-      groupTwoHandler(&(buttonMatrixState.groupTwo), &(buttonEvent->groupTwo), 2, isInProgrammingMode)
+      groupTwoHandler(&(buttonMatrixState.groupTwo), &(buttonEvent->groupTwo), 2, isInProgrammingMode),
+      teaButtonHandler(&buttonMatrixState.tea),
+      buttonEvent(buttonEvent)
 {
 }
 

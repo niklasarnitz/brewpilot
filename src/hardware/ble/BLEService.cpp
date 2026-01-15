@@ -4,6 +4,7 @@
 
 #include "BLEService.h"
 #include "UserConfig.h"
+#include <array>
 
 void BrewPilotBLEService::begin(const char *deviceName)
 {
@@ -198,37 +199,37 @@ void BrewPilotBLEService::updateVolumetricSettings()
     if (pLeftSingleCharacteristic != nullptr)
     {
         uint32_t val = volumetricsHelper->getFlowMeterSetting(GroupHeadButtonEvent::LEFT_SINGLE_ESPRESSO);
-        uint8_t data[4] = {(uint8_t)(val & 0xFF), (uint8_t)((val >> 8) & 0xFF),
+        std::array<uint8_t, 4> data = {(uint8_t)(val & 0xFF), (uint8_t)((val >> 8) & 0xFF),
                            (uint8_t)((val >> 16) & 0xFF), (uint8_t)((val >> 24) & 0xFF)};
-        pLeftSingleCharacteristic->setValue(data, sizeof(data));
+        pLeftSingleCharacteristic->setValue(data.data(), data.size());
     }
     if (pLeftDoubleCharacteristic != nullptr)
     {
         uint32_t val = volumetricsHelper->getFlowMeterSetting(GroupHeadButtonEvent::LEFT_DOUBLE_ESPRESSO);
-        uint8_t data[4] = {(uint8_t)(val & 0xFF), (uint8_t)((val >> 8) & 0xFF),
+        std::array<uint8_t, 4> data = {(uint8_t)(val & 0xFF), (uint8_t)((val >> 8) & 0xFF),
                            (uint8_t)((val >> 16) & 0xFF), (uint8_t)((val >> 24) & 0xFF)};
-        pLeftDoubleCharacteristic->setValue(data, sizeof(data));
+        pLeftDoubleCharacteristic->setValue(data.data(), data.size());
     }
     if (pRightSingleCharacteristic != nullptr)
     {
         uint32_t val = volumetricsHelper->getFlowMeterSetting(GroupHeadButtonEvent::RIGHT_SINGLE_ESPRESSO);
-        uint8_t data[4] = {(uint8_t)(val & 0xFF), (uint8_t)((val >> 8) & 0xFF),
+        std::array<uint8_t, 4> data = {(uint8_t)(val & 0xFF), (uint8_t)((val >> 8) & 0xFF),
                            (uint8_t)((val >> 16) & 0xFF), (uint8_t)((val >> 24) & 0xFF)};
-        pRightSingleCharacteristic->setValue(data, sizeof(data));
+        pRightSingleCharacteristic->setValue(data.data(), data.size());
     }
     if (pRightDoubleCharacteristic != nullptr)
     {
         uint32_t val = volumetricsHelper->getFlowMeterSetting(GroupHeadButtonEvent::RIGHT_DOUBLE_ESPRESSO);
-        uint8_t data[4] = {(uint8_t)(val & 0xFF), (uint8_t)((val >> 8) & 0xFF),
+        std::array<uint8_t, 4> data = {(uint8_t)(val & 0xFF), (uint8_t)((val >> 8) & 0xFF),
                            (uint8_t)((val >> 16) & 0xFF), (uint8_t)((val >> 24) & 0xFF)};
-        pRightDoubleCharacteristic->setValue(data, sizeof(data));
+        pRightDoubleCharacteristic->setValue(data.data(), data.size());
     }
     if (pTeaWaterCharacteristic != nullptr)
     {
         uint32_t val = volumetricsHelper->getTeaWaterSetting();
-        uint8_t data[4] = {(uint8_t)(val & 0xFF), (uint8_t)((val >> 8) & 0xFF),
+        std::array<uint8_t, 4> data = {(uint8_t)(val & 0xFF), (uint8_t)((val >> 8) & 0xFF),
                            (uint8_t)((val >> 16) & 0xFF), (uint8_t)((val >> 24) & 0xFF)};
-        pTeaWaterCharacteristic->setValue(data, sizeof(data));
+        pTeaWaterCharacteristic->setValue(data.data(), data.size());
     }
 }
 
