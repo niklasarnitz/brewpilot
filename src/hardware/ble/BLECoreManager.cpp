@@ -4,8 +4,8 @@
 
 #include "BLECoreManager.h"
 
-BLECoreManager::BLECoreManager(State *state, PreferenceHelper *preferenceHelper, VolumetricsHelper *volumetricsHelper)
-    : state(state), preferenceHelper(preferenceHelper), volumetricsHelper(volumetricsHelper), bleService(nullptr)
+BLECoreManager::BLECoreManager(State *state, PreferenceHelper *preferenceHelper, VolumetricsHelper *volumetricsHelper, DeviceNameHelper *deviceNameHelper)
+    : state(state), preferenceHelper(preferenceHelper), volumetricsHelper(volumetricsHelper), deviceNameHelper(deviceNameHelper), bleService(nullptr)
 {
 }
 
@@ -18,10 +18,10 @@ BLECoreManager::~BLECoreManager()
     }
 }
 
-void BLECoreManager::begin(const char *deviceName)
+void BLECoreManager::begin()
 {
-    bleService = new BrewPilotBLEService(state, preferenceHelper, volumetricsHelper);
-    bleService->begin(deviceName);
+    bleService = new BrewPilotBLEService(state, preferenceHelper, volumetricsHelper, deviceNameHelper);
+    bleService->begin(deviceNameHelper->getFullDeviceName().c_str());
 
     // Load and send initial backflush settings (same for both groups initially)
     uint16_t groupOneBackflush = (uint16_t)preferenceHelper->getULong(

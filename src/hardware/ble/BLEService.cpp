@@ -3,6 +3,7 @@
 //
 
 #include "BLEService.h"
+#include "UserConfig.h"
 
 void BrewPilotBLEService::begin(const char *deviceName)
 {
@@ -12,32 +13,46 @@ void BrewPilotBLEService::begin(const char *deviceName)
 
     // Create server
     pServer = NimBLEDevice::createServer();
+    pServer->setCallbacks(new ServerCallbacks());
 
     // Create service
     pService = pServer->createService(BREWPILOT_SERVICE_UUID);
+
+    Serial.printf("BLE: Starting service with device name: %s\n", deviceName);
 
     // Create state characteristic (read + notify)
     pStateCharacteristic = pService->createCharacteristic(
         STATE_CHARACTERISTIC_UUID,
         NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY);
+    // Initialize with all false state
+    BLEStateData initialState{0, 0, 0, 0, 0};
+    pStateCharacteristic->setValue((uint8_t *)&initialState, sizeof(BLEStateData));
     pStateCharacteristic->setCallbacks(nullptr);
 
     // Create boiler state characteristic (read + notify)
     pBoilerStateCharacteristic = pService->createCharacteristic(
         BOILER_STATE_UUID,
         NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY);
+    // Initialize boiler state
+    BLEBoilerStateData initialBoilerState{0, 0, 0};
+    pBoilerStateCharacteristic->setValue((uint8_t *)&initialBoilerState, sizeof(BLEBoilerStateData));
     pBoilerStateCharacteristic->setCallbacks(nullptr);
 
     // Create group one progress characteristic (read + notify)
     pGroupOneProgressCharacteristic = pService->createCharacteristic(
         GROUP_ONE_PROGRESS_UUID,
         NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY);
+    // Initialize progress
+    BLEProgressData initialProgress{0, 0};
+    pGroupOneProgressCharacteristic->setValue((uint8_t *)&initialProgress, sizeof(BLEProgressData));
     pGroupOneProgressCharacteristic->setCallbacks(nullptr);
 
     // Create group two progress characteristic (read + notify)
     pGroupTwoProgressCharacteristic = pService->createCharacteristic(
         GROUP_TWO_PROGRESS_UUID,
         NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::NOTIFY);
+    // Initialize progress
+    pGroupTwoProgressCharacteristic->setValue((uint8_t *)&initialProgress, sizeof(BLEProgressData));
     pGroupTwoProgressCharacteristic->setCallbacks(nullptr);
 
     // Create group one backflush mode characteristic (read + write)
@@ -92,6 +107,40 @@ void BrewPilotBLEService::begin(const char *deviceName)
     pProgrammingModeCharacteristic->setCallbacks(progModeCallback);
     callbackPtrs.push_back(progModeCallback);
 
+    // Create custom device name characteristic (read + write)
+    pCustomDeviceNameCharacteristic = pService->createCharacteristic(
+        CUSTOM_DEVICE_NAME_UUID,
+        NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE);
+    CustomDeviceNameCallback *customNameCallback = new CustomDeviceNameCallback(deviceNameHelper);
+    pCustomDeviceNameCharacteristic->setCallbacks(customNameCallback);
+    callbackPtrs.push_back(customNameCallback);
+    // Set initial value to current suffix
+    pCustomDeviceNameCharacteristic->setValue(deviceNameHelper->getDeviceNameSuffix().c_str());
+
+    // Create device info characteristics (read-only)
+    pDeviceNameCharacteristic = pService->createCharacteristic(
+        DEVICE_NAME_UUID,
+        NIMBLE_PROPERTY::READ);
+    pDeviceNameCharacteristic->setValue((uint8_t *)deviceName, strlen(deviceName));
+    pDeviceNameCharacteristic->setCallbacks(nullptr);
+
+    pFirmwareVersionCharacteristic = pService->createCharacteristic(
+        FIRMWARE_VERSION_UUID,
+        NIMBLE_PROPERTY::READ);
+    const char *fwVersion = "1.0.0";
+    pFirmwareVersionCharacteristic->setValue((uint8_t *)fwVersion, strlen(fwVersion));
+    pFirmwareVersionCharacteristic->setCallbacks(nullptr);
+
+    pMachineTypeCharacteristic = pService->createCharacteristic(
+        MACHINE_TYPE_UUID,
+        NIMBLE_PROPERTY::READ);
+    // Set machine type from user configuration
+    const char *machineTypeStr = (HARDWARE_MODEL == MachineType::LA_CIMBALI_M29_SELECT)
+                                     ? "LA_CIMBALI_M29_SELECT"
+                                     : "RANCILIO_S27";
+    pMachineTypeCharacteristic->setValue((uint8_t *)machineTypeStr, strlen(machineTypeStr));
+    pMachineTypeCharacteristic->setCallbacks(nullptr);
+
     // Start service
     pService->start();
 
@@ -111,11 +160,11 @@ void BrewPilotBLEService::updateState()
     if (pStateCharacteristic != nullptr)
     {
         BLEStateData stateData{
-            state->isFillingBoiler,
-            state->groupOneIsExtracting,
-            state->groupTwoIsExtracting,
-            state->isExtractingTeaWater,
-            state->isInProgrammingMode};
+            (uint8_t)(state->isFillingBoiler ? 1 : 0),
+            (uint8_t)(state->groupOneIsExtracting ? 1 : 0),
+            (uint8_t)(state->groupTwoIsExtracting ? 1 : 0),
+            (uint8_t)(state->isExtractingTeaWater ? 1 : 0),
+            (uint8_t)(state->isInProgrammingMode ? 1 : 0)};
 
         pStateCharacteristic->setValue((uint8_t *)&stateData, sizeof(BLEStateData));
         pStateCharacteristic->notify();
@@ -126,7 +175,7 @@ void BrewPilotBLEService::updateBoilerState(bool isFilling, uint16_t probeValue,
 {
     if (pBoilerStateCharacteristic != nullptr)
     {
-        BLEBoilerStateData data{isFilling, probeValue, boilerState};
+        BLEBoilerStateData data{(uint8_t)(isFilling ? 1 : 0), probeValue, boilerState};
         pBoilerStateCharacteristic->setValue((uint8_t *)&data, sizeof(BLEBoilerStateData));
         pBoilerStateCharacteristic->notify();
     }
@@ -186,7 +235,7 @@ void BrewPilotBLEService::updateProgrammingMode(bool enabled)
 {
     if (pProgrammingModeCharacteristic != nullptr)
     {
-        uint8_t data[1] = {enabled ? 1 : 0};
+        uint8_t data[1] = {enabled ? (uint8_t)1 : (uint8_t)0};
         pProgrammingModeCharacteristic->setValue(data, sizeof(data));
     }
 }
@@ -202,5 +251,13 @@ void BrewPilotBLEService::updateBackflushSettings(uint16_t groupOneBackflush, ui
     {
         uint8_t data[2] = {(uint8_t)(groupTwoBackflush & 0xFF), (uint8_t)((groupTwoBackflush >> 8) & 0xFF)};
         pGroupTwoBackflushCharacteristic->setValue(data, sizeof(data));
+    }
+}
+
+void BrewPilotBLEService::updateCustomDeviceName(const char *suffix)
+{
+    if (pCustomDeviceNameCharacteristic != nullptr && suffix != nullptr)
+    {
+        pCustomDeviceNameCharacteristic->setValue(suffix);
     }
 }
