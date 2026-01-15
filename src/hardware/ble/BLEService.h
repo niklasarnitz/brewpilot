@@ -173,7 +173,7 @@ private:
     bool *isInProgrammingMode;
 
 public:
-    ProgrammingModeCallback(bool *isInProgrammingMode)
+    explicit ProgrammingModeCallback(bool *isInProgrammingMode)
         : isInProgrammingMode(isInProgrammingMode) {}
 
     void onWrite(NimBLECharacteristic *pCharacteristic) override

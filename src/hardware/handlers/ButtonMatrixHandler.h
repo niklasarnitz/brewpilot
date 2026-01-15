@@ -23,6 +23,14 @@ public:
 
   ~ButtonMatrixHandler();
 
+  // Delete copy constructor and copy assignment operator
+  ButtonMatrixHandler(const ButtonMatrixHandler &) = delete;
+  ButtonMatrixHandler &operator=(const ButtonMatrixHandler &) = delete;
+
+  // Delete move constructor and move assignment operator
+  ButtonMatrixHandler(ButtonMatrixHandler &&) = delete;
+  ButtonMatrixHandler &operator=(ButtonMatrixHandler &&) = delete;
+
   void handle();
 };
 
