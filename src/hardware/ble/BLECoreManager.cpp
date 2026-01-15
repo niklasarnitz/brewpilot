@@ -5,7 +5,7 @@
 #include "BLECoreManager.h"
 
 BLECoreManager::BLECoreManager(State *state, PreferenceHelper *preferenceHelper, VolumetricsHelper *volumetricsHelper, DeviceNameHelper *deviceNameHelper)
-    : state(state), preferenceHelper(preferenceHelper), volumetricsHelper(volumetricsHelper), deviceNameHelper(deviceNameHelper), bleService(nullptr)
+    : state(state), preferenceHelper(preferenceHelper), volumetricsHelper(volumetricsHelper), deviceNameHelper(deviceNameHelper)
 {
 }
 

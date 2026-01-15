@@ -15,11 +15,11 @@
 class BLECoreManager
 {
 private:
-    BrewPilotBLEService *bleService;
     State *state;
     PreferenceHelper *preferenceHelper;
     VolumetricsHelper *volumetricsHelper;
     DeviceNameHelper *deviceNameHelper;
+    BrewPilotBLEService *bleService = nullptr;
 
     // Tracking for state changes
     bool lastIsFillingBoiler = false;

@@ -111,25 +111,25 @@ void BrewPilotBLEService::begin(const char *deviceName)
     pCustomDeviceNameCharacteristic = pService->createCharacteristic(
         CUSTOM_DEVICE_NAME_UUID,
         NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE);
-    CustomDeviceNameCallback *customNameCallback = new CustomDeviceNameCallback(deviceNameHelper);
+    auto *customNameCallback = new CustomDeviceNameCallback(deviceNameHelper);
     pCustomDeviceNameCharacteristic->setCallbacks(customNameCallback);
     callbackPtrs.push_back(customNameCallback);
     // Set initial value to current suffix with explicit length
     String suffix = deviceNameHelper->getDeviceNameSuffix();
-    pCustomDeviceNameCharacteristic->setValue((uint8_t *)suffix.c_str(), suffix.length());
+    pCustomDeviceNameCharacteristic->setValue(reinterpret_cast<const uint8_t *>(suffix.c_str()), suffix.length());
 
     // Create device info characteristics (read-only)
     pDeviceNameCharacteristic = pService->createCharacteristic(
         DEVICE_NAME_UUID,
         NIMBLE_PROPERTY::READ);
-    pDeviceNameCharacteristic->setValue((uint8_t *)deviceName, strlen(deviceName));
+    pDeviceNameCharacteristic->setValue(reinterpret_cast<const uint8_t *>(deviceName), strlen(deviceName));
     pDeviceNameCharacteristic->setCallbacks(nullptr);
 
     pFirmwareVersionCharacteristic = pService->createCharacteristic(
         FIRMWARE_VERSION_UUID,
         NIMBLE_PROPERTY::READ);
     const char *fwVersion = "1.0.0";
-    pFirmwareVersionCharacteristic->setValue((uint8_t *)fwVersion, strlen(fwVersion));
+    pFirmwareVersionCharacteristic->setValue(reinterpret_cast<const uint8_t *>(fwVersion), strlen(fwVersion));
     pFirmwareVersionCharacteristic->setCallbacks(nullptr);
 
     pMachineTypeCharacteristic = pService->createCharacteristic(
@@ -139,7 +139,7 @@ void BrewPilotBLEService::begin(const char *deviceName)
     const char *machineTypeStr = (HARDWARE_MODEL == MachineType::LA_CIMBALI_M29_SELECT)
                                      ? "LA_CIMBALI_M29_SELECT"
                                      : "RANCILIO_S27";
-    pMachineTypeCharacteristic->setValue((uint8_t *)machineTypeStr, strlen(machineTypeStr));
+    pMachineTypeCharacteristic->setValue(reinterpret_cast<const uint8_t *>(machineTypeStr), strlen(machineTypeStr));
     pMachineTypeCharacteristic->setCallbacks(nullptr);
 
     // Start service
@@ -236,8 +236,8 @@ void BrewPilotBLEService::updateProgrammingMode(bool enabled)
 {
     if (pProgrammingModeCharacteristic != nullptr)
     {
-        uint8_t data[1] = {enabled ? (uint8_t)1 : (uint8_t)0};
-        pProgrammingModeCharacteristic->setValue(data, sizeof(data));
+        uint8_t data = enabled ? 1 : 0;
+        pProgrammingModeCharacteristic->setValue(&data, 1);
     }
 }
 
