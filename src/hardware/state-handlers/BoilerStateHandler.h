@@ -25,11 +25,13 @@ private:
     unsigned long lastCheckTime = 0;
     bool hasTurnedOnBoilerProbeVoltage = false;
     BoilerState internalState = BoilerState::BOILER_ABOVE_TARGET_AND_FILLED;
+    uint16_t lastBoilerProbeRawValue = 0;
     bool readBoilerProbe();
 
 public:
     explicit BoilerStateHandler(bool *isFillingBoiler);
     void handleState() override;
+    uint16_t getBoilerProbeRawValue() const { return lastBoilerProbeRawValue; }
 };
 
 #endif // BREWPILOT_BOILERSTATEHANDLER_H

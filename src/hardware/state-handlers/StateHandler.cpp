@@ -35,3 +35,9 @@ void StateHandler::reloadAutoBackflushSettings()
     groupOneStateHandler.reloadAutoBackflushSettings();
     groupTwoStateHandler.reloadAutoBackflushSettings();
 }
+
+void StateHandler::reloadBackflushSettings()
+{
+    groupOneStateHandler.reloadBackflushSettings();
+    groupTwoStateHandler.reloadBackflushSettings();
+}

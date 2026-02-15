@@ -50,6 +50,11 @@ void BLECoreManager::loop()
         bleService->updateState();
     }
 
+    // Update boiler state (read boiler fill level and raw ADC value)
+    const auto &boilerHandler = stateHandler->getBoilerHandler();
+    uint8_t boilerState = state->isFillingBoiler ? 1 : 0;
+    bleService->updateBoilerState(state->isFillingBoiler, boilerState, boilerHandler.getBoilerProbeRawValue());
+
     // Update progress if extraction is active
     if (state->groupOneIsExtracting)
     {

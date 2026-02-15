@@ -93,7 +93,8 @@ struct BLEStateData
 struct BLEBoilerStateData
 {
     uint8_t isFillingBoiler;
-    uint8_t boilerState; // 0=READY, 1=BELOW_TARGET
+    uint8_t boilerState;          // 0=READY, 1=BELOW_TARGET
+    uint16_t boilerProbeRawValue; // ADC raw value (little-endian)
 } __attribute__((packed));
 
 struct BLEProgressData
@@ -147,6 +148,51 @@ public:
             uint16_t value = (uint16_t)rxValue[0] | ((uint16_t)rxValue[1] << 8);
             preferenceHelper->setULong(preferenceKey, value);
             Serial.printf("BLE: Set uint16 setting to %u\n", value);
+        }
+    }
+};
+
+// Callback for backflush settings (stores in preferences and updates read value)
+class BackflushSettingCallback : public NimBLECharacteristicCallbacks
+{
+private:
+    PreferenceHelper *preferenceHelper;
+    PreferenceKey preferenceKey;
+    NimBLECharacteristic *pCharacteristic;
+    StateHandler *stateHandler;
+
+public:
+    BackflushSettingCallback(PreferenceHelper *preferenceHelper, PreferenceKey key, NimBLECharacteristic *pChar, StateHandler *stateHandler = nullptr)
+        : preferenceHelper(preferenceHelper), preferenceKey(key), pCharacteristic(pChar), stateHandler(stateHandler) {}
+
+    void onWrite(NimBLECharacteristic *pChar) override
+    {
+        std::string rxValue = pChar->getValue();
+        if (rxValue.length() >= sizeof(uint16_t))
+        {
+            uint16_t value = (uint16_t)rxValue[0] | ((uint16_t)rxValue[1] << 8);
+            preferenceHelper->setULong(preferenceKey, value);
+
+            // Update the characteristic to reflect the new value
+            std::array<uint8_t, 2> data = {(uint8_t)(value & 0xFF), (uint8_t)((value >> 8) & 0xFF)};
+            pCharacteristic->setValue(data.data(), data.size());
+
+            // Reload backflush settings in state handlers
+            if (stateHandler != nullptr)
+            {
+                stateHandler->reloadBackflushSettings();
+            }
+
+            Serial.printf("BLE: Backflush setting updated to %u, reloading state handlers\n", value);
+        }
+    }
+
+    void updateValue(uint16_t value)
+    {
+        if (pCharacteristic != nullptr)
+        {
+            std::array<uint8_t, 2> data = {(uint8_t)(value & 0xFF), (uint8_t)((value >> 8) & 0xFF)};
+            pCharacteristic->setValue(data.data(), data.size());
         }
     }
 };
@@ -266,7 +312,7 @@ public:
 
     void updateState();
 
-    void updateBoilerState(bool isFilling, uint8_t boilerState);
+    void updateBoilerState(bool isFilling, uint8_t boilerState, uint16_t rawValue);
 
     void updateGroupProgress(bool isGroupOne, uint32_t currentPulses, uint32_t targetPulses);
 

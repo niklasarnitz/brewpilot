@@ -8,8 +8,9 @@
 GroupHeadStateHandler::GroupHeadStateHandler(bool *isExtracting, GroupHeadButtonEvent *event, VolumetricsHelper *volumetricsHelper, PreferenceHelper *preferenceHelper, bool *isInProgrammingMode, int groupNumber)
     : volumetricsHelper(volumetricsHelper), preferenceHelper(preferenceHelper), event(event), isExtracting(isExtracting), isInProgrammingMode(isInProgrammingMode), groupNumber(groupNumber)
 {
-    // Load auto-backflush settings at startup
+    // Load settings at startup
     reloadAutoBackflushSettings();
+    reloadBackflushSettings();
 }
 
 void GroupHeadStateHandler::handleState()
@@ -170,4 +171,13 @@ void GroupHeadStateHandler::reloadAutoBackflushSettings()
 
     Serial.printf("GroupHeadStateHandler %d: Loaded auto-backflush settings - Extract: %lu ms, Pause: %lu ms, Cycles: %lu\n",
                   groupNumber, cachedExtractDuration, cachedPauseDuration, cachedTotalCycles);
+}
+
+void GroupHeadStateHandler::reloadBackflushSettings()
+{
+    cachedBackflushActivationTime = preferenceHelper->getULong(PreferenceKey::BackflushActivationTimeMs, DEFAULT_BACKFLUSH_ACTIVATION_TIME_MS);
+    cachedBackflushDeactivationTime = preferenceHelper->getULong(PreferenceKey::BackflushDeactivationTimeMs, DEFAULT_BACKFLUSH_DEACTIVATION_TIME_MS);
+
+    Serial.printf("GroupHeadStateHandler %d: Loaded backflush settings - Activation: %lu ms, Deactivation: %lu ms\n",
+                  groupNumber, cachedBackflushActivationTime, cachedBackflushDeactivationTime);
 }

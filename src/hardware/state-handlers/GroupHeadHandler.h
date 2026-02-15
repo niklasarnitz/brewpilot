@@ -14,6 +14,10 @@ constexpr unsigned long DEFAULT_EXTRACT_DURATION_MS = 10000; // 10 seconds
 constexpr unsigned long DEFAULT_PAUSE_DURATION_MS = 5000;    // 5 seconds
 constexpr unsigned long DEFAULT_TOTAL_CYCLES = 5;
 
+// Backflush default values
+constexpr unsigned long DEFAULT_BACKFLUSH_ACTIVATION_TIME_MS = 10000;  // 10000 ms
+constexpr unsigned long DEFAULT_BACKFLUSH_DEACTIVATION_TIME_MS = 5000; // 5000 ms
+
 class GroupHeadStateHandler : public GenericStateHandler
 {
     VolumetricsHelper *volumetricsHelper;
@@ -34,17 +38,26 @@ class GroupHeadStateHandler : public GenericStateHandler
     unsigned long cachedPauseDuration = DEFAULT_PAUSE_DURATION_MS;
     unsigned long cachedTotalCycles = DEFAULT_TOTAL_CYCLES;
 
+    // Cached backflush settings (loaded at startup and when changed)
+    unsigned long cachedBackflushActivationTime = DEFAULT_BACKFLUSH_ACTIVATION_TIME_MS;
+    unsigned long cachedBackflushDeactivationTime = DEFAULT_BACKFLUSH_DEACTIVATION_TIME_MS;
+
 public:
     GroupHeadStateHandler(bool *isExtracting, GroupHeadButtonEvent *event, VolumetricsHelper *volumetricsHelper, PreferenceHelper *preferenceHelper, bool *isInProgrammingMode, int groupNumber);
     void handleState() override;
     void flowMeterPulseInterrupt();
 
-    // Reload auto-backflush settings from preferences
+    // Reload settings from preferences
     void reloadAutoBackflushSettings();
+    void reloadBackflushSettings();
 
     // BLE access to progress data
     unsigned long getCurrentPulses() const { return currentPulses; }
     unsigned long getTargetPulses() const { return targetPulses; }
+
+    // BLE access to backflush settings
+    unsigned long getBackflushActivationTime() const { return cachedBackflushActivationTime; }
+    unsigned long getBackflushDeactivationTime() const { return cachedBackflushDeactivationTime; }
 
 private:
     void startAutoBackflush();

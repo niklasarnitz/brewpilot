@@ -80,8 +80,8 @@ void BrewPilotBLEService::begin(const char *deviceName)
     pGroupOneBackflushCharacteristic = pService->createCharacteristic(
         GROUP_ONE_BACKFLUSH_UUID,
         NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE);
-    auto groupOneBackflushCallback = std::make_unique<UInt16SettingCallback>(
-        preferenceHelper, PreferenceKey::BackflushActivationTimeMs);
+    auto groupOneBackflushCallback = std::make_unique<BackflushSettingCallback>(
+        preferenceHelper, PreferenceKey::BackflushActivationTimeMs, pGroupOneBackflushCharacteristic, stateHandler);
     pGroupOneBackflushCharacteristic->setCallbacks(groupOneBackflushCallback.get());
     callbackPtrs.push_back(std::move(groupOneBackflushCallback));
 
@@ -89,8 +89,8 @@ void BrewPilotBLEService::begin(const char *deviceName)
     pGroupTwoBackflushCharacteristic = pService->createCharacteristic(
         GROUP_TWO_BACKFLUSH_UUID,
         NIMBLE_PROPERTY::READ | NIMBLE_PROPERTY::WRITE);
-    auto groupTwoBackflushCallback = std::make_unique<UInt16SettingCallback>(
-        preferenceHelper, PreferenceKey::BackflushDeactivationTimeMs);
+    auto groupTwoBackflushCallback = std::make_unique<BackflushSettingCallback>(
+        preferenceHelper, PreferenceKey::BackflushDeactivationTimeMs, pGroupTwoBackflushCharacteristic, stateHandler);
     pGroupTwoBackflushCharacteristic->setCallbacks(groupTwoBackflushCallback.get());
     callbackPtrs.push_back(std::move(groupTwoBackflushCallback));
 
@@ -218,11 +218,11 @@ void BrewPilotBLEService::updateState()
     }
 }
 
-void BrewPilotBLEService::updateBoilerState(bool isFilling, uint8_t boilerState)
+void BrewPilotBLEService::updateBoilerState(bool isFilling, uint8_t boilerState, uint16_t rawValue)
 {
     if (pBoilerStateCharacteristic != nullptr)
     {
-        BLEBoilerStateData data{(uint8_t)(isFilling ? 1 : 0), boilerState};
+        BLEBoilerStateData data{(uint8_t)(isFilling ? 1 : 0), boilerState, rawValue};
         pBoilerStateCharacteristic->setValue((uint8_t *)&data, sizeof(BLEBoilerStateData));
         pBoilerStateCharacteristic->notify();
     }
@@ -289,14 +289,18 @@ void BrewPilotBLEService::updateProgrammingMode(bool enabled)
 
 void BrewPilotBLEService::updateBackflushSettings(uint16_t groupOneBackflush, uint16_t groupTwoBackflush)
 {
+    // Always read from preferences to ensure consistency
+    uint16_t g1Backflush = (uint16_t)preferenceHelper->getULong(PreferenceKey::BackflushActivationTimeMs, 500);
+    uint16_t g2Backflush = (uint16_t)preferenceHelper->getULong(PreferenceKey::BackflushDeactivationTimeMs, 500);
+
     if (pGroupOneBackflushCharacteristic != nullptr)
     {
-        std::array<uint8_t, 2> data = {(uint8_t)(groupOneBackflush & 0xFF), (uint8_t)((groupOneBackflush >> 8) & 0xFF)};
+        std::array<uint8_t, 2> data = {(uint8_t)(g1Backflush & 0xFF), (uint8_t)((g1Backflush >> 8) & 0xFF)};
         pGroupOneBackflushCharacteristic->setValue(data.data(), data.size());
     }
     if (pGroupTwoBackflushCharacteristic != nullptr)
     {
-        std::array<uint8_t, 2> data = {(uint8_t)(groupTwoBackflush & 0xFF), (uint8_t)((groupTwoBackflush >> 8) & 0xFF)};
+        std::array<uint8_t, 2> data = {(uint8_t)(g2Backflush & 0xFF), (uint8_t)((g2Backflush >> 8) & 0xFF)};
         pGroupTwoBackflushCharacteristic->setValue(data.data(), data.size());
     }
 }

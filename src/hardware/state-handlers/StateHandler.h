@@ -29,9 +29,13 @@ public:
     // Reload auto-backflush settings for both groups
     void reloadAutoBackflushSettings();
 
+    // Reload backflush settings for both groups
+    void reloadBackflushSettings();
+
     // BLE access to group head progress
     const GroupHeadStateHandler &getGroupOneHandler() const { return groupOneStateHandler; }
     const GroupHeadStateHandler &getGroupTwoHandler() const { return groupTwoStateHandler; }
+    const BoilerStateHandler &getBoilerHandler() const { return boilerStateHandler; }
 };
 
 #endif // BREWPILOT_STATEHANDLER_H

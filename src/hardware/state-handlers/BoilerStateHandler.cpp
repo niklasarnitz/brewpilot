@@ -27,6 +27,7 @@ bool BoilerStateHandler::readBoilerProbe()
         lastCheckTime = millis();
 
         uint16_t rawValue = analogRead(BOILER_PROBE_PIN);
+        lastBoilerProbeRawValue = rawValue; // Store raw value
         bool full = rawValue <= BOILER_FILL_LEVEL;
 
         Serial.print("BoilerStateHandler: Boiler is ");
