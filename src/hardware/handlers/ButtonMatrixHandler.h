@@ -19,26 +19,19 @@ private:
   MachineButtonMatrixHandler *machineButtonMatrixHandler;
 
 public:
-  ButtonMatrixHandler(ButtonMatrixState *buttonMatrixState)
-      : buttonMatrixState(buttonMatrixState)
-  {
-    switch (HARDWARE_MODEL)
-    {
-    case MachineType::LA_CIMBALI_M29_SELECT:
-      machineButtonMatrixHandler = new LaCimbaliM29ButtonMatrixHandler(buttonMatrixState);
-      break;
-    case MachineType::RANCILIO_S27:
-      machineButtonMatrixHandler = new RancilioS27ButtonMatrixHandler(buttonMatrixState);
-      break;
-    }
+  ButtonMatrixHandler(ButtonMatrixState *buttonMatrixState);
 
-    machineButtonMatrixHandler->initializePins();
-  };
+  ~ButtonMatrixHandler();
 
-  void handle()
-  {
-    machineButtonMatrixHandler->handle();
-  };
+  // Delete copy constructor and copy assignment operator
+  ButtonMatrixHandler(const ButtonMatrixHandler &) = delete;
+  ButtonMatrixHandler &operator=(const ButtonMatrixHandler &) = delete;
+
+  // Delete move constructor and move assignment operator
+  ButtonMatrixHandler(ButtonMatrixHandler &&) = delete;
+  ButtonMatrixHandler &operator=(ButtonMatrixHandler &&) = delete;
+
+  void handle();
 };
 
 #endif // BREWPILOT_BUTTONMATRIXHANDLER_H

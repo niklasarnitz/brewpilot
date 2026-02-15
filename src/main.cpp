@@ -9,14 +9,18 @@
 #include "structs/VolumetricSettings.h"
 #include "utils/PreferenceHelper.h"
 #include "utils/VolumetricsHelper.h"
+#include "utils/DeviceNameHelper.h"
+#include "hardware/ble/BLECoreManager.h"
 
 PreferenceHelper preferenceHelper;
 VolumetricsHelper volumetricsHelper(&preferenceHelper);
+DeviceNameHelper deviceNameHelper(&preferenceHelper);
 ButtonEvent buttonEvent{};
 State state{};
-StateHandler stateHandler(&state, &buttonEvent, &volumetricsHelper);
+StateHandler stateHandler(&state, &buttonEvent, &volumetricsHelper, &preferenceHelper);
 StateActor stateActor(&state);
 InputHandler inputHandler(&buttonEvent, &state.isInProgrammingMode);
+BLECoreManager bleCoreManager(&state, &stateHandler, &preferenceHelper, &volumetricsHelper, &deviceNameHelper);
 
 void IRAM_ATTR groupOneFlowMeterHandler()
 {
@@ -40,6 +44,11 @@ void setup()
 
     // Load Volumetric Settings
     volumetricsHelper.setup();
+
+    // Initialize device name (generates random suffix if needed)
+    deviceNameHelper.initialize();
+
+    bleCoreManager.begin();
 }
 
 void loop()
@@ -47,6 +56,8 @@ void loop()
     inputHandler.readInputs();
     stateHandler.handleState();
     stateActor.loop();
+    // NimBLE is non blocking so it can run in the main loop
+    bleCoreManager.loop();
 
     delay(50);
 }
