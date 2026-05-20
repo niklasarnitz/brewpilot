@@ -3171,7 +3171,209 @@
 			)
 			(embedded_fonts no)
 		)
-	)
+	
+        	(symbol "Device:LED"
+    		(pin_numbers
+    			(hide yes)
+    		)
+    		(pin_names
+    			(offset 1.016)
+    			(hide yes)
+    		)
+    		(exclude_from_sim no)
+    		(in_bom yes)
+    		(on_board yes)
+    		(in_pos_files yes)
+    		(duplicate_pin_numbers_are_jumpers no)
+    		(property "Reference" "D"
+    			(at 0 2.54 0)
+    			(show_name no)
+    			(do_not_autoplace no)
+    			(effects
+    				(font
+    					(size 1.27 1.27)
+    				)
+    			)
+    		)
+    		(property "Value" "LED"
+    			(at 0 -2.54 0)
+    			(show_name no)
+    			(do_not_autoplace no)
+    			(effects
+    				(font
+    					(size 1.27 1.27)
+    				)
+    			)
+    		)
+    		(property "Footprint" ""
+    			(at 0 0 0)
+    			(show_name no)
+    			(do_not_autoplace no)
+    			(hide yes)
+    			(effects
+    				(font
+    					(size 1.27 1.27)
+    				)
+    			)
+    		)
+    		(property "Datasheet" ""
+    			(at 0 0 0)
+    			(show_name no)
+    			(do_not_autoplace no)
+    			(hide yes)
+    			(effects
+    				(font
+    					(size 1.27 1.27)
+    				)
+    			)
+    		)
+    		(property "Description" "Light emitting diode"
+    			(at 0 0 0)
+    			(show_name no)
+    			(do_not_autoplace no)
+    			(hide yes)
+    			(effects
+    				(font
+    					(size 1.27 1.27)
+    				)
+    			)
+    		)
+    		(property "Sim.Pins" "1=K 2=A"
+    			(at 0 0 0)
+    			(show_name no)
+    			(do_not_autoplace no)
+    			(hide yes)
+    			(effects
+    				(font
+    					(size 1.27 1.27)
+    				)
+    			)
+    		)
+    		(property "ki_keywords" "LED diode"
+    			(at 0 0 0)
+    			(show_name no)
+    			(do_not_autoplace no)
+    			(hide yes)
+    			(effects
+    				(font
+    					(size 1.27 1.27)
+    				)
+    			)
+    		)
+    		(property "ki_fp_filters" "LED* LED_SMD:* LED_THT:*"
+    			(at 0 0 0)
+    			(show_name no)
+    			(do_not_autoplace no)
+    			(hide yes)
+    			(effects
+    				(font
+    					(size 1.27 1.27)
+    				)
+    			)
+    		)
+    		(symbol "LED_0_1"
+    			(polyline
+    				(pts
+    					(xy -3.048 -0.762) (xy -4.572 -2.286) (xy -3.81 -2.286) (xy -4.572 -2.286) (xy -4.572 -1.524)
+    				)
+    				(stroke
+    					(width 0)
+    					(type default)
+    				)
+    				(fill
+    					(type none)
+    				)
+    			)
+    			(polyline
+    				(pts
+    					(xy -1.778 -0.762) (xy -3.302 -2.286) (xy -2.54 -2.286) (xy -3.302 -2.286) (xy -3.302 -1.524)
+    				)
+    				(stroke
+    					(width 0)
+    					(type default)
+    				)
+    				(fill
+    					(type none)
+    				)
+    			)
+    			(polyline
+    				(pts
+    					(xy -1.27 0) (xy 1.27 0)
+    				)
+    				(stroke
+    					(width 0)
+    					(type default)
+    				)
+    				(fill
+    					(type none)
+    				)
+    			)
+    			(polyline
+    				(pts
+    					(xy -1.27 -1.27) (xy -1.27 1.27)
+    				)
+    				(stroke
+    					(width 0.254)
+    					(type default)
+    				)
+    				(fill
+    					(type none)
+    				)
+    			)
+    			(polyline
+    				(pts
+    					(xy 1.27 -1.27) (xy 1.27 1.27) (xy -1.27 0) (xy 1.27 -1.27)
+    				)
+    				(stroke
+    					(width 0.254)
+    					(type default)
+    				)
+    				(fill
+    					(type none)
+    				)
+    			)
+    		)
+    		(symbol "LED_1_1"
+    			(pin passive line
+    				(at -3.81 0 0)
+    				(length 2.54)
+    				(name "K"
+    					(effects
+    						(font
+    							(size 1.27 1.27)
+    						)
+    					)
+    				)
+    				(number "1"
+    					(effects
+    						(font
+    							(size 1.27 1.27)
+    						)
+    					)
+    				)
+    			)
+    			(pin passive line
+    				(at 3.81 0 180)
+    				(length 2.54)
+    				(name "A"
+    					(effects
+    						(font
+    							(size 1.27 1.27)
+    						)
+    					)
+    				)
+    				(number "2"
+    					(effects
+    						(font
+    							(size 1.27 1.27)
+    						)
+    					)
+    				)
+    			)
+    		)
+    		(embedded_fonts no)
+    	)
+  )
 	(junction
 		(at 49.53 121.92)
 		(diameter 0)
@@ -4364,6 +4566,256 @@
 		)
 		(uuid "ffa3ba9f-cd57-405e-a0fa-00f5417f03b8")
 	)
+	(no_connect
+		(at 49.53 43.18)
+		(uuid "46cdc779-a803-4987-ae62-7e9aa8bb1217")
+	)
+	(no_connect
+		(at 49.53 45.72)
+		(uuid "53cf543c-af46-4ba6-b010-1b9575d9b292")
+	)
+	(no_connect
+		(at 49.53 48.26)
+		(uuid "895e5cd6-7254-4a5b-a102-a465231f6761")
+	)
+	(no_connect
+		(at 49.53 78.74)
+		(uuid "abd883bd-1cc6-4878-a3fc-3bfb9b7f0e6e")
+	)
+	(no_connect
+		(at 49.53 81.28)
+		(uuid "dc40460e-d1ed-4b84-b8d5-7bf20e6973fe")
+	)
+	(no_connect
+		(at 77.47 48.26)
+		(uuid "ed4d6720-993b-4eb8-afd6-4f535fa4cf4c")
+	)
+	(no_connect
+		(at 77.47 50.8)
+		(uuid "a8848084-60a8-4247-9e2a-7fe6b18d1fba")
+	)
+	(no_connect
+		(at 77.47 73.66)
+		(uuid "6f25a025-756d-4e0a-92ba-94a3b4fe166e")
+	)
+	(no_connect
+		(at 77.47 81.28)
+		(uuid "3143a3c5-241f-4d81-83c2-85de873b0f2d")
+	)
+	(no_connect
+		(at 77.47 83.82)
+		(uuid "da0d0c77-d04a-45f4-a0cb-50e35b909213")
+	)
+	(no_connect
+		(at 77.47 86.36)
+		(uuid "806c33fc-3d5d-46e3-8c7e-9e6875cfc2ac")
+	)
+	(no_connect
+		(at 49.53 73.66)
+		(uuid "a09c4214-2caf-49e4-a662-1481169ee63d")
+	)
+	(no_connect
+		(at 77.47 55.88)
+		(uuid "1d23defb-10cb-4e42-a56b-1a26a7f9fab9")
+	)
+	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 16.51 95.25 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "df17590b-31c2-497e-9f07-5e949fccd074")
+		(property "Reference" "#FLG01"
+			(at 16.51 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 16.51 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 16.51 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 16.51 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power flag"
+			(at 16.51 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "3e5eac6f-3139-485a-b246-54aaab274498")
+		)
+		(instances
+			(project "BrewPilot"
+				(path "/"
+					(reference "#FLG01")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 16.51 88.9 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "bd12ed35-d894-4dcc-9ca6-3f40dd6952f4")
+		(property "Reference" "#FLG02"
+			(at 16.51 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 16.51 82.55 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 16.51 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 16.51 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power flag"
+			(at 16.51 88.9 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "807704d6-58ec-4e97-b394-3323a4c91558")
+		)
+		(instances
+			(project "BrewPilot"
+				(path "/"
+					(reference "#FLG02")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 16.51 81.28 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "6478750f-4515-420e-99f3-7fa104158ac2")
+		(property "Reference" "#FLG03"
+			(at 16.51 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 16.51 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 16.51 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 16.51 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power flag"
+			(at 16.51 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "e82dbac9-15f4-4226-8f78-66f0ff8e773b")
+		)
+		(instances
+			(project "BrewPilot"
+				(path "/"
+					(reference "#FLG03")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(label "3.3V"
 		(at 68.58 118.11 0)
 		(effects
@@ -4373,16 +4825,6 @@
 			(justify left bottom)
 		)
 		(uuid "08b0c8c7-0fc9-4195-9828-a1e212d984d5")
-	)
-	(label "Probe"
-		(at 25.4 185.42 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "122c223a-e79e-44a5-9643-750aac0c1500")
 	)
 	(label "5V"
 		(at 26.67 121.92 0)
@@ -4404,16 +4846,6 @@
 		)
 		(uuid "1f9fc824-a563-4afb-9d3e-b0bdb94afc77")
 	)
-	(label "GRP_ONE"
-		(at 120.65 160.02 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "24c3d8ff-075e-426f-b207-080ac51be832")
-	)
 	(label "SOL_L"
 		(at 21.59 143.51 0)
 		(effects
@@ -4423,16 +4855,6 @@
 			(justify left bottom)
 		)
 		(uuid "33f036f8-ce6a-44af-ae13-d1da07724680")
-	)
-	(label "PMP_L"
-		(at 26.67 167.64 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "36a12dc3-9e36-48f6-afe7-1f7ebd084e0f")
 	)
 	(label "3.3V"
 		(at 68.58 102.87 0)
@@ -4444,76 +4866,6 @@
 		)
 		(uuid "56f49c4c-ff7a-4668-89c7-fc819681397a")
 	)
-	(label "IO_7"
-		(at 68.58 170.18 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "5c0fc0ff-df89-46a1-aebc-9e137ff4fcf1")
-	)
-	(label "TEA"
-		(at 120.65 170.18 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "81618422-c572-4f2f-b85a-88fdae5721c1")
-	)
-	(label "IO_12"
-		(at 68.58 157.48 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "85fe3c88-c2f1-4be7-8e61-53d74e1560bb")
-	)
-	(label "PMP_N"
-		(at 26.67 170.18 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "88d9a096-ed68-4155-a73a-134bcd3fe3d8")
-	)
-	(label "GRP_TWO"
-		(at 120.65 165.1 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "92a32476-c4aa-48e0-b6aa-7734f1e6f892")
-	)
-	(label "IO_1"
-		(at 68.58 147.32 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "93961833-3bfe-4a80-b6ee-e299fd66254a")
-	)
-	(label "SIG"
-		(at 68.58 105.41 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "97ad5b79-9ccc-42ac-9d1b-2fab53da6b44")
-	)
 	(label "GND"
 		(at 68.58 107.95 0)
 		(effects
@@ -4524,46 +4876,6 @@
 		)
 		(uuid "99c78362-581f-4bd7-be7d-4b784cb2ead5")
 	)
-	(label "SOL_N"
-		(at 21.59 146.05 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "9d24801b-27b0-45c1-874e-b41fc9f380b7")
-	)
-	(label "SIG"
-		(at 68.58 120.65 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "a9bd4c1d-8854-4c47-9b36-8d71634ab8e4")
-	)
-	(label "PMP"
-		(at 120.65 187.96 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "b8f8228f-0da4-4173-a967-f76237158ffc")
-	)
-	(label "IO_6"
-		(at 68.58 134.62 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "ba8bcc8f-a4ff-4018-ad10-59789e00bb29")
-	)
 	(label "GND"
 		(at 25.4 187.96 0)
 		(effects
@@ -4573,16 +4885,6 @@
 			(justify left bottom)
 		)
 		(uuid "c8aa4128-c4db-4ac7-97be-cba1370eaf01")
-	)
-	(label "BLR_FILL"
-		(at 120.65 182.88 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "e8b2a5d6-bf77-4fcc-a615-192a2651f49e")
 	)
 	(label "GND"
 		(at 26.67 124.46 0)
@@ -5144,9 +5446,9 @@
 			)
 		)
 	)
-	(global_label "5V"
-		(shape input)
-		(at 240.03 54.61 0)
+		(global_label "5V"
+			(shape input)
+			(at 240.03 54.61 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -5672,9 +5974,9 @@
 			)
 		)
 	)
-	(global_label "5V"
-		(shape input)
-		(at 222.25 154.94 0)
+	(global_label "3.3V"
+			(shape input)
+			(at 222.25 154.94 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -6636,7 +6938,7 @@
 				)
 			)
 		)
-		(property "Value" "R"
+			(property "Value" "4.7k"
 			(at 264.16 82.55 90)
 			(effects
 				(font
@@ -6954,6 +7256,9 @@
 				(hide yes)
 			)
 		)
+    (property "Electrical_Rating" "Flex IO: ESP32 3.3V GPIO only, 12mA max recommended per pin" (at 63.5 165.1 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
 		(pin "2"
 			(uuid "38e9ebfe-7767-4a93-bfde-73e805a57000")
 		)
@@ -7175,7 +7480,7 @@
 				)
 			)
 		)
-		(property "Value" "R"
+			(property "Value" "4.7k"
 			(at 264.16 107.95 90)
 			(effects
 				(font
@@ -7353,6 +7658,9 @@
 				(hide yes)
 			)
 		)
+    (property "Fuse_Rating" "SOL_L common fuse holder: fit <=3A AC fuse, voltage/breaking capacity suitable for supply" (at 33.02 134.62 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
 		(pin "1"
 			(uuid "5d144e8e-2dbb-4f5b-935b-f7cb25d18873")
 		)
@@ -7496,6 +7804,9 @@
 				(hide yes)
 			)
 		)
+    (property "Fuse_Rating" "5V fuse holder: fit <=1A fuse sized for ESP32 + SSR LED current budget" (at 41.91 121.92 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
 		(pin "1"
 			(uuid "9149dd35-f738-4496-9a57-6861af8a9de0")
 		)
@@ -7537,7 +7848,7 @@
 				)
 			)
 		)
-		(property "Footprint" "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1-4-3.81_1x04_P3.81mm_Horizontal"
+			(property "Footprint" "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1-4-3.81_1x04_P3.81mm_Horizontal"
 			(at 115.57 185.42 0)
 			(effects
 				(font
@@ -7564,6 +7875,9 @@
 				(hide yes)
 			)
 		)
+    (property "Electrical_Rating" "Pump output 2A max; boiler fill output 2A max; AC load only" (at 115.57 185.42 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
 		(pin "4"
 			(uuid "b80e2410-fb92-4e7f-a70d-b79a7bea7186")
 		)
@@ -7640,6 +7954,9 @@
 				(hide yes)
 			)
 		)
+    (property "Electrical_Rating" "G3MB-202P DC5; output 2A max; 75-264VAC datasheet, 24VAC out-of-datasheet" (at 154.94 77.47 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
 		(pin "4"
 			(uuid "8de3ddba-9761-40c0-9b72-fab5c3382734")
 		)
@@ -7716,6 +8033,9 @@
 				(hide yes)
 			)
 		)
+    (property "Electrical_Rating" "G3MB-202P DC5; output 2A max; 75-264VAC datasheet, 24VAC out-of-datasheet" (at 154.94 128.27 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
 		(pin "4"
 			(uuid "098ee716-11ad-436b-a29e-23b401df82e5")
 		)
@@ -7792,6 +8112,9 @@
 				(hide yes)
 			)
 		)
+    (property "Electrical_Rating" "G3MB-202P DC5; output 2A max; 75-264VAC datasheet, 24VAC out-of-datasheet" (at 154.94 52.07 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
 		(pin "4"
 			(uuid "89fe4e9f-0747-4380-9863-c67fffea71ca")
 		)
@@ -7866,6 +8189,9 @@
 				(hide yes)
 			)
 		)
+    (property "Electrical_Rating" "Flex IO: ESP32 3.3V GPIO only, 12mA max recommended per pin" (at 63.5 142.24 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
 		(pin "2"
 			(uuid "539db98f-4b8f-409b-b4a6-9a003b458e19")
 		)
@@ -8192,7 +8518,7 @@
 				)
 			)
 		)
-		(property "Footprint" "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1-4-3.81_1x04_P3.81mm_Horizontal"
+			(property "Footprint" "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1-6-3.81_1x06_P3.81mm_Horizontal"
 			(at 115.57 165.1 0)
 			(effects
 				(font
@@ -8219,6 +8545,9 @@
 				(hide yes)
 			)
 		)
+    (property "Electrical_Rating" "Solenoid outputs: 2A max per switched output; shared solenoid common bus 3A total continuous on PCB" (at 115.57 165.1 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
 		(pin "4"
 			(uuid "da38385b-d612-487a-8b90-c584ffb2d172")
 		)
@@ -8264,8 +8593,8 @@
 				)
 			)
 		)
-		(property "Value" "R"
-			(at 264.16 57.15 90)
+			(property "Value" "4.7k"
+				(at 264.16 57.15 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8501,6 +8830,9 @@
 				(hide yes)
 			)
 		)
+    (property "Electrical_Rating" "G3MB-202P DC5; output 2A max; 75-264VAC datasheet, 24VAC out-of-datasheet" (at 154.94 26.67 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
 		(pin "4"
 			(uuid "cd6772d2-a21c-47eb-9cea-aac01c194ad4")
 		)
@@ -8574,6 +8906,9 @@
 				(hide yes)
 			)
 		)
+    (property "Electrical_Rating" "Solenoid AC input: shared bus 3A total continuous max, fuse <=3A" (at 16.51 146.05 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
 		(pin "1"
 			(uuid "d936cf99-0bbd-4046-bf64-c62cb8e1a6fa")
 		)
@@ -8607,8 +8942,8 @@
 				)
 			)
 		)
-		(property "Value" "R"
-			(at 215.9 151.13 90)
+			(property "Value" "10k"
+				(at 215.9 151.13 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8709,6 +9044,9 @@
 				(hide yes)
 			)
 		)
+    (property "Electrical_Rating" "Pump AC input/output path: 2A max due G3MB SSR" (at 21.59 170.18 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
 		(pin "1"
 			(uuid "81807729-db2a-4b8a-ae86-f402e423e92a")
 		)
@@ -8742,7 +9080,7 @@
 				)
 			)
 		)
-		(property "Value" "R"
+			(property "Value" "4.7k"
 			(at 264.16 31.75 90)
 			(effects
 				(font
@@ -8810,8 +9148,8 @@
 				)
 			)
 		)
-		(property "Value" "R"
-			(at 264.16 133.35 90)
+			(property "Value" "4.7k"
+				(at 264.16 133.35 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8989,6 +9327,9 @@
 				(hide yes)
 			)
 		)
+    (property "Electrical_Rating" "G3MB-202P DC5; output 2A max; 75-264VAC datasheet, 24VAC out-of-datasheet" (at 154.94 102.87 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
 		(pin "4"
 			(uuid "abeb60ab-7630-4798-ab77-c5e2c153b3d2")
 		)
@@ -9062,6 +9403,9 @@
 				(hide yes)
 			)
 		)
+    (property "Electrical_Rating" "Boiler probe input: 0-5V nominal, 6.6V absolute max with 10k/10k divider to ESP32 ADC" (at 20.32 187.96 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
 		(pin "1"
 			(uuid "ea2f3236-a5c6-420e-bac1-69195a6924ab")
 		)
@@ -9148,7 +9492,471 @@
 			)
 		)
 	)
-	(sheet_instances
+	(wire
+		(pts
+			(xy 209.55 162.56) (xy 212.09 162.56)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a8fca7bb-ea61-431f-a15a-f1c30f3011de")
+	)
+	(wire
+		(pts
+			(xy 219.71 162.56) (xy 222.25 162.56)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "76f3a320-39d8-4764-b103-cb8496b99aab")
+	)
+	(global_label "IN_FLOWMETER_GROUP_ONE"
+		(shape input)
+		(at 209.55 162.56 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "69ccb428-e723-4a2f-a833-fff90413ac9b")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 180.6206 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "3.3V"
+		(shape input)
+		(at 222.25 162.56 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "6ef356a6-937e-4af1-adea-0a516f46516d")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 229.3476 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 215.9 162.56 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "984abdd7-04b9-4e3e-89fa-76d5e88dd7b3")
+		(property "Reference" "R9"
+			(at 215.9 156.21 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 215.9 158.75 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
+			(at 215.9 164.338 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 215.9 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 215.9 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "edc0ef90-7d0b-4ed6-b9ff-1bb9712de43d")
+		)
+		(pin "2"
+			(uuid "e604b6c4-6109-4a16-9bdc-7a57392e12b1")
+		)
+		(instances
+			(project "BrewPilot"
+				(path "/b7a2ce43-05af-4468-b259-133901da962b"
+					(reference "R9")
+					(unit 1)
+				)
+			)
+		)
+	)
+		(text "DESIGN RATINGS / LIMITS\nAC outputs use G3MB-202P DC5 SSRs: 2 A max per output, AC load only. Datasheet load range is 75-264 VAC; 24 VAC use is intentionally out-of-datasheet/prototype-only.\nBoard current assumption: 1 oz copper, 1.5 mm AC tracks. Limit shared solenoid common bus to 3 A total continuous; each switched output and pump output to 2 A max.\nFusing required: SOL_L common fuse <= 3 A, each load must be externally protected for wiring/load. 5V fuse <= 1 A.\nClearance policy: AC_HIGH_CURRENT nets use 1.5 mm clearance. This is not certified mains insulation; final product needs EE/safety review for creepage/clearance, enclosure, pollution degree, and fuse breaking capacity.\nSSR drive: ESP32 GPIO drives NPN low-side transistor via 4.7k. Firmware must configure outputs LOW before enabling loads. Add hardware base pulldowns in next rev if outputs must remain off through reset/bootloader faults.\nLow-voltage IO: ESP32 GPIO only, 3.3 V logic, 12 mA max recommended per pin. Boiler probe divider is 10k/10k: probe input <= 5 V nominal, <= 6.6 V absolute to keep ADC <= 3.3 V."
+		(exclude_from_sim no)
+		(at 40 35 0)
+		(effects
+			(font
+				(size 1.8 1.8)
+				(bold yes)
+			)
+			(justify left bottom)
+		)
+		(uuid "72a6a75d-ae2b-4b9a-943d-d94a0bc6f9f8")
+	)
+  (symbol (lib_id "Device:R") (at 205 35 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "b4f5a1da-02a5-46e7-898a-26dab88f8f6a")
+    (property "Reference" "R10" (at 205 32.46 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "1k" (at 205 37.54 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" (at 205 35 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
+    (property "Datasheet" "~" (at 205 35 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
+    (instances
+      (project "BrewPilot"
+        (path "/"
+          (reference "R10")
+          (unit 1)
+        )
+      )
+    )
+  )
+    (symbol (lib_id "Device:LED") (at 215 35 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "10474a3d-f357-4e22-923f-65adb02b2675")
+    (property "Reference" "D1" (at 215 32.46 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "PUMP_ON" (at 215 37.54 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "LED_THT:LED_D3.0mm" (at 215 35 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
+    (property "Datasheet" "~" (at 215 35 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
+    (instances
+      (project "BrewPilot"
+        (path "/"
+          (reference "D1")
+          (unit 1)
+        )
+      )
+    )
+  )
+    (symbol (lib_id "Device:R") (at 205 45 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "59687e08-070d-401c-8aa2-568c840e7e9f")
+    (property "Reference" "R11" (at 205 42.46 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "1k" (at 205 47.54 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" (at 205 45 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
+    (property "Datasheet" "~" (at 205 45 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
+    (instances
+      (project "BrewPilot"
+        (path "/"
+          (reference "R11")
+          (unit 1)
+        )
+      )
+    )
+  )
+    (symbol (lib_id "Device:LED") (at 215 45 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "f731f4c3-43db-4234-8f16-1c1cf62d2dac")
+    (property "Reference" "D2" (at 215 42.46 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "BOILER_FILL_ON" (at 215 47.54 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "LED_THT:LED_D3.0mm" (at 215 45 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
+    (property "Datasheet" "~" (at 215 45 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
+    (instances
+      (project "BrewPilot"
+        (path "/"
+          (reference "D2")
+          (unit 1)
+        )
+      )
+    )
+  )
+    (symbol (lib_id "Device:R") (at 205 55 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "afbf751e-f357-4ad0-b5f2-0f47b6e63c50")
+    (property "Reference" "R12" (at 205 52.46 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "1k" (at 205 57.54 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" (at 205 55 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
+    (property "Datasheet" "~" (at 205 55 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
+    (instances
+      (project "BrewPilot"
+        (path "/"
+          (reference "R12")
+          (unit 1)
+        )
+      )
+    )
+  )
+    (symbol (lib_id "Device:LED") (at 215 55 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "99995fd8-33e5-4a0c-9d0e-a639ac584124")
+    (property "Reference" "D3" (at 215 52.46 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "GROUP1_ON" (at 215 57.54 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "LED_THT:LED_D3.0mm" (at 215 55 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
+    (property "Datasheet" "~" (at 215 55 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
+    (instances
+      (project "BrewPilot"
+        (path "/"
+          (reference "D3")
+          (unit 1)
+        )
+      )
+    )
+  )
+    (symbol (lib_id "Device:R") (at 205 65 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "7a26416a-eb9f-4b05-8fed-9a638abe32c6")
+    (property "Reference" "R13" (at 205 62.46 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "1k" (at 205 67.54 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" (at 205 65 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
+    (property "Datasheet" "~" (at 205 65 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
+    (instances
+      (project "BrewPilot"
+        (path "/"
+          (reference "R13")
+          (unit 1)
+        )
+      )
+    )
+  )
+    (symbol (lib_id "Device:LED") (at 215 65 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "a344c8f2-d7b7-40a5-a175-491e0ca00354")
+    (property "Reference" "D4" (at 215 62.46 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "GROUP2_ON" (at 215 67.54 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "LED_THT:LED_D3.0mm" (at 215 65 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
+    (property "Datasheet" "~" (at 215 65 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
+    (instances
+      (project "BrewPilot"
+        (path "/"
+          (reference "D4")
+          (unit 1)
+        )
+      )
+    )
+  )
+    (symbol (lib_id "Device:R") (at 205 75 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "50efe733-46de-4169-b6d0-91b67ad35c1e")
+    (property "Reference" "R14" (at 205 72.46 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "1k" (at 205 77.54 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" (at 205 75 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
+    (property "Datasheet" "~" (at 205 75 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
+    (instances
+      (project "BrewPilot"
+        (path "/"
+          (reference "R14")
+          (unit 1)
+        )
+      )
+    )
+  )
+    (symbol (lib_id "Device:LED") (at 215 75 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid "70517947-79e4-4f67-936c-e53a9d6b4b87")
+    (property "Reference" "D5" (at 215 72.46 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "TEA_ON" (at 215 77.54 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "LED_THT:LED_D3.0mm" (at 215 75 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
+    (property "Datasheet" "~" (at 215 75 0)
+      (effects (font (size 1.27 1.27)) (hide yes))
+    )
+    (instances
+      (project "BrewPilot"
+        (path "/"
+          (reference "D5")
+          (unit 1)
+        )
+      )
+    )
+  )
+  (label "LED_PUMP_A" (at 205 38.81 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "f8198afa-4fc1-4947-bd7d-3bb227a15beb")
+  )
+  (label "5V" (at 205 31.19 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "76b160cc-75af-49d5-ae4f-a377ac3e0567")
+  )
+  (label "LED_PUMP_A" (at 218.81 35 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "fdceab57-3c54-4100-89f4-29e675ce14b9")
+  )
+  (label "Net-(Q1-C)" (at 211.19 35 180)
+    (effects (font (size 1.27 1.27)) (justify right bottom))
+    (uuid "b4100f6e-c7d8-41de-a70c-68a4e97ec0cf")
+  )
+  (label "LED_BOILER_FILL_A" (at 205 48.81 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "a691041e-cff5-4ccb-8fb2-60afc8750ecb")
+  )
+  (label "5V" (at 205 41.19 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "30b0a517-4924-4ad9-ac9f-51741a59149b")
+  )
+  (label "LED_BOILER_FILL_A" (at 218.81 45 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "14e1f2c2-647c-4958-85e7-b5e1d7e3d132")
+  )
+  (label "Net-(Q2-C)" (at 211.19 45 180)
+    (effects (font (size 1.27 1.27)) (justify right bottom))
+    (uuid "1a3e20ba-126c-4b39-829d-117dd1290e29")
+  )
+  (label "LED_GROUP1_A" (at 205 58.81 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "029da366-9c8a-476c-8f61-f6d804f61ce2")
+  )
+  (label "5V" (at 205 51.19 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "a7fa4b72-fe79-477e-add8-1d3dab20ddb3")
+  )
+  (label "LED_GROUP1_A" (at 218.81 55 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "937d09c7-b653-471a-a21e-78eb0e4fef8f")
+  )
+  (label "Net-(Q3-C)" (at 211.19 55 180)
+    (effects (font (size 1.27 1.27)) (justify right bottom))
+    (uuid "29cd6e40-3627-4e78-ac7e-4724d88d5ec5")
+  )
+  (label "LED_GROUP2_A" (at 205 68.81 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "525c58f9-a8b1-467b-8fae-b6e25623390e")
+  )
+  (label "5V" (at 205 61.19 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "102c3244-19db-45cc-8d92-a1b464d4ec2d")
+  )
+  (label "LED_GROUP2_A" (at 218.81 65 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "d6331c4b-b885-4810-9a27-d63598444839")
+  )
+  (label "Net-(Q4-C)" (at 211.19 65 180)
+    (effects (font (size 1.27 1.27)) (justify right bottom))
+    (uuid "560f4fe6-102e-4273-a683-c0c5bb674a9e")
+  )
+  (label "LED_TEA_A" (at 205 78.81 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "8377b923-4ebd-4c98-b02a-38fdc526ec7e")
+  )
+  (label "5V" (at 205 71.19 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "21ac29db-b5b1-42f8-87a6-401cb4617a42")
+  )
+  (label "LED_TEA_A" (at 218.81 75 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "6607c1ff-2328-4e7a-a5f2-fa717c4555e9")
+  )
+  (label "Net-(Q5-C)" (at 211.19 75 180)
+    (effects (font (size 1.27 1.27)) (justify right bottom))
+    (uuid "7c9b5e6b-5e79-414b-a1eb-7372a4428ab0")
+  )
+  (sheet_instances
 		(path "/"
 			(page "1")
 		)
