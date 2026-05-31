@@ -2,3 +2,6 @@
 .DS_Store
 .vscode/c_cpp_properties.json
 .vscode/launch.json
+pcb/.history
+pcb/~BrewPilot.kicad_pro.lck
+pcb/~BrewPilot.kicad_pcb.lck
