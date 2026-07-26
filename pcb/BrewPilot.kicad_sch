@@ -1977,7 +1977,7 @@
 						)
 					)
 				)
-				(pin tri_state line
+				(pin power_in line
 					(at 22.86 -10.16 180)
 					(length 2.54)
 					(name "GND"
@@ -2745,7 +2745,7 @@
 						(type none)
 					)
 				)
-				(pin unspecified line
+				(pin passive line
 					(at 0 0 0)
 					(length 7.62)
 					(name "1"
@@ -2763,7 +2763,7 @@
 						)
 					)
 				)
-				(pin unspecified line
+				(pin passive line
 					(at 0 -2.54 0)
 					(length 7.62)
 					(name "2"
@@ -2781,7 +2781,7 @@
 						)
 					)
 				)
-				(pin unspecified line
+				(pin passive line
 					(at 81.28 0 180)
 					(length 7.62)
 					(name "4"
@@ -2799,7 +2799,7 @@
 						)
 					)
 				)
-				(pin unspecified line
+				(pin passive line
 					(at 81.28 -2.54 180)
 					(length 7.62)
 					(name "3"
@@ -4392,12 +4392,6 @@
   )
   )
 	(junction
-		(at 49.53 121.92)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "ad10a283-9076-4df3-a60b-4d936263ea20")
-	)
-	(junction
 		(at 44.45 190.5)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4892,16 +4886,6 @@
 			(type default)
 		)
 		(uuid "5790cc49-a73d-41af-828a-10cb3ab59a0f")
-	)
-	(wire
-		(pts
-			(xy 49.53 121.92) (xy 46.99 121.92)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "59621ac0-5b2a-4793-8df6-8202c85726e4")
 	)
 	(wire
 		(pts
@@ -5759,7 +5743,8 @@
 			)
 		)
 	)
-	(label "3.3V"
+	(global_label "+3.3V"
+		(shape input)
 		(at 68.58 118.11 0)
 		(effects
 			(font
@@ -5769,7 +5754,8 @@
 		)
 		(uuid "08b0c8c7-0fc9-4195-9828-a1e212d984d5")
 	)
-	(label "5V_RAW"
+	(global_label "5V_RAW"
+		(shape input)
 		(at 26.67 121.92 0)
 		(effects
 			(font
@@ -5779,7 +5765,8 @@
 		)
 		(uuid "1d9dadcd-cded-4aec-82c2-244958fab60f")
 	)
-	(label "GND"
+	(global_label "GND"
+		(shape input)
 		(at 68.58 123.19 0)
 		(effects
 			(font
@@ -5789,7 +5776,8 @@
 		)
 		(uuid "1f9fc824-a563-4afb-9d3e-b0bdb94afc77")
 	)
-	(label "SOL_L"
+	(global_label "SOL_L"
+		(shape input)
 		(at 21.59 143.51 0)
 		(effects
 			(font
@@ -5799,7 +5787,8 @@
 		)
 		(uuid "33f036f8-ce6a-44af-ae13-d1da07724680")
 	)
-	(label "3.3V"
+	(global_label "+3.3V"
+		(shape input)
 		(at 68.58 102.87 0)
 		(effects
 			(font
@@ -5809,7 +5798,8 @@
 		)
 		(uuid "56f49c4c-ff7a-4668-89c7-fc819681397a")
 	)
-	(label "GND"
+	(global_label "GND"
+		(shape input)
 		(at 68.58 107.95 0)
 		(effects
 			(font
@@ -5819,7 +5809,8 @@
 		)
 		(uuid "99c78362-581f-4bd7-be7d-4b784cb2ead5")
 	)
-	(label "GND"
+	(global_label "GND"
+		(shape input)
 		(at 25.4 187.96 0)
 		(effects
 			(font
@@ -5829,7 +5820,8 @@
 		)
 		(uuid "c8aa4128-c4db-4ac7-97be-cba1370eaf01")
 	)
-	(label "GND"
+	(global_label "GND"
+		(shape input)
 		(at 26.67 124.46 0)
 		(effects
 			(font
@@ -6059,7 +6051,7 @@
 			)
 		)
 	)
-	(global_label "3.3V"
+	(global_label "+3.3V"
 		(shape input)
 		(at 73.66 118.11 0)
 		(fields_autoplaced yes)
@@ -6257,7 +6249,7 @@
 			)
 		)
 	)
-	(global_label "3.3V"
+	(global_label "+3.3V"
 		(shape input)
 		(at 45.72 40.64 180)
 		(fields_autoplaced yes)
@@ -6389,7 +6381,7 @@
 			)
 		)
 	)
-		(global_label "5V"
+		(global_label "+5V"
 			(shape input)
 			(at 240.03 54.61 0)
 		(fields_autoplaced yes)
@@ -6455,7 +6447,7 @@
 			)
 		)
 	)
-	(global_label "5V"
+	(global_label "+5V"
 		(shape input)
 		(at 240.03 80.01 0)
 		(fields_autoplaced yes)
@@ -6675,7 +6667,7 @@
 			)
 		)
 	)
-	(global_label "5V"
+	(global_label "+5V"
 		(shape input)
 		(at 240.03 29.21 0)
 		(fields_autoplaced yes)
@@ -6807,7 +6799,7 @@
 			)
 		)
 	)
-	(global_label "5V"
+	(global_label "+5V"
 		(shape input)
 		(at 20.32 88.9 0)
 		(fields_autoplaced yes)
@@ -6917,7 +6909,7 @@
 			)
 		)
 	)
-	(global_label "3.3V"
+	(global_label "+3.3V"
 			(shape input)
 			(at 222.25 154.94 0)
 		(fields_autoplaced yes)
@@ -7225,7 +7217,7 @@
 			)
 		)
 	)
-	(global_label "3.3V"
+	(global_label "+3.3V"
 		(shape input)
 		(at 73.66 102.87 0)
 		(fields_autoplaced yes)
@@ -7357,7 +7349,7 @@
 			)
 		)
 	)
-	(global_label "5V"
+	(global_label "+5V"
 		(shape input)
 		(at 45.72 86.36 180)
 		(fields_autoplaced yes)
@@ -7445,7 +7437,7 @@
 			)
 		)
 	)
-	(global_label "5V"
+	(global_label "+5V"
 		(shape input)
 		(at 50.8 121.92 0)
 		(fields_autoplaced yes)
@@ -7467,7 +7459,7 @@
 			)
 		)
 	)
-	(global_label "5V"
+	(global_label "+5V"
 		(shape input)
 		(at 240.03 105.41 0)
 		(fields_autoplaced yes)
@@ -7709,7 +7701,7 @@
 			)
 		)
 	)
-	(global_label "5V"
+	(global_label "+5V"
 		(shape input)
 		(at 240.03 130.81 0)
 		(fields_autoplaced yes)
@@ -7841,7 +7833,7 @@
 			)
 		)
 	)
-	(global_label "3.3V"
+	(global_label "+3.3V"
 		(shape input)
 		(at 20.32 81.28 0)
 		(fields_autoplaced yes)
@@ -10477,7 +10469,7 @@
 			)
 		)
 	)
-	(global_label "3.3V"
+	(global_label "+3.3V"
 		(shape input)
 		(at 222.25 162.56 0)
 		(fields_autoplaced yes)
@@ -10819,83 +10811,123 @@
       )
     )
   )
-  (label "LED_PUMP_A" (at 205 38.81 0)
+  (global_label "LED_PUMP_A"
+    (shape input)
+    (at 205 38.81 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid "f8198afa-4fc1-4947-bd7d-3bb227a15beb")
   )
-  (label "5V" (at 205 31.19 0)
+  (global_label "+5V"
+    (shape input)
+    (at 205 31.19 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid "76b160cc-75af-49d5-ae4f-a377ac3e0567")
   )
-  (label "LED_PUMP_A" (at 218.81 35 0)
+  (global_label "LED_PUMP_A"
+    (shape input)
+    (at 218.81 35 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid "fdceab57-3c54-4100-89f4-29e675ce14b9")
   )
-  (label "Net-(Q1-C)" (at 211.19 35 180)
+  (global_label "SSR_PUMP_SINK"
+    (shape input)
+    (at 211.19 35 180)
     (effects (font (size 1.27 1.27)) (justify right bottom))
     (uuid "b4100f6e-c7d8-41de-a70c-68a4e97ec0cf")
   )
-  (label "LED_BOILER_FILL_A" (at 205 48.81 0)
+  (global_label "LED_BOILER_FILL_A"
+    (shape input)
+    (at 205 48.81 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid "a691041e-cff5-4ccb-8fb2-60afc8750ecb")
   )
-  (label "5V" (at 205 41.19 0)
+  (global_label "+5V"
+    (shape input)
+    (at 205 41.19 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid "30b0a517-4924-4ad9-ac9f-51741a59149b")
   )
-  (label "LED_BOILER_FILL_A" (at 218.81 45 0)
+  (global_label "LED_BOILER_FILL_A"
+    (shape input)
+    (at 218.81 45 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid "14e1f2c2-647c-4958-85e7-b5e1d7e3d132")
   )
-  (label "Net-(Q2-C)" (at 211.19 45 180)
+  (global_label "SSR_BOILER_FILL_SINK"
+    (shape input)
+    (at 211.19 45 180)
     (effects (font (size 1.27 1.27)) (justify right bottom))
     (uuid "1a3e20ba-126c-4b39-829d-117dd1290e29")
   )
-  (label "LED_GROUP1_A" (at 205 58.81 0)
+  (global_label "LED_GROUP1_A"
+    (shape input)
+    (at 205 58.81 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid "029da366-9c8a-476c-8f61-f6d804f61ce2")
   )
-  (label "5V" (at 205 51.19 0)
+  (global_label "+5V"
+    (shape input)
+    (at 205 51.19 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid "a7fa4b72-fe79-477e-add8-1d3dab20ddb3")
   )
-  (label "LED_GROUP1_A" (at 218.81 55 0)
+  (global_label "LED_GROUP1_A"
+    (shape input)
+    (at 218.81 55 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid "937d09c7-b653-471a-a21e-78eb0e4fef8f")
   )
-  (label "Net-(Q3-C)" (at 211.19 55 180)
+  (global_label "SSR_GROUP1_SINK"
+    (shape input)
+    (at 211.19 55 180)
     (effects (font (size 1.27 1.27)) (justify right bottom))
     (uuid "29cd6e40-3627-4e78-ac7e-4724d88d5ec5")
   )
-  (label "LED_GROUP2_A" (at 205 68.81 0)
+  (global_label "LED_GROUP2_A"
+    (shape input)
+    (at 205 68.81 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid "525c58f9-a8b1-467b-8fae-b6e25623390e")
   )
-  (label "5V" (at 205 61.19 0)
+  (global_label "+5V"
+    (shape input)
+    (at 205 61.19 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid "102c3244-19db-45cc-8d92-a1b464d4ec2d")
   )
-  (label "LED_GROUP2_A" (at 218.81 65 0)
+  (global_label "LED_GROUP2_A"
+    (shape input)
+    (at 218.81 65 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid "d6331c4b-b885-4810-9a27-d63598444839")
   )
-  (label "Net-(Q4-C)" (at 211.19 65 180)
+  (global_label "SSR_GROUP2_SINK"
+    (shape input)
+    (at 211.19 65 180)
     (effects (font (size 1.27 1.27)) (justify right bottom))
     (uuid "560f4fe6-102e-4273-a683-c0c5bb674a9e")
   )
-  (label "LED_TEA_A" (at 205 78.81 0)
+  (global_label "LED_TEA_A"
+    (shape input)
+    (at 205 78.81 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid "8377b923-4ebd-4c98-b02a-38fdc526ec7e")
   )
-  (label "5V" (at 205 71.19 0)
+  (global_label "+5V"
+    (shape input)
+    (at 205 71.19 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid "21ac29db-b5b1-42f8-87a6-401cb4617a42")
   )
-  (label "LED_TEA_A" (at 218.81 75 0)
+  (global_label "LED_TEA_A"
+    (shape input)
+    (at 218.81 75 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid "6607c1ff-2328-4e7a-a5f2-fa717c4555e9")
   )
-  (label "Net-(Q5-C)" (at 211.19 75 180)
+  (global_label "SSR_TEA_SINK"
+    (shape input)
+    (at 211.19 75 180)
     (effects (font (size 1.27 1.27)) (justify right bottom))
     (uuid "7c9b5e6b-5e79-414b-a1eb-7372a4428ab0")
   )
@@ -11021,13 +11053,13 @@
     (property "Reference" "D6" (at 82 102.86999999999999 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Value" "PESD3V3" (at 82 107.95 0)
+    (property "Value" "BZX55C5V1" (at 82 107.95 0)
       (effects (font (size 1.27 1.27)))
     )
     (property "Footprint" "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal" (at 82 105.41 0)
       (effects (font (size 1.27 1.27)) (hide yes))
     )
-    (property "Datasheet" "~" (at 82 105.41 0)
+    (property "Datasheet" "https://www.vishay.com/docs/85604/bzx55.pdf" (at 82 105.41 0)
       (effects (font (size 1.27 1.27)) (hide yes))
     )
     (instances
@@ -11045,13 +11077,13 @@
     (property "Reference" "D7" (at 82 118.11 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Value" "PESD3V3" (at 82 123.19000000000001 0)
+    (property "Value" "BZX55C5V1" (at 82 123.19000000000001 0)
       (effects (font (size 1.27 1.27)))
     )
     (property "Footprint" "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal" (at 82 120.65 0)
       (effects (font (size 1.27 1.27)) (hide yes))
     )
-    (property "Datasheet" "~" (at 82 120.65 0)
+    (property "Datasheet" "https://www.vishay.com/docs/85604/bzx55.pdf" (at 82 120.65 0)
       (effects (font (size 1.27 1.27)) (hide yes))
     )
     (instances
@@ -11069,13 +11101,13 @@
     (property "Reference" "D8" (at 39 185.42000000000002 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Value" "PESD3V3" (at 39 190.5 0)
+    (property "Value" "BZX55C5V1" (at 39 190.5 0)
       (effects (font (size 1.27 1.27)))
     )
     (property "Footprint" "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal" (at 39 187.96 0)
       (effects (font (size 1.27 1.27)) (hide yes))
     )
-    (property "Datasheet" "~" (at 39 187.96 0)
+    (property "Datasheet" "https://www.vishay.com/docs/85604/bzx55.pdf" (at 39 187.96 0)
       (effects (font (size 1.27 1.27)) (hide yes))
     )
     (instances
@@ -11219,6 +11251,36 @@
 		)
 		(uuid "05a8871f-6f36-4c60-bdf9-d0408038daed")
 	)
+  (global_label "SSR_PUMP_SINK"
+    (shape input)
+    (at 236.22 26.67 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "dc94c03f-2427-42b7-8b22-111db1d070af")
+  )
+  (global_label "SSR_BOILER_FILL_SINK"
+    (shape input)
+    (at 236.22 52.07 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "1615ca1f-d856-43c7-98e6-c925027819ed")
+  )
+  (global_label "SSR_GROUP1_SINK"
+    (shape input)
+    (at 236.22 77.47 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "7ea6f1b7-1223-4200-915d-fa225e7d50ce")
+  )
+  (global_label "SSR_GROUP2_SINK"
+    (shape input)
+    (at 236.22 102.87 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "9928f715-ee65-49c0-8c17-0b7e24bc9c12")
+  )
+  (global_label "SSR_TEA_SINK"
+    (shape input)
+    (at 236.22 128.27 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "519d22f1-a858-46ef-8139-baeca8d1aad6")
+  )
   (sheet_instances
 		(path "/"
 			(page "1")
@@ -11557,16 +11619,16 @@
     )
   )
   (wire (pts (xy 132.08 27.94) (xy 134.62 27.94)) (stroke (width 0) (type default)) (uuid "034ecd83-19c2-4241-9deb-cd172e76e15d"))
-  (global_label "I2C_SDA" (shape input) (at 134.62 27.94 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "5c217387-ae30-4a9a-89ed-fad4d5ef9878"))
+  (global_label "FLEXIBLE_IO_10" (shape input) (at 134.62 27.94 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "5c217387-ae30-4a9a-89ed-fad4d5ef9878"))
   
   (wire (pts (xy 132.08 25.4) (xy 134.62 25.4)) (stroke (width 0) (type default)) (uuid "6cee67fc-3a63-4df7-bce7-02210e08a21a"))
-  (global_label "I2C_SCL" (shape input) (at 134.62 25.4 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "81ac4f2c-ae94-41bf-a8b0-87c7ec3e68a1"))
+  (global_label "FLEXIBLE_IO_11" (shape input) (at 134.62 25.4 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "81ac4f2c-ae94-41bf-a8b0-87c7ec3e68a1"))
   
   (wire (pts (xy 132.08 22.86) (xy 134.62 22.86)) (stroke (width 0) (type default)) (uuid "223af0e4-92bf-4688-a44c-7291b7105598"))
   (global_label "GND" (shape input) (at 134.62 22.86 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "36766da5-d97e-4858-aab4-feb2c768a4c6"))
   
   (wire (pts (xy 132.08 20.32) (xy 134.62 20.32)) (stroke (width 0) (type default)) (uuid "5592091d-044b-4186-83d1-6a513357624d"))
-  (global_label "3.3V" (shape input) (at 134.62 20.32 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "de622327-b0ec-43f6-ac78-50a26341569f"))
+  (global_label "+3.3V" (shape input) (at 134.62 20.32 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "de622327-b0ec-43f6-ac78-50a26341569f"))
   
   (wire (pts (xy 132.08 10.16) (xy 132.08 17.78)) (stroke (width 0) (type default)) (uuid "b65c7a73-fa0e-4ec3-8aba-e26d1d1b8694"))
   (wire (pts (xy 132.08 12.7) (xy 132.08 10.16)) (stroke (width 0) (type default)) (uuid "812c0770-2f9d-4ff1-b604-b79f028a97ac"))
@@ -11577,27 +11639,27 @@
   
   (wire (pts (xy 142.24 16.51) (xy 149.86 16.51)) (stroke (width 0) (type default)) (uuid "3f78ada1-3b85-4206-9e60-7b44b94e8597"))
   (wire (pts (xy 142.24 16.51) (xy 139.7 16.51)) (stroke (width 0) (type default)) (uuid "d96ad901-c74d-4c4d-8f96-7fbc914ccb58"))
-  (global_label "3.3V" (shape input) (at 139.7 16.51 180) (effects (font (size 1.27 1.27)) (justify right)) (uuid "37fdbeea-8db2-4d97-9808-7200f544daae"))
+  (global_label "+3.3V" (shape input) (at 139.7 16.51 180) (effects (font (size 1.27 1.27)) (justify right)) (uuid "37fdbeea-8db2-4d97-9808-7200f544daae"))
   
   (wire (pts (xy 142.24 24.13) (xy 142.24 26.67)) (stroke (width 0) (type default)) (uuid "e647dfaa-2965-4502-83b5-50b65c2a5606"))
-  (global_label "I2C_SDA" (shape input) (at 142.24 26.67 90) (effects (font (size 1.27 1.27)) (justify left)) (uuid "38994806-4293-4fb9-976b-539473709133"))
+  (global_label "FLEXIBLE_IO_10" (shape input) (at 142.24 26.67 90) (effects (font (size 1.27 1.27)) (justify left)) (uuid "38994806-4293-4fb9-976b-539473709133"))
   
   (wire (pts (xy 149.86 24.13) (xy 149.86 26.67)) (stroke (width 0) (type default)) (uuid "9046c624-5278-46f5-b7f9-d5c7b281bf05"))
-  (global_label "I2C_SCL" (shape input) (at 149.86 26.67 90) (effects (font (size 1.27 1.27)) (justify left)) (uuid "dbcee50c-3ccc-4e3d-a5e4-0113c90e5a49"))
+  (global_label "FLEXIBLE_IO_11" (shape input) (at 149.86 26.67 90) (effects (font (size 1.27 1.27)) (justify left)) (uuid "dbcee50c-3ccc-4e3d-a5e4-0113c90e5a49"))
 
   (wire (pts (xy 50.8 121.92) (xy 55.88 121.92)) (stroke (width 0) (type default)) (uuid "9696e1f9-b2fe-41b4-9260-dcc3d375f794"))
   (wire (pts (xy 55.88 121.92) (xy 60.96 121.92)) (stroke (width 0) (type default)) (uuid "be09d5fd-fbda-445c-b881-c8175fbb0e23"))
   (wire (pts (xy 60.96 121.92) (xy 68.58 121.92)) (stroke (width 0) (type default)) (uuid "02830f09-ec82-4843-995c-ffec8047d839"))
-  (global_label "5V" (shape input) (at 68.58 121.92 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "7b82a9ec-f870-4be2-ae7f-04f6df20dbd5"))
+  (global_label "+5V" (shape input) (at 68.58 121.92 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "7b82a9ec-f870-4be2-ae7f-04f6df20dbd5"))
   
   (wire (pts (xy 55.88 129.54) (xy 60.96 129.54)) (stroke (width 0) (type default)) (uuid "1c643868-4c38-451c-9e97-164b09f42dc3"))
   (wire (pts (xy 60.96 129.54) (xy 68.58 129.54)) (stroke (width 0) (type default)) (uuid "b706697c-cffd-43b7-ad11-9480f80f6e05"))
   (global_label "GND" (shape input) (at 68.58 129.54 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "cd5d432c-a39f-4a2f-bc96-55ddacd5bf06"))
   
   (wire (pts (xy 77.47 53.34) (xy 80.01 53.34)) (stroke (width 0) (type default)) (uuid "54275671-744f-44af-a00f-529204fa0230"))
-  (global_label "I2C_SDA" (shape input) (at 80.01 53.34 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "ad7121df-9572-46af-af8a-8a6041f9f001"))
+  (global_label "FLEXIBLE_IO_10" (shape input) (at 80.01 53.34 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "ad7121df-9572-46af-af8a-8a6041f9f001"))
   
   (wire (pts (xy 77.47 45.72) (xy 80.01 45.72)) (stroke (width 0) (type default)) (uuid "2082ae7a-d79b-4987-91e5-d6dcb2dd98fd"))
-  (global_label "I2C_SCL" (shape input) (at 80.01 45.72 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "f67cbf26-5996-4901-8e63-71668b20e997"))
+  (global_label "FLEXIBLE_IO_11" (shape input) (at 80.01 45.72 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "f67cbf26-5996-4901-8e63-71668b20e997"))
 
 )

@@ -30,7 +30,7 @@ The two fuse holders are fully identified, but the actual fuse elements are not 
 
 Their current ratings and time characteristics must be selected from the real load/inrush, supply limit, conductor size, and applicable safety requirements. The BOM deliberately does not invent these ratings.
 
-D6–D8 are named `PESD3V3` but use a DO-35 through-hole footprint. The proposed `BZX55C3V3-TR` physically fits and can serve as a prototype Zener clamp, but it is not a true PESD/ESD suppressor and should not be treated as an equivalent production substitution.
+D6–D8 use Vishay `BZX55C5V1-TR` 5.1 V Zener diodes in the existing DO-35 through-hole footprints. They are pragmatic clamps for the machine-internal flow-meter and boiler-probe wiring; they are not IEC-rated ESD suppressors.
 
 The five LEDs have no color specification in the schematic. Green `L-934GD` parts are proposed.
 
@@ -38,8 +38,8 @@ The five LEDs have no color specification in the schematic. Green `L-934GD` part
 
 This is a complete count/sourcing BOM, not a release-to-production approval.
 
-- The current ERC has 0 errors and 57 warnings. In particular, the D1–D5 cathode labels are reported as isolated, so the indicator LEDs are not electrically joined to the transistor collector nets in the exported netlist.
-- KiCad 10.0.5 crashes while running CLI DRC on the current PCB (`Array index out of range`). Existing local DRC reports contain short-circuit violations. Resolve and rerun DRC successfully before fabrication or mains testing.
+- KiCad 10.0.5 CLI ERC completes with 0 violations under the current project exclusions.
+- KiCad 10.0.5 crashes while running CLI DRC on the current PCB (`Array index out of range`), so no valid current DRC result is available. Resolve the crash and obtain a clean DRC result before fabrication or mains testing.
 - Several 3.81 mm Phoenix terminal blocks carry AC mains in the current netlist. Phoenix lists the selected MKDS 1 family at 200 V in overvoltage category III / pollution degree 2 and 400 V in category II / pollution degree 2. Confirm the actual installation category and required creepage/clearance before using them at 230 VAC.
 - Omron discontinued `G3MB-202P DC5` in 2011. The on-hand relays should be known-authentic and verified; do not replenish them from an unverified marketplace.
 - Confirm that the on-hand ESP32 is a 38-pin DevKitC-style board. A common 30-pin DOIT ESP32 DevKit V1 is not mechanically or electrically interchangeable with this footprint.

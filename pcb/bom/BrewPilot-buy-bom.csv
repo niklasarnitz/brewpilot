@@ -4,7 +4,7 @@
 "3","2","C3, C5","100 nF, 50 V, X7R, ±10%","Radial dipped ceramic capacitor, 5.00 mm pitch","TDK","FG28X7R1H104KNT06","Ready to order."
 "4","1","C4","100 µF, 16 V, ±20%, 105 °C","Radial aluminum electrolytic capacitor, 6.3 mm diameter","Panasonic Industry","EEU-FR1C101B","Ready to order."
 "5","5","D1, D2, D3, D4, D5","Green, 3 mm","Diffused through-hole indicator LED","Kingbright","L-934GD","Green is proposed; the schematic does not define color."
-"6","3","D6, D7, D8","3.3 V, 500 mW","Axial Zener diode","Vishay","BZX55C3V3-TR","Prototype-only footprint-compatible proposal; not equivalent to the PESD3V3 schematic value."
+"6","3","D6, D7, D8","5.1 V, 500 mW","Axial Zener clamp diode, DO-35","Vishay","BZX55C5V1-TR","Ready to order; pragmatic THT input clamp."
 "11","1","J11","5 × 20 mm, 250 VAC","Covered PCB fuse holder","Würth Elektronik","696108003002","Ready to order."
 "12","1","J12","5 × 20 mm","Open horizontal PCB fuse holder","SCHURTER","0031.8201","Ready to order."
 "13","1","J13","8P8C, right angle","Unshielded through-hole modular jack","Amphenol Communications Solutions","54602-908LF","Ready to order."

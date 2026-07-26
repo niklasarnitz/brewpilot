@@ -7,3 +7,27 @@ pcb/~BrewPilot.kicad_pro.lck
 pcb/~BrewPilot.kicad_pcb.lck
 logs
 pcb/production
+
+# Generated reports and review exports
+drc_report*.txt
+erc_report*.txt
+*.rpt
+*.log
+pcb/review/*.pdf
+pcb/review/*audit*.md
+
+# KiCad and FreeRouting local/session artifacts
+*.kicad_prl
+*.lck
+**/fp-info-cache
+*.bak
+*.dsn
+*.ses
+*.net
+*.pre-freerouting-*.kicad_pcb
+*-backups/
+
+# Language/build caches
+__pycache__/
+*.py[cod]
+*.tmp

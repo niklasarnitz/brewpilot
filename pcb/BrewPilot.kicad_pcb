@@ -283,7 +283,7 @@
 			(drill 0.9)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "Net-(Q2-C)")
+			(net "SSR_BOILER_FILL_SINK")
 			(teardrops
 				(best_length_ratio 0.5)
 				(max_length 1)
@@ -825,7 +825,7 @@
 			(drill 0.8)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "3.3V")
+			(net "+3.3V")
 			(teardrops
 				(best_length_ratio 0.5)
 				(max_length 1)
@@ -1409,7 +1409,7 @@
 			(drill 0.75)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "Net-(Q2-C)")
+			(net "SSR_BOILER_FILL_SINK")
 			(pinfunction "C")
 			(pintype "passive")
 			(teardrops
@@ -2192,7 +2192,7 @@
 			(drill 0.9)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "Net-(Q5-C)")
+			(net "SSR_TEA_SINK")
 			(teardrops
 				(best_length_ratio 0.5)
 				(max_length 1)
@@ -3014,7 +3014,7 @@
 			(drill 0.76)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "3.3V")
+			(net "+3.3V")
 			(teardrops
 				(best_length_ratio 0.5)
 				(max_length 1)
@@ -3095,7 +3095,7 @@
 				)
 			)
 		)
-		(property "Value" "PESD3V3"
+		(property "Value" "BZX55C5V1"
 			(at 3.81 2.12 0)
 			(layer "F.Fab")
 			(uuid "91a7723d-0b06-4af9-ac87-a46df53d2141")
@@ -3106,7 +3106,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "https://www.vishay.com/docs/85604/bzx55.pdf"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -3117,7 +3117,7 @@
 				)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "5.1 V, 500 mW axial Zener diode, DO-35"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -3701,7 +3701,7 @@
 			(drill 0.9906)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "5V")
+			(net "+5V")
 			(pinfunction "3")
 			(pintype "unspecified")
 			(teardrops
@@ -3723,7 +3723,7 @@
 			(drill 0.9906)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "Net-(Q2-C)")
+			(net "SSR_BOILER_FILL_SINK")
 			(pinfunction "4")
 			(pintype "unspecified")
 			(teardrops
@@ -4067,7 +4067,7 @@
 			(drill 1.1)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "3.3V")
+			(net "+3.3V")
 			(pinfunction "Pin_3")
 			(pintype "passive")
 			(teardrops
@@ -4281,7 +4281,7 @@
 			(drill 0.8)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "5V")
+			(net "+5V")
 			(teardrops
 				(best_length_ratio 0.5)
 				(max_length 1)
@@ -4510,7 +4510,7 @@
 			(drill 0.75)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "Net-(Q4-C)")
+			(net "SSR_GROUP2_SINK")
 			(pinfunction "C")
 			(pintype "passive")
 			(teardrops
@@ -5200,7 +5200,7 @@
 			(drill 1.1)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "3.3V")
+			(net "+3.3V")
 			(pinfunction "Pin_3")
 			(pintype "passive")
 			(teardrops
@@ -6216,7 +6216,7 @@
 			(drill 0.9906)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "5V")
+			(net "+5V")
 			(pinfunction "3")
 			(pintype "unspecified")
 			(teardrops
@@ -6238,7 +6238,7 @@
 			(drill 0.9906)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "Net-(Q1-C)")
+			(net "SSR_PUMP_SINK")
 			(pinfunction "4")
 			(pintype "unspecified")
 			(teardrops
@@ -6499,7 +6499,7 @@
 			(drill 0.9906)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "5V")
+			(net "+5V")
 			(pinfunction "3")
 			(pintype "unspecified")
 			(teardrops
@@ -6521,7 +6521,7 @@
 			(drill 0.9906)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "Net-(Q3-C)")
+			(net "SSR_GROUP1_SINK")
 			(pinfunction "4")
 			(pintype "unspecified")
 			(teardrops
@@ -6721,7 +6721,7 @@
 			(drill 0.75)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "Net-(Q3-C)")
+			(net "SSR_GROUP1_SINK")
 			(pinfunction "C")
 			(pintype "passive")
 			(teardrops
@@ -7225,7 +7225,7 @@
 			(drill 0.9906)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "5V")
+			(net "+5V")
 			(pinfunction "3")
 			(pintype "unspecified")
 			(teardrops
@@ -7247,7 +7247,7 @@
 			(drill 0.9906)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "Net-(Q4-C)")
+			(net "SSR_GROUP2_SINK")
 			(pinfunction "4")
 			(pintype "unspecified")
 			(teardrops
@@ -7447,7 +7447,7 @@
 			(drill 0.75)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "Net-(Q1-C)")
+			(net "SSR_PUMP_SINK")
 			(pinfunction "C")
 			(pintype "passive")
 			(teardrops
@@ -7705,7 +7705,7 @@
 			(drill 0.9)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "Net-(Q1-C)")
+			(net "SSR_PUMP_SINK")
 			(teardrops
 				(best_length_ratio 0.5)
 				(max_length 1)
@@ -8130,7 +8130,7 @@
 			(drill 0.8)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "3.3V")
+			(net "+3.3V")
 			(pintype "passive")
 			(teardrops
 				(best_length_ratio 0.5)
@@ -8423,7 +8423,7 @@
 			(drill 0.9906)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "5V")
+			(net "+5V")
 			(pinfunction "3")
 			(pintype "unspecified")
 			(teardrops
@@ -8445,7 +8445,7 @@
 			(drill 0.9906)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "Net-(Q5-C)")
+			(net "SSR_TEA_SINK")
 			(pinfunction "4")
 			(pintype "unspecified")
 			(teardrops
@@ -10067,7 +10067,7 @@
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
 			(roundrect_rratio 0.15625)
-			(net "5V")
+			(net "+5V")
 			(teardrops
 				(best_length_ratio 0.5)
 				(max_length 1)
@@ -10423,7 +10423,7 @@
 			(drill 1)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "3.3V")
+			(net "+3.3V")
 			(pinfunction "3.3V")
 			(pintype "power_out")
 			(teardrops
@@ -10743,7 +10743,7 @@
 			(drill 1)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "5V")
+			(net "+5V")
 			(pinfunction "5V")
 			(pintype "power_in")
 			(teardrops
@@ -11299,7 +11299,7 @@
 			(drill 0.8)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "5V")
+			(net "+5V")
 			(teardrops
 				(best_length_ratio 0.5)
 				(max_length 1)
@@ -11939,7 +11939,7 @@
 			(drill 0.8)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "3.3V")
+			(net "+3.3V")
 			(pintype "passive")
 			(teardrops
 				(best_length_ratio 0.5)
@@ -12131,7 +12131,7 @@
 			(drill 0.8)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "5V")
+			(net "+5V")
 			(teardrops
 				(best_length_ratio 0.5)
 				(max_length 1)
@@ -12352,7 +12352,7 @@
 			(drill 0.8)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "5V")
+			(net "+5V")
 			(teardrops
 				(best_length_ratio 0.5)
 				(max_length 1)
@@ -12804,7 +12804,7 @@
 			(drill 0.8)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "3.3V")
+			(net "+3.3V")
 			(pintype "passive")
 			(teardrops
 				(best_length_ratio 0.5)
@@ -13098,7 +13098,7 @@
 				)
 			)
 		)
-		(property "Value" "PESD3V3"
+		(property "Value" "BZX55C5V1"
 			(at 3.81 2.12 0)
 			(layer "F.Fab")
 			(uuid "51d46ad7-f4a5-459a-a284-507bb8f173c7")
@@ -13109,7 +13109,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "https://www.vishay.com/docs/85604/bzx55.pdf"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -13120,7 +13120,7 @@
 				)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "5.1 V, 500 mW axial Zener diode, DO-35"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -13539,7 +13539,7 @@
 			(drill 0.8)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "5V")
+			(net "+5V")
 			(teardrops
 				(best_length_ratio 0.5)
 				(max_length 1)
@@ -13782,7 +13782,7 @@
 			(drill 1.5)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "5V")
+			(net "+5V")
 			(pintype "passive")
 			(solder_mask_margin 0.102)
 			(teardrops
@@ -14284,7 +14284,7 @@
 			(drill 0.75)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "Net-(Q5-C)")
+			(net "SSR_TEA_SINK")
 			(pinfunction "C")
 			(pintype "passive")
 			(teardrops
@@ -14542,7 +14542,7 @@
 			(drill 0.9)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "Net-(Q4-C)")
+			(net "SSR_GROUP2_SINK")
 			(teardrops
 				(best_length_ratio 0.5)
 				(max_length 1)
@@ -14774,7 +14774,7 @@
 			(drill 0.8)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "5V")
+			(net "+5V")
 			(teardrops
 				(best_length_ratio 0.5)
 				(max_length 1)
@@ -15017,7 +15017,7 @@
 			(drill 0.9)
 			(layers "*.Cu" "*.Mask")
 			(remove_unused_layers no)
-			(net "Net-(Q3-C)")
+			(net "SSR_GROUP1_SINK")
 			(teardrops
 				(best_length_ratio 0.5)
 				(max_length 1)
@@ -15082,7 +15082,7 @@
 				)
 			)
 		)
-		(property "Value" "PESD3V3"
+		(property "Value" "BZX55C5V1"
 			(at 3.81 2.12 0)
 			(layer "F.Fab")
 			(uuid "f67263c2-94e2-4cae-a6be-34dde6ddbcb9")
@@ -15093,7 +15093,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "https://www.vishay.com/docs/85604/bzx55.pdf"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -15104,7 +15104,7 @@
 				)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "5.1 V, 500 mW axial Zener diode, DO-35"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -17569,7 +17569,7 @@
 		(end 216.96 122.14)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q2-C)")
+		(net "SSR_BOILER_FILL_SINK")
 		(uuid "20306e60-62de-463d-b377-a6c3d7b6b417")
 	)
 	(segment
@@ -17577,7 +17577,7 @@
 		(end 216.96 112.68)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q2-C)")
+		(net "SSR_BOILER_FILL_SINK")
 		(uuid "8bf93062-bd63-4893-9795-8a282443df43")
 	)
 	(segment
@@ -17585,7 +17585,7 @@
 		(end 218.6 90.3)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q2-C)")
+		(net "SSR_BOILER_FILL_SINK")
 		(uuid "db299782-e889-4a57-a420-6d9246a651fb")
 	)
 	(segment
@@ -17593,7 +17593,7 @@
 		(end 216.96 91.94)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q2-C)")
+		(net "SSR_BOILER_FILL_SINK")
 		(uuid "f376b4c1-15d8-4261-9441-65670372da88")
 	)
 	(segment
@@ -17769,7 +17769,7 @@
 		(end 138.3982 52.0486)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "04d43285-5c3e-418a-9207-d02ccafea491")
 	)
 	(segment
@@ -17777,7 +17777,7 @@
 		(end 221.31 65)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "14b3244b-9b94-4b4a-8e06-676d5287f1e0")
 	)
 	(segment
@@ -17785,7 +17785,7 @@
 		(end 159.9683 53.0245)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "35c67ee4-760d-40bf-a1e2-dcf5dcf95a32")
 	)
 	(segment
@@ -17793,7 +17793,7 @@
 		(end 145.0232 105.0275)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "40665529-1e45-4d13-86a6-50764408303f")
 	)
 	(segment
@@ -17801,7 +17801,7 @@
 		(end 217.31 45.81)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "47e65007-b600-444a-b2b8-38e84be1352c")
 	)
 	(segment
@@ -17809,7 +17809,7 @@
 		(end 159.9683 54.4773)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "48e71b1e-9804-4368-8c9e-a3d2385fdffc")
 	)
 	(segment
@@ -17817,7 +17817,7 @@
 		(end 217.31 61)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "7425de64-ce50-47c5-b57a-e504950b44b8")
 	)
 	(segment
@@ -17825,7 +17825,7 @@
 		(end 159.9683 54.4773)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "8b79e042-8905-49a4-83c7-34b2d272443d")
 	)
 	(segment
@@ -17833,7 +17833,7 @@
 		(end 131.5731 91.5774)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "8d4aee4a-866a-42e5-b5c9-dd898edba609")
 	)
 	(segment
@@ -17841,7 +17841,7 @@
 		(end 131.5731 58.8737)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "8ef6ad86-0aa8-4278-bfdc-955eb03eec19")
 	)
 	(segment
@@ -17849,7 +17849,7 @@
 		(end 145.0232 109.1443)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "ebf76d2f-7fc0-40b3-acb7-648d09fecb55")
 	)
 	(via
@@ -17857,7 +17857,7 @@
 		(size 0.6)
 		(drill 0.3)
 		(layers "F.Cu" "B.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "648e36c4-20d0-49fe-9879-16310f908e3d")
 	)
 	(via
@@ -17865,7 +17865,7 @@
 		(size 0.6)
 		(drill 0.3)
 		(layers "F.Cu" "B.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "ece09c84-41f8-4602-bf49-b69136c04e1b")
 	)
 	(segment
@@ -17873,7 +17873,7 @@
 		(end 162.4488 38.0918)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "0b877366-cd72-4c37-a0ea-5802a8a42e0f")
 	)
 	(segment
@@ -17881,7 +17881,7 @@
 		(end 204.9105 63.5895)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "40285641-eb77-457c-8624-f45a3a824f7a")
 	)
 	(segment
@@ -17889,7 +17889,7 @@
 		(end 214.5 43)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "44a98a16-eddc-4bc9-8bd4-f7a5235ee319")
 	)
 	(segment
@@ -17897,7 +17897,7 @@
 		(end 155.2873 45.2533)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "5385d7ba-6a8a-4ba6-a8cb-75d21a43328a")
 	)
 	(segment
@@ -17905,7 +17905,7 @@
 		(end 193.6988 38.0918)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "5aeb1fb0-8528-4be3-b8cc-965d4280ad53")
 	)
 	(segment
@@ -17913,7 +17913,7 @@
 		(end 141.6983 51.9573)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "6f980768-3063-401b-af29-0202c285187f")
 	)
 	(segment
@@ -17921,7 +17921,7 @@
 		(end 144.9983 51.9573)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "a939edbb-5dfc-4582-b51e-c6fb665a5f1a")
 	)
 	(segment
@@ -17929,7 +17929,7 @@
 		(end 155.2873 48.3435)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "aa429d24-348d-4dee-b368-f2f26887a4e1")
 	)
 	(segment
@@ -17937,7 +17937,7 @@
 		(end 148.6121 48.3435)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "c14ce023-0d99-49ad-b465-11ea2e14365f")
 	)
 	(segment
@@ -17945,7 +17945,7 @@
 		(end 141.6983 51.9573)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "db506085-c4d9-40ac-b9be-6c4124d6c2a5")
 	)
 	(segment
@@ -17953,7 +17953,7 @@
 		(end 219.8995 63.5895)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "ddb9d3ec-0c52-439b-b0a5-59679b55a0e3")
 	)
 	(segment
@@ -17961,7 +17961,7 @@
 		(end 203.5 65)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "e5b58a23-cf28-4391-89d5-ad161c8fbcb7")
 	)
 	(segment
@@ -17969,7 +17969,7 @@
 		(end 197 43)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "f2c5d87e-85b6-4cd8-bae7-d751cc988412")
 	)
 	(segment
@@ -17977,7 +17977,7 @@
 		(end 212.893 41.393)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "f8e1f6e6-2123-46ac-928d-177c399a2e49")
 	)
 	(segment
@@ -17985,7 +17985,7 @@
 		(end 141.607 52.0486)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "fe404860-7a5d-4750-acaa-6280aadd8f17")
 	)
 	(segment
@@ -17993,7 +17993,7 @@
 		(end 197 41.393)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "3.3V")
+		(net "+3.3V")
 		(uuid "fe8ded48-108c-4cdd-8c57-85e5d83ee290")
 	)
 	(segment
@@ -18369,7 +18369,7 @@
 		(end 175.4983 110.9283)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q5-C)")
+		(net "SSR_TEA_SINK")
 		(uuid "01198f50-070f-4c61-904a-410aed34984e")
 	)
 	(segment
@@ -18377,7 +18377,7 @@
 		(end 177.5 90.23)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q5-C)")
+		(net "SSR_TEA_SINK")
 		(uuid "2e3c7967-93b4-45fe-8225-22c7b455e3f4")
 	)
 	(segment
@@ -18385,7 +18385,7 @@
 		(end 175.86 111.29)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q5-C)")
+		(net "SSR_TEA_SINK")
 		(uuid "61313672-afc5-4f9c-81a0-379631d22110")
 	)
 	(segment
@@ -18393,7 +18393,7 @@
 		(end 179.0069 101.198)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q5-C)")
+		(net "SSR_TEA_SINK")
 		(uuid "6ebb48eb-1a07-484f-9c80-24c0120e59f7")
 	)
 	(segment
@@ -18401,7 +18401,7 @@
 		(end 179.0069 91.7369)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q5-C)")
+		(net "SSR_TEA_SINK")
 		(uuid "8127f4b1-6a73-4ac4-89ed-13ed35809555")
 	)
 	(segment
@@ -18409,7 +18409,7 @@
 		(end 175.4983 104.7066)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q5-C)")
+		(net "SSR_TEA_SINK")
 		(uuid "939db0a9-8af9-4269-beed-f1b45ba0726f")
 	)
 	(segment
@@ -18417,7 +18417,7 @@
 		(end 175.86 112.84)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "Net-(Q5-C)")
+		(net "SSR_TEA_SINK")
 		(uuid "315adacc-67f1-4ccb-8b77-6c2270aeb7ba")
 	)
 	(segment
@@ -18425,7 +18425,7 @@
 		(end 175.86 122.3)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "Net-(Q5-C)")
+		(net "SSR_TEA_SINK")
 		(uuid "f400a972-26d0-43c9-982c-da6e23c54cce")
 	)
 	(segment
@@ -18889,7 +18889,7 @@
 		(end 128.7548 79.6581)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "0597370a-6ec5-489c-88ff-41eff9374c6d")
 	)
 	(segment
@@ -18897,7 +18897,7 @@
 		(end 133 87.329)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "082f3b99-1ed4-45fb-8c36-b0e50629c924")
 	)
 	(segment
@@ -18905,7 +18905,7 @@
 		(end 177.5 75.23)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "18a05f49-c8ee-450e-8999-ed34824214be")
 	)
 	(segment
@@ -18913,7 +18913,7 @@
 		(end 144.9983 97.6773)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "1e5cd665-e119-4359-a86d-4abcaa214bb5")
 	)
 	(segment
@@ -18921,7 +18921,7 @@
 		(end 171.6014 124.2804)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "33f69743-7a2c-426f-bd1a-8b2d4d63c3c6")
 	)
 	(segment
@@ -18929,7 +18929,7 @@
 		(end 180.0103 121.3191)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "37117bf4-3db5-4c2c-aa65-e8998b2fb6db")
 	)
 	(segment
@@ -18937,7 +18937,7 @@
 		(end 178.4 127.38)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "41eb0c85-9b8b-40a7-9b6f-682be9dd7ffd")
 	)
 	(segment
@@ -18945,7 +18945,7 @@
 		(end 124 84.4129)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "465dd7f9-df21-424c-bcde-850c69c871f1")
 	)
 	(segment
@@ -18953,7 +18953,7 @@
 		(end 177.049 126.029)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "692f2c7b-2aec-4a79-9f90-e48736c743e9")
 	)
 	(segment
@@ -18961,7 +18961,7 @@
 		(end 177.049 124.2804)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "76034b3b-9790-46ff-b48b-c4033425eee8")
 	)
 	(segment
@@ -18969,7 +18969,7 @@
 		(end 180.0103 77.7403)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "c6b19aad-b54a-40b7-a96c-34ec43d83cf9")
 	)
 	(segment
@@ -18977,7 +18977,7 @@
 		(end 133 82.9129)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "c7925a4d-552f-40e5-ae2a-f16524aba54c")
 	)
 	(segment
@@ -18985,7 +18985,7 @@
 		(end 208.1 75.61)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "1a75d073-ef38-4de2-bb87-dd3cd8ad4def")
 	)
 	(segment
@@ -18993,7 +18993,7 @@
 		(end 188 75.23)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "3028c875-86fa-4e3f-87d5-24fd3ea1ebf6")
 	)
 	(segment
@@ -19001,7 +19001,7 @@
 		(end 188 75.23)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "431c0b03-295c-4d9e-8031-75923154e7c4")
 	)
 	(segment
@@ -19009,7 +19009,7 @@
 		(end 208.41 75.3)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "469f960d-04be-4625-afb0-c2f7af843642")
 	)
 	(segment
@@ -19017,7 +19017,7 @@
 		(end 207.95 75.46)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "57abf29d-a677-4feb-9a90-847b74810593")
 	)
 	(segment
@@ -19025,7 +19025,7 @@
 		(end 188.23 75.46)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "5c9a255c-7782-4553-b3a1-63dd8ae5accc")
 	)
 	(segment
@@ -19033,7 +19033,7 @@
 		(end 209.34 127.38)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "6a5b8b44-6f9f-4e92-a600-08a052c10e00")
 	)
 	(segment
@@ -19041,7 +19041,7 @@
 		(end 209.5 127.22)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "74cce8d9-401d-4797-a526-4bd8e46b0636")
 	)
 	(segment
@@ -19049,7 +19049,7 @@
 		(end 199.4 127.38)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "873e775a-c2c4-4f88-b498-c6b71bf12870")
 	)
 	(segment
@@ -19057,7 +19057,7 @@
 		(end 219.5 127.22)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "bde910b3-e9e3-4f36-879a-8523024a4e1d")
 	)
 	(segment
@@ -19065,7 +19065,7 @@
 		(end 131.5 84.4129)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "d5dad68f-2167-41b2-b60f-18c9bd79d367")
 	)
 	(segment
@@ -19073,7 +19073,7 @@
 		(end 188.9 127.38)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "db8c8410-15d6-46a3-a840-ae6ece44d139")
 	)
 	(segment
@@ -19081,7 +19081,7 @@
 		(end 208.1 75.61)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "e1d92a2e-7d65-410d-9fe5-49a73fd36fc0")
 	)
 	(segment
@@ -19089,7 +19089,7 @@
 		(end 133 82.9129)
 		(width 0.8)
 		(layer "B.Cu")
-		(net "5V")
+		(net "+5V")
 		(uuid "f05f514a-cdef-4081-a956-374b6165f238")
 	)
 	(segment
@@ -19241,7 +19241,7 @@
 		(end 186.63 112.7)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q4-C)")
+		(net "SSR_GROUP2_SINK")
 		(uuid "004b6f90-67ec-4791-854f-3ad182102107")
 	)
 	(segment
@@ -19249,7 +19249,7 @@
 		(end 186.63 111.15)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q4-C)")
+		(net "SSR_GROUP2_SINK")
 		(uuid "419d2b50-599a-4b5f-b92e-6689445d6288")
 	)
 	(segment
@@ -19257,7 +19257,7 @@
 		(end 186.4686 91.7614)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q4-C)")
+		(net "SSR_GROUP2_SINK")
 		(uuid "56991f58-9ad2-46d0-8f0f-f58e5122c053")
 	)
 	(segment
@@ -19265,7 +19265,7 @@
 		(end 186.4686 110.9886)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q4-C)")
+		(net "SSR_GROUP2_SINK")
 		(uuid "b305047f-e0cc-43d1-8ef8-d66888a7db66")
 	)
 	(segment
@@ -19273,7 +19273,7 @@
 		(end 186.63 122.57)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q4-C)")
+		(net "SSR_GROUP2_SINK")
 		(uuid "bc3fd06c-3589-4a26-93ee-6fa8110f283e")
 	)
 	(segment
@@ -19281,7 +19281,7 @@
 		(end 188 90.23)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q4-C)")
+		(net "SSR_GROUP2_SINK")
 		(uuid "dc0fc786-1eb3-4b77-b172-d720723c33b3")
 	)
 	(segment
@@ -19393,7 +19393,7 @@
 		(end 209.6428 99.6125)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q1-C)")
+		(net "SSR_PUMP_SINK")
 		(uuid "0968f59c-e096-4da4-a58a-a260a2758301")
 	)
 	(segment
@@ -19401,7 +19401,7 @@
 		(end 206.96 122.14)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q1-C)")
+		(net "SSR_PUMP_SINK")
 		(uuid "28a1a88d-a2b0-411a-b50b-5636793c3f64")
 	)
 	(segment
@@ -19409,7 +19409,7 @@
 		(end 206.5983 102.657)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q1-C)")
+		(net "SSR_PUMP_SINK")
 		(uuid "776df7dd-5220-465c-b5c0-a8a6221aef64")
 	)
 	(segment
@@ -19417,7 +19417,7 @@
 		(end 209.6428 92.1528)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q1-C)")
+		(net "SSR_PUMP_SINK")
 		(uuid "9e2a9b11-f5d6-4d2d-9f4f-e4b1e60b2575")
 	)
 	(segment
@@ -19425,7 +19425,7 @@
 		(end 208.1 90.61)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q1-C)")
+		(net "SSR_PUMP_SINK")
 		(uuid "a25216fe-9628-41fd-818c-5e04981f5480")
 	)
 	(segment
@@ -19433,7 +19433,7 @@
 		(end 206.96 111.17)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q1-C)")
+		(net "SSR_PUMP_SINK")
 		(uuid "b1e736fc-bae4-44f6-a127-c9ae445a08ba")
 	)
 	(segment
@@ -19441,7 +19441,7 @@
 		(end 206.5983 110.8083)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q1-C)")
+		(net "SSR_PUMP_SINK")
 		(uuid "daf69e07-8821-466e-b1e1-1229a1541450")
 	)
 	(segment
@@ -19449,7 +19449,7 @@
 		(end 206.96 112.72)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q1-C)")
+		(net "SSR_PUMP_SINK")
 		(uuid "df7c7fe9-bfab-4f0f-add0-9b59b7513470")
 	)
 	(segment
@@ -19457,7 +19457,7 @@
 		(end 200.0021 101.0979)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q3-C)")
+		(net "SSR_GROUP1_SINK")
 		(uuid "0d78a61f-8be8-4e50-b4b0-9476755c1836")
 	)
 	(segment
@@ -19465,7 +19465,7 @@
 		(end 197.13 112.7)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q3-C)")
+		(net "SSR_GROUP1_SINK")
 		(uuid "24d60e73-1ada-417b-85b7-88800aa79fd3")
 	)
 	(segment
@@ -19473,7 +19473,7 @@
 		(end 198.5 90.46)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q3-C)")
+		(net "SSR_GROUP1_SINK")
 		(uuid "46d9eb79-2a05-4226-bc0e-50a05e4858b0")
 	)
 	(segment
@@ -19481,7 +19481,7 @@
 		(end 196.9983 104.1017)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q3-C)")
+		(net "SSR_GROUP1_SINK")
 		(uuid "4d0cb023-63c0-466a-b060-c12c96ec95f0")
 	)
 	(segment
@@ -19489,7 +19489,7 @@
 		(end 200.0021 91.9621)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q3-C)")
+		(net "SSR_GROUP1_SINK")
 		(uuid "61cae5a5-5b84-4c21-bdec-33a2770dd319")
 	)
 	(segment
@@ -19497,7 +19497,7 @@
 		(end 196.9983 111.0183)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q3-C)")
+		(net "SSR_GROUP1_SINK")
 		(uuid "6b7952f3-b210-407a-8ebd-2e86d2ad4275")
 	)
 	(segment
@@ -19505,7 +19505,7 @@
 		(end 197.13 122.57)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q3-C)")
+		(net "SSR_GROUP1_SINK")
 		(uuid "b70fe587-2a71-4f97-b176-50f5c2c62f69")
 	)
 	(segment
@@ -19513,7 +19513,7 @@
 		(end 197.13 111.15)
 		(width 0.8)
 		(layer "F.Cu")
-		(net "Net-(Q3-C)")
+		(net "SSR_GROUP1_SINK")
 		(uuid "ba3c2d53-3076-426d-a704-e70a1fe4139a")
 	)
 	(segment
@@ -20500,7 +20500,7 @@
 		)
 	)
 	(zone
-		(net "Net-(Q3-C)")
+		(net "SSR_GROUP1_SINK")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30086)
@@ -20631,7 +20631,7 @@
 		)
 	)
 	(zone
-		(net "Net-(Q2-C)")
+		(net "SSR_BOILER_FILL_SINK")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30072)
@@ -20664,7 +20664,7 @@
 		)
 	)
 	(zone
-		(net "Net-(Q4-C)")
+		(net "SSR_GROUP2_SINK")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30005)
@@ -20735,7 +20735,7 @@
 		)
 	)
 	(zone
-		(net "3.3V")
+		(net "+3.3V")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30057)
@@ -21196,7 +21196,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30069)
@@ -21228,7 +21228,7 @@
 		)
 	)
 	(zone
-		(net "3.3V")
+		(net "+3.3V")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30010)
@@ -21294,7 +21294,7 @@
 		)
 	)
 	(zone
-		(net "Net-(Q5-C)")
+		(net "SSR_TEA_SINK")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30006)
@@ -21333,7 +21333,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30050)
@@ -21366,7 +21366,7 @@
 		)
 	)
 	(zone
-		(net "Net-(Q4-C)")
+		(net "SSR_GROUP2_SINK")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30073)
@@ -21435,7 +21435,7 @@
 		)
 	)
 	(zone
-		(net "Net-(Q3-C)")
+		(net "SSR_GROUP1_SINK")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30074)
@@ -21468,7 +21468,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30042)
@@ -21537,7 +21537,7 @@
 		)
 	)
 	(zone
-		(net "3.3V")
+		(net "+3.3V")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30051)
@@ -21607,7 +21607,7 @@
 		)
 	)
 	(zone
-		(net "Net-(Q2-C)")
+		(net "SSR_BOILER_FILL_SINK")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30087)
@@ -21639,7 +21639,7 @@
 		)
 	)
 	(zone
-		(net "Net-(Q5-C)")
+		(net "SSR_TEA_SINK")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30088)
@@ -21739,7 +21739,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30075)
@@ -21808,7 +21808,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30037)
@@ -22039,7 +22039,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30001)
@@ -22105,7 +22105,7 @@
 		)
 	)
 	(zone
-		(net "Net-(Q2-C)")
+		(net "SSR_BOILER_FILL_SINK")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30003)
@@ -22278,7 +22278,7 @@
 		)
 	)
 	(zone
-		(net "Net-(Q3-C)")
+		(net "SSR_GROUP1_SINK")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30089)
@@ -22415,7 +22415,7 @@
 		)
 	)
 	(zone
-		(net "Net-(Q4-C)")
+		(net "SSR_GROUP2_SINK")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30090)
@@ -22447,7 +22447,7 @@
 		)
 	)
 	(zone
-		(net "Net-(Q1-C)")
+		(net "SSR_PUMP_SINK")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30091)
@@ -22545,7 +22545,7 @@
 		)
 	)
 	(zone
-		(net "Net-(Q1-C)")
+		(net "SSR_PUMP_SINK")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30076)
@@ -22644,7 +22644,7 @@
 		)
 	)
 	(zone
-		(net "Net-(Q1-C)")
+		(net "SSR_PUMP_SINK")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30092)
@@ -22709,7 +22709,7 @@
 		)
 	)
 	(zone
-		(net "Net-(Q1-C)")
+		(net "SSR_PUMP_SINK")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30004)
@@ -22812,7 +22812,7 @@
 		)
 	)
 	(zone
-		(net "Net-(Q3-C)")
+		(net "SSR_GROUP1_SINK")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30007)
@@ -22852,7 +22852,7 @@
 		)
 	)
 	(zone
-		(net "Net-(Q2-C)")
+		(net "SSR_BOILER_FILL_SINK")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30093)
@@ -22952,7 +22952,7 @@
 		)
 	)
 	(zone
-		(net "3.3V")
+		(net "+3.3V")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30062)
@@ -23086,7 +23086,7 @@
 		)
 	)
 	(zone
-		(net "3.3V")
+		(net "+3.3V")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30065)
@@ -23122,7 +23122,7 @@
 		)
 	)
 	(zone
-		(net "3.3V")
+		(net "+3.3V")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30071)
@@ -23155,7 +23155,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30055)
@@ -23188,7 +23188,7 @@
 		)
 	)
 	(zone
-		(net "Net-(Q4-C)")
+		(net "SSR_GROUP2_SINK")
 		(layer "F.Cu")
 		(hatch none 0.1)
 		(priority 30094)
@@ -23220,7 +23220,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30036)
@@ -23252,7 +23252,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30037)
@@ -23352,7 +23352,7 @@
 		)
 	)
 	(zone
-		(net "3.3V")
+		(net "+3.3V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30020)
@@ -23560,7 +23560,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30027)
@@ -23667,7 +23667,7 @@
 		)
 	)
 	(zone
-		(net "3.3V")
+		(net "+3.3V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30022)
@@ -23700,7 +23700,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30028)
@@ -23732,7 +23732,7 @@
 		)
 	)
 	(zone
-		(net "3.3V")
+		(net "+3.3V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30001)
@@ -23766,7 +23766,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30029)
@@ -23799,7 +23799,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30006)
@@ -23832,7 +23832,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30038)
@@ -23897,7 +23897,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30039)
@@ -23929,7 +23929,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30030)
@@ -23961,7 +23961,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30040)
@@ -24062,7 +24062,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30031)
@@ -24164,7 +24164,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30041)
@@ -24196,7 +24196,7 @@
 		)
 	)
 	(zone
-		(net "Net-(Q5-C)")
+		(net "SSR_TEA_SINK")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30043)
@@ -24262,7 +24262,7 @@
 		)
 	)
 	(zone
-		(net "3.3V")
+		(net "+3.3V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30033)
@@ -24362,7 +24362,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30049)
@@ -24394,7 +24394,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30048)
@@ -24426,7 +24426,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30044)
@@ -24458,7 +24458,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30050)
@@ -24490,7 +24490,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30032)
@@ -24522,7 +24522,7 @@
 		)
 	)
 	(zone
-		(net "Net-(Q5-C)")
+		(net "SSR_TEA_SINK")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30052)
@@ -24591,7 +24591,7 @@
 		)
 	)
 	(zone
-		(net "5V")
+		(net "+5V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30042)
@@ -24689,7 +24689,7 @@
 		)
 	)
 	(zone
-		(net "3.3V")
+		(net "+3.3V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30034)
@@ -27851,7 +27851,7 @@
 		)
 	)
 	(zone
-		(net "3.3V")
+		(net "+3.3V")
 		(layer "B.Cu")
 		(hatch none 0.1)
 		(priority 30019)
