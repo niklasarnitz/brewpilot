@@ -1,0 +1,5 @@
+(version 1)
+
+(rule "Minimum trace width 0.8 mm"
+	(constraint track_width (min 0.8mm))
+)

@@ -1,25 +1,26 @@
-- 5V Tracks breiter (SSRs brauchen auch Strom) (3/4 mm)
-- so weit wie möglich auf VIAs vermeiden (Widerstand), auch 90* Winkel verwenden
+- [ ] 5V Tracks breiter (SSRs brauchen auch Strom) (3/4 mm)
+- [ ]so weit wie möglich auf VIAs vermeiden (Widerstand), auch 90* Winkel verwenden
 
-- teardrops bei der Steuerung der SSRs
+- [ ] teardrops bei der Steuerung der SSRs
 
-- Tracks generell einfach breiter machen (mind. 2mm)
+- [ ] Tracks generell einfach breiter machen (mind. 2mm)
 
-- gndplane polygone auch eher 45* Winkel
+- [ ] gndplane polygone auch eher 45* Winkel
 
-- teardrops bei mechanischer Belastung (z.B. bei den Steckverbindern)
+- [ ] teardrops bei mechanischer Belastung (z.B. bei den Steckverbindern)
 
-J10, diagonaler pin runterziehen und direkt an den Kondensator anschließen, dass das Signal da "durch muss" (Keramik)
+- [ ] J10, diagonaler pin runterziehen und direkt an den Kondensator anschließen, dass das Signal da "durch muss" (Keramik)
 
-I2c schauen, dass man nicht zu weit weg geht + pull ups auf das board packen und möglichst nahe beieinander halten
+- [ ] I2C Standard Ethernet Port platzieren, wo noch platz ist und mit I2C Header des ESP32 verbinden (soll standardbauteil sein, dass man günstig bekommt) 
+- [ ] I2c schauen, dass man nicht zu weit weg geht + pull ups auf das board packen und möglichst nahe beieinander halten
 
-Zwischen den Pins vom ESP möglichst keine tracks durch Routen, oder möglichst mittig
+- [ ] Zwischen den Pins vom ESP möglichst keine tracks durch Routen, oder möglichst mittig
 
-Den track von r6 noch etwas weiter nach rechts schieben
+- [ ] Den track von r6 noch etwas weiter nach rechts schieben
 
-Evtl. Anstatt tracks polygone für 230v setzen (für Anschluss klein, für den weg breiter)
+- [ ] Evtl. Anstatt tracks polygone für 230v setzen (für Anschluss klein, für den weg breiter)
 
-Elko + Schneller Kondensator auf 5V
+- [ ] Elko + Schneller Kondensator auf 5V
 
 
 Teardrops automatisch, dann wenn man weiter macht, reverten und dann wieder hinzufügen

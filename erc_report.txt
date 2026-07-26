@@ -1,0 +1,210 @@
+ERC report (2026-06-06T11:04:21, Encoding UTF8)
+Report includes: Errors, Warnings
+
+***** Sheet /
+[multiple_net_names]: Both 3.3V and +3.3V are attached to the same items; 3.3V will be used in the netlist
+    ; warning
+    @(20.32 mm, 81.28 mm): Global Label '3.3V'
+    @(16.51 mm, 81.28 mm): Symbol #PWR03 Pin 1 [Power input, Line]
+[lib_symbol_mismatch]: Symbol 'PWR_FLAG' doesn't match copy in library 'power'
+    ; warning
+    @(16.51 mm, 88.90 mm): Symbol #FLG02 [PWR_FLAG]
+[multiple_net_names]: Both 5V and +5V are attached to the same items; 5V will be used in the netlist
+    ; warning
+    @(45.72 mm, 86.36 mm): Global Label '5V'
+    @(16.51 mm, 88.90 mm): Symbol #PWR01 Pin 1 [Power input, Line]
+[lib_symbol_mismatch]: Symbol 'PWR_FLAG' doesn't match copy in library 'power'
+    ; warning
+    @(16.51 mm, 95.25 mm): Symbol #FLG01 [PWR_FLAG]
+[same_local_global_label]: Local and global labels have same name
+    ; warning
+    @(20.32 mm, 81.28 mm): Global Label '3.3V'
+    @(68.58 mm, 102.87 mm): Label '3.3V'
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(31.00 mm, 184.15 mm): Symbol C3 Pin 1 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(35.19 mm, 187.96 mm): Symbol D8 Pin 1 [K, Passive, Line]
+[same_local_global_label]: Local and global labels have same name
+    ; warning
+    @(45.72 mm, 86.36 mm): Global Label '5V'
+    @(205.00 mm, 31.19 mm): Label '5V'
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(49.53 mm, 121.92 mm): Horizontal Wire, length 2.54 mm
+[same_local_global_label]: Local and global labels have same name
+    ; warning
+    @(55.88 mm, 194.31 mm): Global Label 'GND'
+    @(26.67 mm, 124.46 mm): Label 'GND'
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(74.00 mm, 101.60 mm): Symbol C1 Pin 1 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(74.00 mm, 116.84 mm): Symbol C2 Pin 1 [Passive, Line]
+[unconnected_wire_endpoint]: Unconnected wire endpoint
+    ; warning
+    @(77.47 mm, 38.10 mm): Horizontal Wire, length 2.54 mm
+[pin_to_pin]: Pins of type Tri-state and Power input are connected
+    ; warning
+    @(77.47 mm, 55.88 mm): Symbol U1 Pin 32 [GND, Tri-state, Line]
+    @(49.53 mm, 73.66 mm): Symbol U1 Pin 14 [GND, Power input, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(78.19 mm, 105.41 mm): Symbol D6 Pin 1 [K, Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(78.19 mm, 120.65 mm): Symbol D7 Pin 1 [K, Passive, Line]
+[multiple_net_names]: Both FLEXIBLE_IO_11 and I2C_SCL are attached to the same items; FLEXIBLE_IO_11 will be used in the netlist
+    ; warning
+    @(77.47 mm, 160.02 mm): Global Label 'FLEXIBLE_IO_11'
+    @(134.62 mm, 25.40 mm): Global Label 'I2C_SCL'
+[pin_to_pin]: Pins of type Unspecified and Passive are connected
+    ; warning
+    @(154.94 mm, 26.67 mm): Symbol K1 Pin 1 [1, Unspecified, Line]
+    @(26.67 mm, 167.64 mm): Symbol J9 Pin 2 [Pin_2, Passive, Line]
+[pin_to_pin]: Pins of type Unspecified and Passive are connected
+    ; warning
+    @(154.94 mm, 29.21 mm): Symbol K1 Pin 2 [2, Unspecified, Line]
+    @(120.65 mm, 185.42 mm): Symbol J7 Pin 2 [Pin_2, Passive, Line]
+[pin_to_pin]: Pins of type Unspecified and Unspecified are connected
+    ; warning
+    @(154.94 mm, 52.07 mm): Symbol K2 Pin 1 [1, Unspecified, Line]
+    @(154.94 mm, 77.47 mm): Symbol K3 Pin 1 [1, Unspecified, Line]
+[pin_to_pin]: Pins of type Unspecified and Passive are connected
+    ; warning
+    @(154.94 mm, 54.61 mm): Symbol K2 Pin 2 [2, Unspecified, Line]
+    @(120.65 mm, 180.34 mm): Symbol J7 Pin 4 [Pin_4, Passive, Line]
+[pin_to_pin]: Pins of type Unspecified and Unspecified are connected
+    ; warning
+    @(154.94 mm, 77.47 mm): Symbol K3 Pin 1 [1, Unspecified, Line]
+    @(154.94 mm, 102.87 mm): Symbol K4 Pin 1 [1, Unspecified, Line]
+[pin_to_pin]: Pins of type Unspecified and Passive are connected
+    ; warning
+    @(154.94 mm, 80.01 mm): Symbol K3 Pin 2 [2, Unspecified, Line]
+    @(120.65 mm, 157.48 mm): Symbol J6 Pin 6 [Pin_6, Passive, Line]
+[pin_to_pin]: Pins of type Unspecified and Unspecified are connected
+    ; warning
+    @(154.94 mm, 102.87 mm): Symbol K4 Pin 1 [1, Unspecified, Line]
+    @(154.94 mm, 128.27 mm): Symbol K5 Pin 1 [1, Unspecified, Line]
+[pin_to_pin]: Pins of type Unspecified and Passive are connected
+    ; warning
+    @(154.94 mm, 105.41 mm): Symbol K4 Pin 2 [2, Unspecified, Line]
+    @(120.65 mm, 162.56 mm): Symbol J6 Pin 4 [Pin_4, Passive, Line]
+[pin_to_pin]: Pins of type Unspecified and Passive are connected
+    ; warning
+    @(154.94 mm, 128.27 mm): Symbol K5 Pin 1 [1, Unspecified, Line]
+    @(40.64 mm, 134.62 mm): Symbol J11 Pin 2 [Passive, Line]
+[pin_to_pin]: Pins of type Unspecified and Passive are connected
+    ; warning
+    @(154.94 mm, 130.81 mm): Symbol K5 Pin 2 [2, Unspecified, Line]
+    @(120.65 mm, 167.64 mm): Symbol J6 Pin 2 [Pin_2, Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(205.00 mm, 31.19 mm): Symbol R10 Pin 1 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(205.00 mm, 41.19 mm): Symbol R11 Pin 1 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(205.00 mm, 51.19 mm): Symbol R12 Pin 1 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(205.00 mm, 61.19 mm): Symbol R13 Pin 1 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(205.00 mm, 71.19 mm): Symbol R14 Pin 1 [Passive, Line]
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(211.19 mm, 35.00 mm): Symbol D1 Pin 1 [K, Passive, Line]
+[isolated_pin_label]: Label connected to only one pin
+    ; warning
+    @(211.19 mm, 35.00 mm): Label 'Net-(Q1-C)'
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(211.19 mm, 45.00 mm): Symbol D2 Pin 1 [K, Passive, Line]
+[isolated_pin_label]: Label connected to only one pin
+    ; warning
+    @(211.19 mm, 45.00 mm): Label 'Net-(Q2-C)'
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(211.19 mm, 55.00 mm): Symbol D3 Pin 1 [K, Passive, Line]
+[isolated_pin_label]: Label connected to only one pin
+    ; warning
+    @(211.19 mm, 55.00 mm): Label 'Net-(Q3-C)'
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(211.19 mm, 65.00 mm): Symbol D4 Pin 1 [K, Passive, Line]
+[isolated_pin_label]: Label connected to only one pin
+    ; warning
+    @(211.19 mm, 65.00 mm): Label 'Net-(Q4-C)'
+[endpoint_off_grid]: Symbol pin or wire end off connection grid
+    ; warning
+    @(211.19 mm, 75.00 mm): Symbol D5 Pin 1 [K, Passive, Line]
+[isolated_pin_label]: Label connected to only one pin
+    ; warning
+    @(211.19 mm, 75.00 mm): Label 'Net-(Q5-C)'
+[pin_to_pin]: Pins of type Unspecified and Passive are connected
+    ; warning
+    @(236.22 mm, 26.67 mm): Symbol K1 Pin 4 [4, Unspecified, Line]
+    @(255.27 mm, 26.67 mm): Symbol Q1 Pin 1 [C, Passive, Line]
+[pin_to_pin]: Pins of type Unspecified and Unspecified are connected
+    ; warning
+    @(236.22 mm, 29.21 mm): Symbol K1 Pin 3 [3, Unspecified, Line]
+    @(236.22 mm, 54.61 mm): Symbol K2 Pin 3 [3, Unspecified, Line]
+[pin_to_pin]: Pins of type Unspecified and Passive are connected
+    ; warning
+    @(236.22 mm, 52.07 mm): Symbol K2 Pin 4 [4, Unspecified, Line]
+    @(255.27 mm, 52.07 mm): Symbol Q2 Pin 1 [C, Passive, Line]
+[pin_to_pin]: Pins of type Unspecified and Unspecified are connected
+    ; warning
+    @(236.22 mm, 54.61 mm): Symbol K2 Pin 3 [3, Unspecified, Line]
+    @(236.22 mm, 80.01 mm): Symbol K3 Pin 3 [3, Unspecified, Line]
+[pin_to_pin]: Pins of type Unspecified and Passive are connected
+    ; warning
+    @(236.22 mm, 77.47 mm): Symbol K3 Pin 4 [4, Unspecified, Line]
+    @(255.27 mm, 77.47 mm): Symbol Q3 Pin 1 [C, Passive, Line]
+[pin_to_pin]: Pins of type Unspecified and Unspecified are connected
+    ; warning
+    @(236.22 mm, 80.01 mm): Symbol K3 Pin 3 [3, Unspecified, Line]
+    @(236.22 mm, 105.41 mm): Symbol K4 Pin 3 [3, Unspecified, Line]
+[pin_to_pin]: Pins of type Unspecified and Passive are connected
+    ; warning
+    @(236.22 mm, 102.87 mm): Symbol K4 Pin 4 [4, Unspecified, Line]
+    @(255.27 mm, 102.87 mm): Symbol Q4 Pin 1 [C, Passive, Line]
+[pin_to_pin]: Pins of type Unspecified and Unspecified are connected
+    ; warning
+    @(236.22 mm, 105.41 mm): Symbol K4 Pin 3 [3, Unspecified, Line]
+    @(236.22 mm, 130.81 mm): Symbol K5 Pin 3 [3, Unspecified, Line]
+[pin_to_pin]: Pins of type Unspecified and Passive are connected
+    ; warning
+    @(236.22 mm, 128.27 mm): Symbol K5 Pin 4 [4, Unspecified, Line]
+    @(255.27 mm, 128.27 mm): Symbol Q5 Pin 1 [C, Passive, Line]
+[pin_to_pin]: Pins of type Unspecified and Passive are connected
+    ; warning
+    @(236.22 mm, 130.81 mm): Symbol K5 Pin 3 [3, Unspecified, Line]
+    @(205.00 mm, 71.19 mm): Symbol R14 Pin 1 [Passive, Line]
+[lib_symbol_mismatch]: Symbol 'BC547' doesn't match copy in library 'Transistor_BJT'
+    ; warning
+    @(260.35 mm, 29.21 mm): Symbol Q1 [BC547]
+[lib_symbol_mismatch]: Symbol 'BC547' doesn't match copy in library 'Transistor_BJT'
+    ; warning
+    @(260.35 mm, 54.61 mm): Symbol Q2 [BC547]
+[lib_symbol_mismatch]: Symbol 'BC547' doesn't match copy in library 'Transistor_BJT'
+    ; warning
+    @(260.35 mm, 80.01 mm): Symbol Q3 [BC547]
+[lib_symbol_mismatch]: Symbol 'BC547' doesn't match copy in library 'Transistor_BJT'
+    ; warning
+    @(260.35 mm, 105.41 mm): Symbol Q4 [BC547]
+[lib_symbol_mismatch]: Symbol 'BC547' doesn't match copy in library 'Transistor_BJT'
+    ; warning
+    @(260.35 mm, 130.81 mm): Symbol Q5 [BC547]
+
+ ** ERC messages: 57  Errors 0  Warnings 57
+
+ ** Ignored checks:
+    - Global label only appears once in the schematic
+    - Four connection points are joined together
+    - SPICE model issue
+    - Assigned footprint doesn't match footprint filters

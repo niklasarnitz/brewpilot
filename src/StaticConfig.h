@@ -9,10 +9,10 @@
 
 // Pins
 // Outputs
-#define RELAY_PUMP 18
-#define RELAY_GROUP_ONE 5
-#define RELAY_GROUP_TWO 4
-#define RELAY_BOILER_FILL 2
+#define RELAY_PUMP 5
+#define RELAY_GROUP_ONE 4
+#define RELAY_GROUP_TWO 2
+#define RELAY_BOILER_FILL 18
 #define RELAY_TEA 15
 
 // Inputs

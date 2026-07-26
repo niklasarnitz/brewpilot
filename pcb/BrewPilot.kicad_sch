@@ -3774,6 +3774,622 @@
     		)
     		(embedded_fonts no)
     	)
+  
+  (symbol "Connector:8P8C"
+    (pin_names
+      (offset 1.016)
+    )
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (in_pos_files yes)
+    (duplicate_pin_numbers_are_jumpers no)
+    (property "Reference" "J"
+      (at -5.08 13.97 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (justify right)
+      )
+    )
+    (property "Value" "8P8C"
+      (at 2.54 13.97 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (justify left)
+      )
+    )
+    (property "Footprint" ""
+      (at 0 0.635 90)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+      )
+    )
+    (property "Datasheet" ""
+      (at 0 0.635 90)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+      )
+    )
+    (property "Description" "RJ connector, 8P8C (8 positions 8 connected), RJ31/RJ32/RJ33/RJ34/RJ35/RJ41/RJ45/RJ49/RJ61"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+      )
+    )
+    (property "ki_keywords" "8P8C RJ socket connector"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+      )
+    )
+    (property "ki_fp_filters" "8P8C* RJ31* RJ32* RJ33* RJ34* RJ35* RJ41* RJ45* RJ49* RJ61*"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+      )
+    )
+    (symbol "8P8C_0_1"
+      (polyline
+        (pts
+          (xy -6.35 1.905) (xy -5.08 1.905) (xy -5.08 1.905)
+        )
+        (stroke
+          (width 0)
+          (type default)
+        )
+        (fill
+          (type none)
+        )
+      )
+      (polyline
+        (pts
+          (xy -6.35 0.635) (xy -5.08 0.635) (xy -5.08 0.635)
+        )
+        (stroke
+          (width 0)
+          (type default)
+        )
+        (fill
+          (type none)
+        )
+      )
+      (polyline
+        (pts
+          (xy -6.35 -0.635) (xy -5.08 -0.635) (xy -5.08 -0.635)
+        )
+        (stroke
+          (width 0)
+          (type default)
+        )
+        (fill
+          (type none)
+        )
+      )
+      (polyline
+        (pts
+          (xy -6.35 -1.905) (xy -5.08 -1.905) (xy -5.08 -1.905)
+        )
+        (stroke
+          (width 0)
+          (type default)
+        )
+        (fill
+          (type none)
+        )
+      )
+      (polyline
+        (pts
+          (xy -6.35 -3.175) (xy -5.08 -3.175) (xy -5.08 -3.175)
+        )
+        (stroke
+          (width 0)
+          (type default)
+        )
+        (fill
+          (type none)
+        )
+      )
+      (polyline
+        (pts
+          (xy -6.35 -4.445) (xy -6.35 6.985) (xy 3.81 6.985) (xy 3.81 4.445) (xy 5.08 4.445) (xy 5.08 3.175)
+          (xy 6.35 3.175) (xy 6.35 -0.635) (xy 5.08 -0.635) (xy 5.08 -1.905) (xy 3.81 -1.905) (xy 3.81 -4.445)
+          (xy -6.35 -4.445) (xy -6.35 -4.445)
+        )
+        (stroke
+          (width 0)
+          (type default)
+        )
+        (fill
+          (type none)
+        )
+      )
+      (polyline
+        (pts
+          (xy -5.08 5.715) (xy -6.35 5.715)
+        )
+        (stroke
+          (width 0)
+          (type default)
+        )
+        (fill
+          (type none)
+        )
+      )
+      (polyline
+        (pts
+          (xy -5.08 4.445) (xy -6.35 4.445)
+        )
+        (stroke
+          (width 0)
+          (type default)
+        )
+        (fill
+          (type none)
+        )
+      )
+      (polyline
+        (pts
+          (xy -5.08 3.175) (xy -6.35 3.175) (xy -6.35 3.175)
+        )
+        (stroke
+          (width 0)
+          (type default)
+        )
+        (fill
+          (type none)
+        )
+      )
+      (rectangle
+        (start 7.62 12.7)
+        (end -7.62 -10.16)
+        (stroke
+          (width 0.254)
+          (type default)
+        )
+        (fill
+          (type background)
+        )
+      )
+    )
+    (symbol "8P8C_1_1"
+      (pin passive line
+        (at 10.16 -7.62 180)
+        (length 2.54)
+        (name ""
+          (effects
+            (font
+              (size 1.27 1.27)
+            )
+          )
+        )
+        (number "1"
+          (effects
+            (font
+              (size 1.27 1.27)
+            )
+          )
+        )
+      )
+      (pin passive line
+        (at 10.16 -5.08 180)
+        (length 2.54)
+        (name ""
+          (effects
+            (font
+              (size 1.27 1.27)
+            )
+          )
+        )
+        (number "2"
+          (effects
+            (font
+              (size 1.27 1.27)
+            )
+          )
+        )
+      )
+      (pin passive line
+        (at 10.16 -2.54 180)
+        (length 2.54)
+        (name ""
+          (effects
+            (font
+              (size 1.27 1.27)
+            )
+          )
+        )
+        (number "3"
+          (effects
+            (font
+              (size 1.27 1.27)
+            )
+          )
+        )
+      )
+      (pin passive line
+        (at 10.16 0 180)
+        (length 2.54)
+        (name ""
+          (effects
+            (font
+              (size 1.27 1.27)
+            )
+          )
+        )
+        (number "4"
+          (effects
+            (font
+              (size 1.27 1.27)
+            )
+          )
+        )
+      )
+      (pin passive line
+        (at 10.16 2.54 180)
+        (length 2.54)
+        (name ""
+          (effects
+            (font
+              (size 1.27 1.27)
+            )
+          )
+        )
+        (number "5"
+          (effects
+            (font
+              (size 1.27 1.27)
+            )
+          )
+        )
+      )
+      (pin passive line
+        (at 10.16 5.08 180)
+        (length 2.54)
+        (name ""
+          (effects
+            (font
+              (size 1.27 1.27)
+            )
+          )
+        )
+        (number "6"
+          (effects
+            (font
+              (size 1.27 1.27)
+            )
+          )
+        )
+      )
+      (pin passive line
+        (at 10.16 7.62 180)
+        (length 2.54)
+        (name ""
+          (effects
+            (font
+              (size 1.27 1.27)
+            )
+          )
+        )
+        (number "7"
+          (effects
+            (font
+              (size 1.27 1.27)
+            )
+          )
+        )
+      )
+      (pin passive line
+        (at 10.16 10.16 180)
+        (length 2.54)
+        (name ""
+          (effects
+            (font
+              (size 1.27 1.27)
+            )
+          )
+        )
+        (number "8"
+          (effects
+            (font
+              (size 1.27 1.27)
+            )
+          )
+        )
+      )
+    )
+    (embedded_fonts no)
+  )
+  (symbol "Connector:RJ45"
+    (extends "Connector:8P8C")
+    (property "Reference" "J"
+      (at -5.08 13.97 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (justify right)
+      )
+    )
+    (property "Value" "RJ45"
+      (at 2.54 13.97 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (justify left)
+      )
+    )
+    (property "Footprint" ""
+      (at 0 0.635 90)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+      )
+    )
+    (property "Datasheet" ""
+      (at 0 0.635 90)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+      )
+    )
+    (property "Description" "RJ connector, 8P8C (8 positions 8 connected)"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+      )
+    )
+    (property "ki_keywords" "8P8C RJ socket connector"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+      )
+    )
+    (property "ki_fp_filters" "8P8C* RJ31* RJ32* RJ33* RJ34* RJ35* RJ41* RJ45* RJ49* RJ61*"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+      )
+    )
+    (embedded_fonts no)
+  )
+  (symbol "Device:C_Polarized"
+    (pin_numbers
+      (hide yes)
+    )
+    (pin_names
+      (offset 0.254)
+    )
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (in_pos_files yes)
+    (duplicate_pin_numbers_are_jumpers no)
+    (property "Reference" "C"
+      (at 0.635 2.54 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (justify left)
+      )
+    )
+    (property "Value" "C_Polarized"
+      (at 0.635 -2.54 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (justify left)
+      )
+    )
+    (property "Footprint" ""
+      (at 0.9652 -3.81 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+      )
+    )
+    (property "Datasheet" ""
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+      )
+    )
+    (property "Description" "Polarized capacitor"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+      )
+    )
+    (property "ki_keywords" "cap capacitor"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+      )
+    )
+    (property "ki_fp_filters" "CP_*"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+      )
+    )
+    (symbol "C_Polarized_0_1"
+      (rectangle
+        (start -2.286 0.508)
+        (end 2.286 1.016)
+        (stroke
+          (width 0)
+          (type default)
+        )
+        (fill
+          (type none)
+        )
+      )
+      (polyline
+        (pts
+          (xy -1.778 2.286) (xy -0.762 2.286)
+        )
+        (stroke
+          (width 0)
+          (type default)
+        )
+        (fill
+          (type none)
+        )
+      )
+      (polyline
+        (pts
+          (xy -1.27 2.794) (xy -1.27 1.778)
+        )
+        (stroke
+          (width 0)
+          (type default)
+        )
+        (fill
+          (type none)
+        )
+      )
+      (rectangle
+        (start 2.286 -0.508)
+        (end -2.286 -1.016)
+        (stroke
+          (width 0)
+          (type default)
+        )
+        (fill
+          (type outline)
+        )
+      )
+    )
+    (symbol "C_Polarized_1_1"
+      (pin passive line
+        (at 0 3.81 270)
+        (length 2.794)
+        (name ""
+          (effects
+            (font
+              (size 1.27 1.27)
+            )
+          )
+        )
+        (number "1"
+          (effects
+            (font
+              (size 1.27 1.27)
+            )
+          )
+        )
+      )
+      (pin passive line
+        (at 0 -3.81 90)
+        (length 2.794)
+        (name ""
+          (effects
+            (font
+              (size 1.27 1.27)
+            )
+          )
+        )
+        (number "2"
+          (effects
+            (font
+              (size 1.27 1.27)
+            )
+          )
+        )
+      )
+    )
+    (embedded_fonts no)
+  )
   )
 	(junction
 		(at 49.53 121.92)
@@ -5663,7 +6279,7 @@
 			)
 		)
 	)
-	(global_label "CONTROL_RELAY_BOILER_FILL"
+	(global_label "CONTROL_RELAY_GROUP_TWO"
 		(shape input)
 		(at 81.28 76.2 0)
 		(fields_autoplaced yes)
@@ -6521,7 +7137,7 @@
 			)
 		)
 	)
-	(global_label "CONTROL_RELAY_GROUP_ONE"
+	(global_label "CONTROL_RELAY_PUMP"
 		(shape input)
 		(at 81.28 63.5 0)
 		(fields_autoplaced yes)
@@ -6961,7 +7577,7 @@
 			)
 		)
 	)
-	(global_label "CONTROL_RELAY_GROUP_TWO"
+	(global_label "CONTROL_RELAY_GROUP_ONE"
 		(shape input)
 		(at 81.28 71.12 0)
 		(fields_autoplaced yes)
@@ -7049,7 +7665,7 @@
 			)
 		)
 	)
-	(global_label "CONTROL_RELAY_PUMP"
+	(global_label "CONTROL_RELAY_BOILER_FILL"
 		(shape input)
 		(at 81.28 60.96 0)
 		(fields_autoplaced yes)
@@ -10609,4 +11225,379 @@
 		)
 	)
 	(embedded_fonts no)
+
+    (symbol
+    (lib_id "Connector:8P8C")
+    (at 121.92 20.32 0)
+    (unit 1)
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (dnp no)
+    (fields_autoplaced yes)
+    (uuid "8bae3d75-9ca8-4c4e-9ff9-e562afb9f445")
+    (property "Reference" "J13"
+      (at 121.92 8.32 0)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+      )
+    )
+    (property "Value" "I2C Port"
+      (at 121.92 10.86 0)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+      )
+    )
+    (property "Footprint" "Connector_RJ:RJ45_Amphenol_54602-x08_Horizontal"
+      (at 121.92 20.32 0)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (hide yes)
+      )
+    )
+    (property "Datasheet" "~"
+      (at 121.92 20.32 0)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (hide yes)
+      )
+    )
+    (property "Description" ""
+      (at 121.92 20.32 0)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (hide yes)
+      )
+    )
+    (pin "1" (uuid "57ec64e3-550b-4b7a-9578-74fd4e7a9f19"))
+    (pin "2" (uuid "bcea585e-531a-4ed8-b1ca-7a7182580501"))
+    (pin "3" (uuid "797aaf96-d7d2-4f6f-b068-0520bf81a53c"))
+    (pin "4" (uuid "de7134e8-1be4-4dae-93ed-3f1877ef72fc"))
+    (pin "5" (uuid "d500a64f-a4fb-4239-9295-e71fc0edbf20"))
+    (pin "6" (uuid "81a7f481-9022-40de-8f51-da39d8c43471"))
+    (pin "7" (uuid "4e7684d7-ff66-4028-a699-9f5f7a7b38b4"))
+    (pin "8" (uuid "34c0c69e-c56f-465c-bd77-0488fd1555d5"))
+    (instances
+      (project "BrewPilot"
+        (path "/b7a2ce43-05af-4468-b259-133901da962b"
+          (reference "J13")
+          (unit 1)
+        )
+      )
+    )
+  )
+  (symbol
+    (lib_id "Device:R")
+    (at 142.24 20.32 0)
+    (unit 1)
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (dnp no)
+    (fields_autoplaced yes)
+    (uuid "ca7fc631-f5a7-4845-b283-385d944efb42")
+    (property "Reference" "R15"
+      (at 144.78 19.05 0)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (justify left)
+      )
+    )
+    (property "Value" "4.7k"
+      (at 144.78 21.59 0)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (justify left)
+      )
+    )
+    (property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
+      (at 142.24 20.32 0)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (hide yes)
+      )
+    )
+    (property "Datasheet" "~"
+      (at 142.24 20.32 0)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (hide yes)
+      )
+    )
+    (property "Description" "Resistor"
+      (at 142.24 20.32 0)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (hide yes)
+      )
+    )
+    (pin "1" (uuid "9e996f73-7b8d-4c98-8101-6e3c24d0c07c"))
+    (pin "2" (uuid "8ffc0110-e188-42c3-8e08-87302afe5889"))
+    (instances
+      (project "BrewPilot"
+        (path "/b7a2ce43-05af-4468-b259-133901da962b"
+          (reference "R15")
+          (unit 1)
+        )
+      )
+    )
+  )
+  (symbol
+    (lib_id "Device:R")
+    (at 149.86 20.32 0)
+    (unit 1)
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (dnp no)
+    (fields_autoplaced yes)
+    (uuid "16f0a129-4239-4017-b361-954d7ce0d851")
+    (property "Reference" "R16"
+      (at 152.4 19.05 0)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (justify left)
+      )
+    )
+    (property "Value" "4.7k"
+      (at 152.4 21.59 0)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (justify left)
+      )
+    )
+    (property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
+      (at 149.86 20.32 0)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (hide yes)
+      )
+    )
+    (property "Datasheet" "~"
+      (at 149.86 20.32 0)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (hide yes)
+      )
+    )
+    (property "Description" "Resistor"
+      (at 149.86 20.32 0)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (hide yes)
+      )
+    )
+    (pin "1" (uuid "cf3813f7-5b99-4a07-b19b-ee3f99597b1e"))
+    (pin "2" (uuid "287d0270-2352-45ee-890b-d280da2b1b26"))
+    (instances
+      (project "BrewPilot"
+        (path "/b7a2ce43-05af-4468-b259-133901da962b"
+          (reference "R16")
+          (unit 1)
+        )
+      )
+    )
+  )
+  (symbol
+    (lib_id "Device:C_Polarized")
+    (at 55.88 125.73 0)
+    (unit 1)
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (dnp no)
+    (fields_autoplaced yes)
+    (uuid "f7616f43-7455-4276-8eef-6febd819b71b")
+    (property "Reference" "C4"
+      (at 53.34 125.73 90)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+      )
+    )
+    (property "Value" "100uF"
+      (at 58.42 125.73 90)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+      )
+    )
+    (property "Footprint" "Capacitor_THT:CP_Radial_D6.3mm_P2.50mm"
+      (at 55.88 125.73 0)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (hide yes)
+      )
+    )
+    (property "Datasheet" "~"
+      (at 55.88 125.73 0)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (hide yes)
+      )
+    )
+    (property "Description" "Polarized capacitor"
+      (at 55.88 125.73 0)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (hide yes)
+      )
+    )
+    (pin "1" (uuid "8140b930-038c-4fcf-a765-3e80c351afaf"))
+    (pin "2" (uuid "605228a4-e7ca-428b-af08-258d980d38ef"))
+    (instances
+      (project "BrewPilot"
+        (path "/b7a2ce43-05af-4468-b259-133901da962b"
+          (reference "C4")
+          (unit 1)
+        )
+      )
+    )
+  )
+  (symbol
+    (lib_id "Device:C")
+    (at 60.96 125.73 0)
+    (unit 1)
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (dnp no)
+    (fields_autoplaced yes)
+    (uuid "19bead4e-78d8-4816-a715-207e0d7a84cb")
+    (property "Reference" "C5"
+      (at 63.5 125.73 90)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+      )
+    )
+    (property "Value" "100nF"
+      (at 58.42 125.73 90)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+      )
+    )
+    (property "Footprint" "Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P5.00mm"
+      (at 60.96 125.73 0)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (hide yes)
+      )
+    )
+    (property "Datasheet" "~"
+      (at 60.96 125.73 0)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (hide yes)
+      )
+    )
+    (property "Description" "Unpolarized capacitor"
+      (at 60.96 125.73 0)
+      (effects
+        (font
+          (size 1.27 1.27)
+        )
+        (hide yes)
+      )
+    )
+    (pin "1" (uuid "773bc5da-52ad-4b7e-8bf3-927b24020bb9"))
+    (pin "2" (uuid "c2120d75-080f-40ad-84ec-d45d73818954"))
+    (instances
+      (project "BrewPilot"
+        (path "/b7a2ce43-05af-4468-b259-133901da962b"
+          (reference "C5")
+          (unit 1)
+        )
+      )
+    )
+  )
+  (wire (pts (xy 132.08 27.94) (xy 134.62 27.94)) (stroke (width 0) (type default)) (uuid "034ecd83-19c2-4241-9deb-cd172e76e15d"))
+  (global_label "I2C_SDA" (shape input) (at 134.62 27.94 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "5c217387-ae30-4a9a-89ed-fad4d5ef9878"))
+  
+  (wire (pts (xy 132.08 25.4) (xy 134.62 25.4)) (stroke (width 0) (type default)) (uuid "6cee67fc-3a63-4df7-bce7-02210e08a21a"))
+  (global_label "I2C_SCL" (shape input) (at 134.62 25.4 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "81ac4f2c-ae94-41bf-a8b0-87c7ec3e68a1"))
+  
+  (wire (pts (xy 132.08 22.86) (xy 134.62 22.86)) (stroke (width 0) (type default)) (uuid "223af0e4-92bf-4688-a44c-7291b7105598"))
+  (global_label "GND" (shape input) (at 134.62 22.86 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "36766da5-d97e-4858-aab4-feb2c768a4c6"))
+  
+  (wire (pts (xy 132.08 20.32) (xy 134.62 20.32)) (stroke (width 0) (type default)) (uuid "5592091d-044b-4186-83d1-6a513357624d"))
+  (global_label "3.3V" (shape input) (at 134.62 20.32 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "de622327-b0ec-43f6-ac78-50a26341569f"))
+  
+  (wire (pts (xy 132.08 10.16) (xy 132.08 17.78)) (stroke (width 0) (type default)) (uuid "b65c7a73-fa0e-4ec3-8aba-e26d1d1b8694"))
+  (wire (pts (xy 132.08 12.7) (xy 132.08 10.16)) (stroke (width 0) (type default)) (uuid "812c0770-2f9d-4ff1-b604-b79f028a97ac"))
+  (wire (pts (xy 132.08 15.24) (xy 132.08 12.7)) (stroke (width 0) (type default)) (uuid "152e3a8f-42ca-468e-b78e-f398fa27c823"))
+  (wire (pts (xy 132.08 17.78) (xy 132.08 15.24)) (stroke (width 0) (type default)) (uuid "75fb9a3f-314d-4d07-bd7b-8a4931752887"))
+  (wire (pts (xy 132.08 17.78) (xy 134.62 17.78)) (stroke (width 0) (type default)) (uuid "bb30af8f-1090-42ec-b596-239c3d6798d6"))
+  (global_label "GND" (shape input) (at 134.62 17.78 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "2d86c1f9-3589-4c8a-8a55-11a004ee52b1"))
+  
+  (wire (pts (xy 142.24 16.51) (xy 149.86 16.51)) (stroke (width 0) (type default)) (uuid "3f78ada1-3b85-4206-9e60-7b44b94e8597"))
+  (wire (pts (xy 142.24 16.51) (xy 139.7 16.51)) (stroke (width 0) (type default)) (uuid "d96ad901-c74d-4c4d-8f96-7fbc914ccb58"))
+  (global_label "3.3V" (shape input) (at 139.7 16.51 180) (effects (font (size 1.27 1.27)) (justify right)) (uuid "37fdbeea-8db2-4d97-9808-7200f544daae"))
+  
+  (wire (pts (xy 142.24 24.13) (xy 142.24 26.67)) (stroke (width 0) (type default)) (uuid "e647dfaa-2965-4502-83b5-50b65c2a5606"))
+  (global_label "I2C_SDA" (shape input) (at 142.24 26.67 90) (effects (font (size 1.27 1.27)) (justify left)) (uuid "38994806-4293-4fb9-976b-539473709133"))
+  
+  (wire (pts (xy 149.86 24.13) (xy 149.86 26.67)) (stroke (width 0) (type default)) (uuid "9046c624-5278-46f5-b7f9-d5c7b281bf05"))
+  (global_label "I2C_SCL" (shape input) (at 149.86 26.67 90) (effects (font (size 1.27 1.27)) (justify left)) (uuid "dbcee50c-3ccc-4e3d-a5e4-0113c90e5a49"))
+
+  (wire (pts (xy 50.8 121.92) (xy 55.88 121.92)) (stroke (width 0) (type default)) (uuid "9696e1f9-b2fe-41b4-9260-dcc3d375f794"))
+  (wire (pts (xy 55.88 121.92) (xy 60.96 121.92)) (stroke (width 0) (type default)) (uuid "be09d5fd-fbda-445c-b881-c8175fbb0e23"))
+  (wire (pts (xy 60.96 121.92) (xy 68.58 121.92)) (stroke (width 0) (type default)) (uuid "02830f09-ec82-4843-995c-ffec8047d839"))
+  (global_label "5V" (shape input) (at 68.58 121.92 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "7b82a9ec-f870-4be2-ae7f-04f6df20dbd5"))
+  
+  (wire (pts (xy 55.88 129.54) (xy 60.96 129.54)) (stroke (width 0) (type default)) (uuid "1c643868-4c38-451c-9e97-164b09f42dc3"))
+  (wire (pts (xy 60.96 129.54) (xy 68.58 129.54)) (stroke (width 0) (type default)) (uuid "b706697c-cffd-43b7-ad11-9480f80f6e05"))
+  (global_label "GND" (shape input) (at 68.58 129.54 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "cd5d432c-a39f-4a2f-bc96-55ddacd5bf06"))
+  
+  (wire (pts (xy 77.47 53.34) (xy 80.01 53.34)) (stroke (width 0) (type default)) (uuid "54275671-744f-44af-a00f-529204fa0230"))
+  (global_label "I2C_SDA" (shape input) (at 80.01 53.34 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "ad7121df-9572-46af-af8a-8a6041f9f001"))
+  
+  (wire (pts (xy 77.47 45.72) (xy 80.01 45.72)) (stroke (width 0) (type default)) (uuid "2082ae7a-d79b-4987-91e5-d6dcb2dd98fd"))
+  (global_label "I2C_SCL" (shape input) (at 80.01 45.72 0) (effects (font (size 1.27 1.27)) (justify left)) (uuid "f67cbf26-5996-4901-8e63-71668b20e997"))
+
 )
