@@ -10,7 +10,7 @@
 "13","1","J13","8P8C, right angle","Unshielded through-hole modular jack","Amphenol Communications Solutions","54602-908LF","Ready to order."
 "15","5","Q1, Q2, Q3, Q4, Q5","BC547B","NPN transistor, TO-92, C-B-E pin order","onsemi","BC547BTA","Ready to order."
 "16","7","R1, R2, R3, R4, R6, R15, R16","4.7 kΩ, ±5%, 0.25 W","Axial carbon-film resistor","Yageo","CFR-25JB-52-4K7","Ready to order."
-"17","2","R5, R7","10 kΩ, ±1%, 0.4 W","Miniature axial metal-film resistor","Vishay Beyschlag","MBA02040C1002FC100","Ready to order."
+"17","2","R5, R7","10 kΩ, ±1%, 0.4 W","Miniature axial metal-film resistor","Vishay Beyschlag","MBA02040C1002FC100","Form leads to 7.62 mm pitch and mount horizontally; verify lead reach."
 "18","2","R8, R9","10 kΩ, ±5%, 0.25 W","Axial carbon-film resistor","Yageo","CFR-25JB-52-10K","Ready to order."
 "19","5","R10, R11, R12, R13, R14","1 kΩ, ±5%, 0.25 W","Axial carbon-film resistor","Yageo","CFR-25JB-52-1K","Ready to order."
 "22","1","Installed in J11","TBD, 5 × 20 mm, 250 VAC minimum","Solenoid mains fuse element","TBD","TBD","Blocked until load/inrush and wire-gauge review defines current and time characteristic."
