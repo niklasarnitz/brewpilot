@@ -23,10 +23,10 @@ The schematic contains 53 BOM references, and the PCB contains the same 53 refer
 
 ## Unresolved selections
 
-The two fuse holders are fully identified, but the actual fuse elements are not defined in the schematic:
+The PCB uses BLX-A footprints for both fuse holders, based on the listing's 22.2 mm pin pitch and 27.8 × 9.5 mm cover dimensions. Confirm the delivered parts' pin size, pitch, and electrical approvals before assembly. The actual fuse elements are not defined in the schematic:
 
-- J11 is a Würth Elektronik 696108003002 holder for a 5 × 20 mm fuse on the solenoid AC phase.
-- J12 is a SCHURTER 0031.8201 holder for a 5 × 20 mm fuse on the 5 V input.
+- J11 is a covered BLX-A holder for a 5 × 20 mm fuse on the solenoid AC phase; verify mains suitability.
+- J12 is a covered BLX-A holder for a 5 × 20 mm fuse on the 5 V input.
 
 Their current ratings and time characteristics must be selected from the real load/inrush, supply limit, conductor size, and applicable safety requirements. The BOM deliberately does not invent these ratings.
 
@@ -50,8 +50,7 @@ This is a complete count/sourcing BOM, not a release-to-production approval.
 - TDK `FG28X7R1H104KNT06`: https://product.tdk.com/en/search/capacitor/ceramic/lead-mlcc/info?part_no=FG28X7R1H104KNT06
 - Panasonic FR electrolytic series: https://industrial.panasonic.com/cdbs/www-data/pdf/RDF0000/ABA0000C1259.pdf
 - Vishay BZX55 series: https://www.vishay.com/docs/85604/bzx55.pdf
-- Würth `696108003002`: https://www.we-online.com/components/products/datasheet/696108003002.pdf
-- SCHURTER OGN / `0031.8201`: https://www.schurter.com/en/datasheet/typ_OGN.pdf
+- BLX-A listing and mechanical drawing: https://de.aliexpress.com/item/1005008894822999.html
 - Amphenol `54602-908LF`: https://www.amphenol-cs.com/product/54602908lf.html
 - onsemi BC547 family: https://www.onsemi.com/download/data-sheet/pdf/bc550-d.pdf
 - Espressif ESP32-DevKitC V4: https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32/esp32-devkitc/user_guide.html

@@ -3,3 +3,13 @@
 (rule "Minimum trace width 0.8 mm"
 	(constraint track_width (min 0.8mm))
 )
+
+(rule "No vias on mains nets"
+	(condition "A.Type == 'Via' && A.NetClass == 'AC_HIGH_CURRENT'")
+	(constraint disallow via)
+)
+
+(rule "Mains to low-voltage copper separation"
+	(condition "A.NetClass == 'AC_HIGH_CURRENT' && B.NetClass != 'AC_HIGH_CURRENT' && B.NetName != ''")
+	(constraint clearance (min 6mm))
+)
