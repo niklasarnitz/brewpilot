@@ -3,4 +3,4 @@ Manchmal wenig freiraum zwischen pin pad und ground plane - ground plane schneid
 Ende der Groundplane richtung Hochvolt könnte noch ein paar Militmeter mehr bekommen - dadurch werden Bereiche der Ground pland verbunden statt separiert.
 Sind alle ground Plane flächen auch mit ground verbunden?
 Warum sind ground pins in der ground plane nicht einfach komplett kupfer sondern haben einzelne Brücken zur groundplane?
-
+Tauschen Pump + Boiler fill? Also SSR bereich plus anschluss? PCB Könnte leicht einfacher werden dadurch.
