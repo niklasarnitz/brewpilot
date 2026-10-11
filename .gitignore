@@ -26,6 +26,7 @@ pcb/review/*audit*.md
 *.net
 *.pre-freerouting-*.kicad_pcb
 *-backups/
+/pcb/**/*backup*.zip
 
 # Language/build caches
 __pycache__/
