@@ -1,11 +1,17 @@
 
-This directory is intended for PlatformIO Test Runner and project tests.
+Run ./tools/test-firmware.sh from the repository root (or by absolute path).
+Requires a C++17 compiler with AddressSanitizer and UndefinedBehaviorSanitizer;
+set CXX to select a compiler. This is a host runner, not `pio test`.
 
-Unit Testing is a software testing method by which individual units of
-source code, sets of one or more MCU program modules together with associated
-control data, usage procedures, and operating procedures, are tested to
-determine whether they are fit for use. Unit testing finds problems early
-in the development cycle.
+The same regression suite runs for both machines, with flowmeters enabled and
+disabled. It exercises real button handlers, state handlers, persistence helpers
+and output actors. Only Arduino time/GPIO/Serial and the external Preferences
+API are replaced. The fake clock wraps at 32 bits like millis() on ESP32.
 
-More information about PlatformIO Unit Testing:
-- https://docs.platformio.org/en/latest/advanced/unit-testing/index.html
+Coverage includes programming isolation/cancellation, stop precedence, NVS open
+and write failure, successful reload, timeout boundaries, clock rollover,
+backflush without flow, and the boiler fault acknowledgement interlock.
+
+These tests do not verify electrical behavior, actual NVS, ISR scheduling or boot
+levels. Build both targets with ./tools/build-firmware.sh and test the assembled
+hardware separately before operating real loads. See docs/firmware.md.

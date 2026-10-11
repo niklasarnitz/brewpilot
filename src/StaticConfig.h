@@ -41,4 +41,23 @@
 // Boiler Stuff
 #define BOILER_FILL_LEVEL 1000 // Value for the LaCimbali M29 Select DT2 / R
 
+// Override with -D flags for the installed machine. Durations are milliseconds.
+#ifndef BREWPILOT_HAS_FLOWMETERS
+#define BREWPILOT_HAS_FLOWMETERS 1
+#endif
+#ifndef BREWPILOT_NO_FLOW_TIMEOUT_MS
+#define BREWPILOT_NO_FLOW_TIMEOUT_MS 10000UL
+#endif
+#ifndef BREWPILOT_MAX_EXTRACTION_MS
+#define BREWPILOT_MAX_EXTRACTION_MS 120000UL
+#endif
+#ifndef BREWPILOT_MAX_BOILER_FILL_MS
+#define BREWPILOT_MAX_BOILER_FILL_MS 120000UL
+#endif
+
+static_assert(BREWPILOT_HAS_FLOWMETERS == 0 || BREWPILOT_HAS_FLOWMETERS == 1, "Flowmeters flag must be 0 or 1");
+static_assert(BREWPILOT_NO_FLOW_TIMEOUT_MS > 0 && BREWPILOT_NO_FLOW_TIMEOUT_MS < 0x80000000UL, "Invalid no-flow timeout");
+static_assert(BREWPILOT_MAX_EXTRACTION_MS > 0 && BREWPILOT_MAX_EXTRACTION_MS < 0x80000000UL, "Invalid extraction timeout");
+static_assert(BREWPILOT_MAX_BOILER_FILL_MS > 0 && BREWPILOT_MAX_BOILER_FILL_MS < 0x80000000UL, "Invalid boiler timeout");
+
 #endif // BREWPILOT_CONFIG_H

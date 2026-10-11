@@ -8,7 +8,9 @@
 #include "GenericStateHandler.h"
 #include "hardware/enums/GroupHeadButtonEvent.h"
 #include "utils/VolumetricsHelper.h"
+#include "StaticConfig.h"
 
+#include <atomic>
 #include <climits>
 
 class GroupHeadStateHandler : public GenericStateHandler
@@ -17,12 +19,18 @@ class GroupHeadStateHandler : public GenericStateHandler
     GroupHeadButtonEvent *event;
     bool *isExtracting;
 
-    bool *isInProgrammingMode;
+    ProgrammingTarget *programmingTarget;
+    const ProgrammingTarget ownTarget;
 
     GroupHeadButtonEvent buttonToBeProgrammed = GroupHeadButtonEvent::NONE;
 
     unsigned long targetPulses = 0;
-    unsigned long currentPulses = 0;
+    // Only the ISR increments this monotonic counter; the loop never resets it.
+    std::atomic<uint32_t> pulseCounter{0};
+    uint32_t pulsesAtStart = 0;
+    uint32_t lastObservedPulses = 0;
+    uint32_t extractionStartTime = 0;
+    uint32_t lastPulseTime = 0;
 
     int groupNumber;
 
@@ -34,11 +42,21 @@ class GroupHeadStateHandler : public GenericStateHandler
     static const int TOTAL_CYCLES = 5;
 
 public:
-    GroupHeadStateHandler(bool *isExtracting, GroupHeadButtonEvent *event, VolumetricsHelper *volumetricsHelper, bool *isInProgrammingMode, int groupNumber)
-        : volumetricsHelper(volumetricsHelper), event(event), isExtracting(isExtracting), isInProgrammingMode(isInProgrammingMode), groupNumber(groupNumber) {}
+    GroupHeadStateHandler(bool *isExtracting, GroupHeadButtonEvent *event, VolumetricsHelper *volumetricsHelper, ProgrammingTarget *programmingTarget, int groupNumber)
+        : volumetricsHelper(volumetricsHelper), event(event), isExtracting(isExtracting), programmingTarget(programmingTarget),
+          ownTarget(groupNumber == 1 ? ProgrammingTarget::GROUP_ONE : ProgrammingTarget::GROUP_TWO), groupNumber(groupNumber) {}
 
     void handleState() override
     {
+        if (*event == GroupHeadButtonEvent::CONTINUOUS && *programmingTarget == ProgrammingTarget::SELECTING &&
+            !*isExtracting && !isAutoBackflushing)
+        {
+            *programmingTarget = ProgrammingTarget::NONE;
+            stop();
+            Serial.println("GroupHeadStateHandler: Programming selection canceled");
+            return;
+        }
+
         // Handle auto backflush mode
         if (isAutoBackflushing)
         {
@@ -46,8 +64,30 @@ public:
             return; // Auto backflush takes priority over normal operations
         }
 
+        const uint32_t now = millis();
+        const uint32_t totalPulses = pulseCounter.load(std::memory_order_relaxed);
+        const unsigned long currentPulses = uint32_t(totalPulses - pulsesAtStart);
+        if (*isExtracting)
+        {
+            if (totalPulses != lastObservedPulses)
+            {
+                lastObservedPulses = totalPulses;
+                lastPulseTime = now;
+            }
+            bool timedOut = uint32_t(now - extractionStartTime) >= BREWPILOT_MAX_EXTRACTION_MS;
+#if BREWPILOT_HAS_FLOWMETERS
+            timedOut = timedOut || uint32_t(now - lastPulseTime) >= BREWPILOT_NO_FLOW_TIMEOUT_MS;
+#endif
+            if (timedOut)
+            {
+                Serial.printf("GroupHeadStateHandler %d: Safety timeout; extraction canceled without saving\n", groupNumber);
+                stop();
+                return;
+            }
+        }
+
         // Check for auto backflush activation
-        if (*event == GroupHeadButtonEvent::AUTO_BACKFLUSH && !(*isInProgrammingMode))
+        if (*event == GroupHeadButtonEvent::AUTO_BACKFLUSH && *programmingTarget == ProgrammingTarget::NONE)
         {
             startAutoBackflush();
             return;
@@ -56,42 +96,36 @@ public:
         // Normal extraction handling
         if (*isExtracting)
         {
-            if (*event == GroupHeadButtonEvent::CONTINUOUS_HELD && targetPulses == LONG_MAX && !(*isInProgrammingMode))
+            if (*event == GroupHeadButtonEvent::CONTINUOUS_HELD && targetPulses == LONG_MAX && *programmingTarget == ProgrammingTarget::NONE)
             {
                 Serial.printf("GroupHeadStateHandler %d: Entered Programming Mode\n", groupNumber);
-                *isInProgrammingMode = true;
-
-                *isExtracting = false;
-
-                currentPulses = 0;
-                targetPulses = 0;
+                stop();
+                *programmingTarget = ProgrammingTarget::SELECTING;
             }
             else if (*event == GroupHeadButtonEvent::CONTINUOUS)
             {
                 *isExtracting = false;
 
-                if (*isInProgrammingMode)
+                if (*programmingTarget == ownTarget)
                 {
-                    volumetricsHelper->writeFlowMeterSetting(buttonToBeProgrammed, currentPulses);
-
-                    Serial.printf("GroupHeadStateHandler %d: Stored %ld target pulses. Left Programming Mode\n", groupNumber, currentPulses);
-                    *isInProgrammingMode = false;
+                    bool saved = volumetricsHelper->writeFlowMeterSetting(buttonToBeProgrammed, currentPulses);
+                    Serial.printf("GroupHeadStateHandler %d: %s. Left Programming Mode\n", groupNumber,
+                                  saved ? "Dose saved" : "Dose NOT saved; previous setting retained");
                 }
                 else
                 {
                     Serial.printf("GroupHeadStateHandler %d: Cancelled Extraction at %ld of %ld pulses\n", groupNumber, currentPulses, targetPulses);
                 }
 
-                currentPulses = 0;
-                targetPulses = 0;
+                stop();
             }
-            else if (!(*isInProgrammingMode) && currentPulses >= targetPulses)
+            else if (*programmingTarget != ownTarget && currentPulses >= targetPulses)
             {
                 *isExtracting = false;
 
                 Serial.printf("GroupHeadStateHandler %d: Finished Extraction - Current: %ld pulses; Target: %ld pulses; Difference: %ld pulses\n", groupNumber, currentPulses, targetPulses, currentPulses - targetPulses);
 
-                targetPulses = 0;
+                stop();
             }
         }
         else if (*event != GroupHeadButtonEvent::NONE && *event != GroupHeadButtonEvent::CONTINUOUS_HELD && *event != GroupHeadButtonEvent::AUTO_BACKFLUSH)
@@ -106,12 +140,17 @@ public:
             {
                 targetPulses = volumetricsHelper->getFlowMeterSetting(*event);
 
-                buttonToBeProgrammed = *event;
+                if (*programmingTarget == ProgrammingTarget::SELECTING)
+                {
+                    *programmingTarget = ownTarget;
+                    buttonToBeProgrammed = *event;
+                }
             }
 
-            if (targetPulses != 0 || (*event != GroupHeadButtonEvent::CONTINUOUS && *isInProgrammingMode))
+            if (targetPulses != 0 || *programmingTarget == ownTarget)
             {
-                currentPulses = 0;
+                pulsesAtStart = lastObservedPulses = totalPulses;
+                extractionStartTime = lastPulseTime = now;
 
                 *isExtracting = true;
                 Serial.printf("GroupHeadStateHandler %d: Start extracting targeting %ld pulses\n", groupNumber, targetPulses);
@@ -121,10 +160,15 @@ public:
 
     void flowMeterPulseInterrupt()
     {
-        if (*isExtracting && !isAutoBackflushing)
-        {
-            currentPulses++;
-        }
+        pulseCounter.fetch_add(1, std::memory_order_relaxed);
+    }
+
+    void stop()
+    {
+        stopAutoBackflush();
+        buttonToBeProgrammed = GroupHeadButtonEvent::NONE;
+        if (*programmingTarget == ownTarget)
+            *programmingTarget = ProgrammingTarget::NONE;
     }
 
 private:
@@ -135,7 +179,6 @@ private:
         autoBackflushCycle = 0;
         autoBackflushStartTime = millis();
         *isExtracting = true; // Start with extraction
-        currentPulses = 0;
         targetPulses = 0;
     }
 
@@ -190,7 +233,6 @@ private:
         isAutoBackflushing = false;
         autoBackflushCycle = 0;
         *isExtracting = false;
-        currentPulses = 0;
         targetPulses = 0;
     }
 };

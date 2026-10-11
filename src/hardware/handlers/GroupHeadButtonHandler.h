@@ -14,8 +14,6 @@ class GroupHeadButtonHandler
 private:
     GroupHeadButtonEvent *event;
 
-    bool *isInProgrammingMode;
-
     ButtonHandler leftSingleDoseButtonHandler;
     ButtonHandler leftDoubleDoseButtonHandler;
     ButtonHandler continuousButtonHandler;
@@ -25,9 +23,8 @@ private:
     int groupNumber;
 
 public:
-    explicit GroupHeadButtonHandler(GroupButtonMatrixState *groupState, GroupHeadButtonEvent *event, int groupNumber, bool *isInProgrammingMode)
+    explicit GroupHeadButtonHandler(GroupButtonMatrixState *groupState, GroupHeadButtonEvent *event, int groupNumber)
         : event(event),
-          isInProgrammingMode(isInProgrammingMode),
           leftSingleDoseButtonHandler(
               &(groupState->leftSingleDose)),
           leftDoubleDoseButtonHandler(
@@ -48,15 +45,6 @@ public:
         ButtonState rightSingleDoseState = rightSingleDoseButtonHandler.getEvent();
         ButtonState rightDoubleDoseState = rightDoubleDoseButtonHandler.getEvent();
 
-        // Check for auto backflush combo: left single + right double simultaneously held
-        if (((leftSingleDoseState.event == ButtonEventType::BUTTON_PRESSED) && rightDoubleDoseState.currentState) ||
-            ((rightDoubleDoseState.event == ButtonEventType::BUTTON_PRESSED) && leftSingleDoseState.currentState))
-        {
-            *event = GroupHeadButtonEvent::AUTO_BACKFLUSH;
-            Serial.printf("GroupHeadButtonHandler %d: auto backflush combo detected\n", groupNumber);
-            return;
-        }
-
         // Held events are emitted for all buttons but only handled for the continuous button
         if (continuousState.event == ButtonEventType::BUTTON_PRESSED)
         {
@@ -67,6 +55,17 @@ public:
         {
             *event = GroupHeadButtonEvent::CONTINUOUS_HELD;
             Serial.printf("GroupHeadButtonHandler %d: continuous held\n", groupNumber);
+        }
+        else if (continuousState.currentState)
+        {
+            // Do not start another operation until Stop has been released.
+            *event = GroupHeadButtonEvent::NONE;
+        }
+        else if (((leftSingleDoseState.event == ButtonEventType::BUTTON_PRESSED) && rightDoubleDoseState.currentState) ||
+                 ((rightDoubleDoseState.event == ButtonEventType::BUTTON_PRESSED) && leftSingleDoseState.currentState))
+        {
+            *event = GroupHeadButtonEvent::AUTO_BACKFLUSH;
+            Serial.printf("GroupHeadButtonHandler %d: auto backflush combo detected\n", groupNumber);
         }
         else if (leftSingleDoseState.event == ButtonEventType::BUTTON_PRESSED)
         {

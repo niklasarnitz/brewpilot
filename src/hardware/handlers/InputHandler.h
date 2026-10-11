@@ -26,9 +26,9 @@ private:
     ButtonEvent *buttonEvent;
 
 public:
-    explicit InputHandler(ButtonEvent *buttonEvent, bool *isInProgrammingMode)
+    explicit InputHandler(ButtonEvent *buttonEvent)
         : buttonEvent(buttonEvent), buttonMatrixHandler(&buttonMatrixState),
-          teaButtonHandler(&buttonMatrixState.tea), groupOneHandler(&(buttonMatrixState.groupOne), &(buttonEvent->groupOne), 1, isInProgrammingMode), groupTwoHandler(&(buttonMatrixState.groupTwo), &(buttonEvent->groupTwo), 2, isInProgrammingMode) {};
+          teaButtonHandler(&buttonMatrixState.tea), groupOneHandler(&(buttonMatrixState.groupOne), &(buttonEvent->groupOne), 1), groupTwoHandler(&(buttonMatrixState.groupTwo), &(buttonEvent->groupTwo), 2) {};
 
     void readInputs()
     {

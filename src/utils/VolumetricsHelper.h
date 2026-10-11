@@ -47,7 +47,8 @@ public:
 
     void setup()
     {
-        preferenceHelper->open();
+        if (!preferenceHelper->open())
+            return;
 
         volumetricSettings.leftSingleEspressoPulses = preferenceHelper->getULong(PreferenceKey::FlowMeterPulsesLeftSingleEspresso);
         volumetricSettings.leftDoubleEspressoPulses = preferenceHelper->getULong(PreferenceKey::FlowMeterPulsesLeftDoubleEspresso);
@@ -60,9 +61,10 @@ public:
         logVolumetricSettings(&volumetricSettings);
     }
 
-    void writeFlowMeterSetting(GroupHeadButtonEvent event, unsigned long value)
+    bool writeFlowMeterSetting(GroupHeadButtonEvent event, unsigned long value)
     {
-        preferenceHelper->setULong(convertButtonEventToPreferenceKey(event), value);
+        if (value == 0 || !preferenceHelper->setULong(convertButtonEventToPreferenceKey(event), value))
+            return false;
 
         switch (event)
         {
@@ -81,15 +83,18 @@ public:
         };
 
         logVolumetricSettings(&volumetricSettings);
+        return true;
     }
 
-    void writeTeaWaterSetting(long value)
+    bool writeTeaWaterSetting(unsigned long value)
     {
-        preferenceHelper->setULong(PreferenceKey::TeaWaterMilliseconds, value);
+        if (value == 0 || !preferenceHelper->setULong(PreferenceKey::TeaWaterMilliseconds, value))
+            return false;
 
         volumetricSettings.teaWaterMilliseconds = value;
 
         logVolumetricSettings(&volumetricSettings);
+        return true;
     }
 
     unsigned long getFlowMeterSetting(GroupHeadButtonEvent key)
