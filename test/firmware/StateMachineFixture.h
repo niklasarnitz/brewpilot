@@ -31,10 +31,11 @@ struct StateMachineFixture
         testProbe = 0;
     }
 
-    void tick(Event one = Event::NONE, Event two = Event::NONE, bool tea = false, uint32_t elapsed = 50)
+    void tick(Event one = Event::NONE, Event two = Event::NONE, bool tea = false, uint32_t elapsed = 50, bool teaHeld = false)
     {
         testMillis += elapsed;
-        events = {one, tea, two};
+        events = {one, teaHeld ? ButtonEventType::BUTTON_HELD :
+                           (tea ? ButtonEventType::BUTTON_PRESSED : ButtonEventType::BUTTON_NONE), two};
         handler.handleState();
         actor.loop();
     }
@@ -56,7 +57,7 @@ struct StateMachineFixture
              group == 2 ? Event::CONTINUOUS : Event::NONE);
         tick(group == 1 ? Event::CONTINUOUS_HELD : Event::NONE,
              group == 2 ? Event::CONTINUOUS_HELD : Event::NONE, false, 2000);
-        require(state.programmingTarget == ProgrammingTarget::SELECTING,
-                "holding continuous must enter programming selection");
+        require(state.programmingTarget == (group == 1 ? ProgrammingTarget::GROUP_ONE : ProgrammingTarget::GROUP_TWO),
+                "holding continuous must reserve that group's programming session");
     }
 };

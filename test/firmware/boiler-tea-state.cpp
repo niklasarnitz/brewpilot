@@ -4,7 +4,7 @@ namespace
 {
 struct BoilerTest : StateMachineFixture
 {
-    BoilerStateHandler boiler{&state.isFillingBoiler, &state.boilerFillFault};
+    BoilerStateHandler boiler{&state.isFillingBoiler};
 
     void step(uint32_t elapsed = 0)
     {
@@ -59,52 +59,34 @@ void boilerSamplingAndOverfill()
     require(machine.state.isFillingBoiler && testPins[OUT_BOILER_VOLTAGE] == LOW,
             "overfill must still run at exactly 2000ms");
     machine.sample(1001, 1);
-    require(!machine.state.isFillingBoiler && !machine.state.boilerFillFault,
+    require(!machine.state.isFillingBoiler,
             "overfill must stop even when its sample is dry");
     machine.sample(1001);
     require(machine.state.isFillingBoiler, "dry sample after overfill must restart filling");
 }
 
-void boilerTimeoutAndAcknowledgement()
+void boilerFillingHasNoDeadline()
 {
     for (uint32_t start : {1u, 0xfffff000u})
     {
-        for (bool overfill : {false, true})
+        BoilerTest machine;
+        testMillis = start;
+        machine.sample(1001, 0);
+        uint32_t previous = 0;
+        for (uint32_t elapsed : {119999u, 120000u, 120001u, 240000u})
         {
-            BoilerTest machine;
-            testMillis = start;
-            machine.sample(1001, 0);
-            if (overfill)
-            {
-                machine.sample(1000);
-                machine.step(117998);
-            }
-            else
-                machine.step(119999);
-            require(machine.state.isFillingBoiler && !machine.state.boilerFillFault,
-                    "fill deadline must not fire at 119999ms, even across rollover");
-            require(testPins[OUT_BOILER_VOLTAGE] == HIGH,
-                    "timeout scenario must include an energized settling probe");
-            machine.step(1);
-            require(!machine.state.isFillingBoiler && machine.state.boilerFillFault &&
-                        testPins[OUT_BOILER_VOLTAGE] == LOW,
-                    "120000ms must latch fault and turn off filling and probe, including overfill");
-            testProbe = 1000;
-            machine.step(5000);
-            require(machine.state.boilerFillFault && !machine.state.isFillingBoiler &&
-                        testPins[OUT_BOILER_VOLTAGE] == LOW,
-                    "wet probe must not clear a latched fault");
-            machine.boiler.acknowledgeFault();
-            require(!machine.state.boilerFillFault && !machine.state.isFillingBoiler,
-                    "explicit acknowledgement must clear fault without filling");
-            machine.sample(1000, 0);
-            require(!machine.state.isFillingBoiler, "acknowledgement must reset overfill state");
-            machine.sample(1001);
-            require(machine.state.isFillingBoiler, "acknowledged handler must permit fresh filling");
-            machine.step(120000);
-            require(machine.state.boilerFillFault && !machine.state.isFillingBoiler,
-                    "fresh filling must have a fresh active timeout");
+            machine.step(elapsed - previous);
+            machine.step();
+            require(machine.state.isFillingBoiler,
+                    "dry boiler must keep filling beyond two minutes, including clock rollover");
+            previous = elapsed;
         }
+        machine.sample(1000);
+        require(machine.state.isFillingBoiler, "full probe after prolonged filling still enters overfill");
+        machine.sample(1000);
+        require(!machine.state.isFillingBoiler, "full boiler stops after normal overfill without acknowledgement");
+        machine.sample(1001);
+        require(machine.state.isFillingBoiler, "later dry probe starts a new fill without acknowledgement");
     }
 }
 
@@ -113,10 +95,11 @@ struct TeaTest : StateMachineFixture
     TeaStateHandler tea{&events.tea, &state.isExtractingTeaWater,
                         &volumes, &state.programmingTarget};
 
-    void step(bool pressed = false, uint32_t elapsed = 0)
+    void step(bool pressed = false, uint32_t elapsed = 0, bool held = false)
     {
         testMillis += elapsed;
-        events.tea = pressed;
+        events.tea = held ? ButtonEventType::BUTTON_HELD :
+                           (pressed ? ButtonEventType::BUTTON_PRESSED : ButtonEventType::BUTTON_NONE);
         tea.handleState();
         actor.loop();
         require(testPins[RELAY_TEA] ==
@@ -144,11 +127,11 @@ void teaNormalOperation()
     machine.step(true, 100);
     require(!machine.state.isExtractingTeaWater && machine.volumes.getTeaWaterSetting() == 3000,
             "manual stop must not overwrite normal tea duration");
-    machine.state.programmingTarget = ProgrammingTarget::SELECTING;
+    machine.state.programmingTarget = ProgrammingTarget::GROUP_ONE;
     machine.step();
-    require(machine.state.programmingTarget == ProgrammingTarget::SELECTING &&
+    require(machine.state.programmingTarget == ProgrammingTarget::GROUP_ONE &&
                 !machine.state.isExtractingTeaWater,
-            "selection without press must not start tea");
+            "group programming without a Tea press must not start tea");
 }
 
 void teaNormalRollover()
@@ -175,7 +158,7 @@ void teaLearningRollover()
     {
         TeaTest machine;
         require(machine.volumes.writeTeaWaterSetting(3000), "seed prior learning duration");
-        machine.state.programmingTarget = ProgrammingTarget::SELECTING;
+        machine.step(false, 2000, true);
         testMillis = 0xfffffa24u;
         machine.step(true);
         for (uint32_t elapsed : {1499u, 1500u, 1501u})
@@ -214,10 +197,12 @@ void teaProgramming()
         TeaTest machine;
         if (failure != 0)
             require(machine.volumes.writeTeaWaterSetting(3000), "prior setting must save");
-        machine.state.programmingTarget = ProgrammingTarget::SELECTING;
+        machine.step(false, 2000, true);
+        require(!machine.state.isExtractingTeaWater && machine.state.programmingTarget == ProgrammingTarget::TEA,
+                "Tea hold arms only Tea programming without dispensing");
         machine.step(true);
         require(machine.state.isExtractingTeaWater && machine.state.programmingTarget == ProgrammingTarget::TEA,
-                "selection press must start learning even with missing setting");
+                "Tea press after its own hold starts learning even with missing setting");
         if (failure != 3)
         {
             machine.step(false, 4100);
@@ -247,12 +232,12 @@ int runBoilerTeaStateTests()
     try
     {
         boilerSamplingAndOverfill();
-        boilerTimeoutAndAcknowledgement();
+        boilerFillingHasNoDeadline();
         teaNormalOperation();
         teaProgramming();
         teaNormalRollover();
         teaLearningRollover();
-        std::cout << "PASS: boiler sampling, thresholds, overfill, timeout/ack and tea normal/programming states\n";
+        std::cout << "PASS: boiler sampling, thresholds, overfill, prolonged filling and tea normal/programming states\n";
     }
     catch (const std::exception &error)
     {

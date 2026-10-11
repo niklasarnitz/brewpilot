@@ -36,7 +36,7 @@ struct GroupFixture : StateMachineFixture
         step(Event::CONTINUOUS);
         require(extracting, "continuous starts extraction before selection");
         step(Event::CONTINUOUS_HELD, 2000);
-        require(!extracting && state.programmingTarget == ProgrammingTarget::SELECTING,
+        require(!extracting && state.programmingTarget == own,
                 "held continuous stops water and opens programming selection");
     }
 };
@@ -90,7 +90,7 @@ void continuousAndOwnership()
     f.step(Event::CONTINUOUS_HELD);
     require(!f.extracting, "held alone cannot choose a dose");
     f.step(Event::AUTO_BACKFLUSH);
-    require(!f.extracting && f.state.programmingTarget == ProgrammingTarget::SELECTING,
+    require(!f.extracting && f.state.programmingTarget == f.own,
             "backflush is blocked during selection");
     f.step(Event::CONTINUOUS);
     require(!f.extracting && f.state.programmingTarget == ProgrammingTarget::NONE,
@@ -117,9 +117,9 @@ void continuousAndOwnership()
     }
     f.state.programmingTarget = ProgrammingTarget::NONE;
     f.step(Event::CONTINUOUS);
-    f.state.programmingTarget = ProgrammingTarget::SELECTING;
+    f.state.programmingTarget = ProgrammingTarget::GROUP_TWO;
     f.step(Event::CONTINUOUS);
-    require(!f.extracting && f.state.programmingTarget == ProgrammingTarget::SELECTING,
+    require(!f.extracting && f.state.programmingTarget == ProgrammingTarget::GROUP_TWO,
             "stopping existing water must not cancel another group's selection");
 }
 
@@ -187,7 +187,7 @@ void backflushContracts()
         require(f.extracting, "backflush starts every extraction phase");
         f.step(Event::CONTINUOUS_HELD, 9999);
         require(f.extracting && f.state.programmingTarget == ProgrammingTarget::NONE,
-                "backflush has priority over held programming and no-flow safety");
+                "backflush has priority over held programming");
         f.step(Event::LEFT_SINGLE_ESPRESSO, 1);
         require(!f.extracting, "backflush extraction ends at ten seconds");
         if (cycle < 5)
@@ -222,14 +222,15 @@ void backflushContracts()
     f.step(Event::AUTO_BACKFLUSH);
     f.step(Event::NONE, 10000);
     require(!f.extracting, "backflush can replace a normal extraction");
-    f.state.programmingTarget = ProgrammingTarget::SELECTING;
+    f.state.programmingTarget = ProgrammingTarget::GROUP_TWO;
     f.step(Event::CONTINUOUS);
     f.step(Event::NONE, 5000);
-    require(!f.extracting && f.state.programmingTarget == ProgrammingTarget::SELECTING,
+    require(!f.extracting && f.state.programmingTarget == ProgrammingTarget::GROUP_TWO,
             "backflush cancellation preserves another group's programming selection");
     f.step(Event::CONTINUOUS);
-    require(f.state.programmingTarget == ProgrammingTarget::NONE && !f.extracting,
-            "a subsequent idle continuous event cancels selection");
+    require(f.state.programmingTarget == ProgrammingTarget::GROUP_TWO && f.extracting,
+            "subsequent continuous starts normally without canceling another group's selection");
+    f.group.stop();
 }
 
 void pulseBoundaryContracts()
@@ -325,30 +326,34 @@ void backflushRollover(bool wrapDuringPause)
 void backflushExtractionRollover() { backflushRollover(false); }
 void backflushPauseRollover() { backflushRollover(true); }
 
-void safetyContracts()
+void prolongedExtractionContracts(int number)
 {
     for (uint32_t start : {1u, 0xfffff000u})
     {
-        GroupFixture f;
+        GroupFixture f(number);
         testMillis = start;
-        f.step(Event::CONTINUOUS);
-        f.step(Event::NONE, 9999);
-        require(f.extracting, "no-flow grace lasts until the boundary");
-        f.step(Event::NONE, 1);
-#if BREWPILOT_HAS_FLOWMETERS
-        require(!f.extracting, "no-flow stops at ten seconds across clock rollover");
-        f.step(Event::CONTINUOUS);
-        f.flow(1);
-        f.step(Event::NONE, 9000);
-        f.step(Event::NONE, 9999);
-        require(f.extracting, "observed flow refreshes the deadline");
-        f.step(Event::NONE, 1);
-        require(!f.extracting, "flow stall stops at the refreshed deadline");
-#else
-        require(f.extracting, "flowmeter opt-out leaves extraction active without pulses");
-        f.step(Event::NONE, 110000);
-        require(!f.extracting, "flowmeter opt-out retains maximum-duration safety");
-#endif
+        require(f.volumes.writeFlowMeterSetting(doses[0], 7), "seed missing-pulse dose");
+        for (Event mode : {Event::CONTINUOUS, doses[0]})
+        {
+            f.step(mode);
+            f.step(Event::NONE, 9999);
+            require(f.extracting, "missing initial pulses leave extraction active before ten seconds");
+            f.step(Event::NONE, 1);
+            require(f.extracting, "missing initial pulses do not stop extraction at ten seconds");
+            f.step(Event::NONE, 1);
+            require(f.extracting, "missing initial pulses do not stop extraction after ten seconds");
+            f.flow(1);
+            f.step();
+            f.step(Event::NONE, 9999);
+            require(f.extracting, "stalled flow leaves extraction active before ten seconds");
+            f.step(Event::NONE, 1);
+            require(f.extracting, "stalled flow does not stop extraction at ten seconds");
+            f.step(Event::NONE, 1);
+            require(f.extracting, "stalled flow does not stop extraction after ten seconds");
+            f.step(Event::CONTINUOUS);
+            require(!f.extracting && f.volumes.getFlowMeterSetting(doses[0]) == 7,
+                    "manual stop still ends extraction without changing the dose");
+        }
         for (bool learning : {false, true})
         {
             require(f.volumes.writeFlowMeterSetting(doses[0], 7), "seed safety dose");
@@ -367,22 +372,27 @@ void safetyContracts()
             f.step(Event::NONE, 999);
             require(f.extracting, "flowing extraction survives until 119999 milliseconds");
             f.flow(1);
-            f.step(Event::CONTINUOUS, 1);
+            f.step(Event::NONE, 1);
+            require(f.extracting, "flowing extraction has no cutoff at 120000 milliseconds");
+            f.step(Event::NONE, 120000);
+            require(f.extracting, "flowing extraction has no cutoff beyond two minutes");
+            f.step(Event::CONTINUOUS);
             require(!f.extracting && f.state.programmingTarget == ProgrammingTarget::NONE,
-                    "maximum duration wins over stop/save event at exactly 120 seconds");
-            require(f.volumes.getFlowMeterSetting(doses[0]) == 7,
-                    "safety timeout never saves a partial learning dose");
+                    "manual stop ends prolonged extraction");
+            require(f.volumes.getFlowMeterSetting(doses[0]) == (learning ? 120 : 7),
+                    "only learning saves the pulse count after prolonged extraction");
         }
-#if BREWPILOT_HAS_FLOWMETERS
         f.select();
         f.step(doses[0]);
         f.flow(2);
         f.step();
-        f.step(Event::CONTINUOUS, 10000);
+        f.step(Event::NONE, 10001);
+        require(f.extracting && f.state.programmingTarget == f.own,
+                "stalled flow does not abort a learning extraction");
+        f.step(Event::CONTINUOUS);
         require(!f.extracting && f.state.programmingTarget == ProgrammingTarget::NONE &&
-                    f.volumes.getFlowMeterSetting(doses[0]) == 7,
-                "no-flow timeout wins over learning save");
-#endif
+                    f.volumes.getFlowMeterSetting(doses[0]) == 2,
+                "manual stop saves the learned dose after stalled flow");
     }
 }
 } // namespace
@@ -395,11 +405,12 @@ int runGroupStateTests()
         continuousAndOwnership();
         programmingContracts();
         backflushContracts();
-        safetyContracts();
+        for (int number : {1, 2})
+            prolongedExtractionContracts(number);
         pulseBoundaryContracts();
         backflushExtractionRollover();
         backflushPauseRollover();
-        std::cout << "PASS: group doses, continuous, programming, backflush and safety (flowmeters="
+        std::cout << "PASS: group doses, continuous, programming, backflush and prolonged extraction (flowmeters="
                   << BREWPILOT_HAS_FLOWMETERS << ")\n";
     }
     catch (const std::exception &error)

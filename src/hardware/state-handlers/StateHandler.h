@@ -17,8 +17,6 @@ class StateHandler : public GenericStateHandler
 private:
     State *state;
     ButtonEvent *buttonEvent;
-    bool groupOneAckArmed = false;
-    bool groupTwoAckArmed = false;
     BoilerStateHandler boilerStateHandler;
     GroupHeadStateHandler groupOneStateHandler;
     GroupHeadStateHandler groupTwoStateHandler;
@@ -27,7 +25,7 @@ private:
 public:
     StateHandler(State *state, ButtonEvent *buttonEvent, VolumetricsHelper *volumetricsHelper)
         : state(state), buttonEvent(buttonEvent),
-          boilerStateHandler(&state->isFillingBoiler, &state->boilerFillFault),
+          boilerStateHandler(&state->isFillingBoiler),
           groupOneStateHandler(&state->groupOneIsExtracting,
                                &buttonEvent->groupOne, volumetricsHelper, &state->programmingTarget, 1),
           groupTwoStateHandler(&state->groupTwoIsExtracting,
@@ -37,35 +35,7 @@ public:
 
     void handleState() override
     {
-        const bool wasFaulted = state->boilerFillFault;
         boilerStateHandler.handleState();
-        if (state->boilerFillFault)
-        {
-            groupOneStateHandler.stop();
-            groupTwoStateHandler.stop();
-            state->isExtractingTeaWater = false;
-            state->programmingTarget = ProgrammingTarget::NONE;
-
-            if (!wasFaulted)
-            {
-                groupOneAckArmed = groupTwoAckArmed = false;
-            }
-            else
-            {
-                // A button already held when the fault arose must not acknowledge it.
-                if (buttonEvent->groupOne == GroupHeadButtonEvent::CONTINUOUS)
-                    groupOneAckArmed = true;
-                if (buttonEvent->groupTwo == GroupHeadButtonEvent::CONTINUOUS)
-                    groupTwoAckArmed = true;
-                if ((groupOneAckArmed && buttonEvent->groupOne == GroupHeadButtonEvent::CONTINUOUS_HELD) ||
-                    (groupTwoAckArmed && buttonEvent->groupTwo == GroupHeadButtonEvent::CONTINUOUS_HELD))
-                {
-                    boilerStateHandler.acknowledgeFault();
-                    groupOneAckArmed = groupTwoAckArmed = false;
-                }
-            }
-            return; // Consume acknowledgement; never use it to start a drink or programming.
-        }
         groupOneStateHandler.handleState();
         groupTwoStateHandler.handleState();
         teaStateHandler.handleState();

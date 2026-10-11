@@ -22,10 +22,8 @@ private:
     };
 
     bool *isFillingBoiler;
-    bool *fillFault;
 
     uint32_t lastCheckTime = 0;
-    uint32_t fillStartTime = 0;
 
     bool hasTurnedOnBoilerProbeVoltage = false;
 
@@ -63,8 +61,8 @@ private:
     }
 
 public:
-    BoilerStateHandler(bool *isFillingBoiler, bool *fillFault)
-        : isFillingBoiler(isFillingBoiler), fillFault(fillFault)
+    BoilerStateHandler(bool *isFillingBoiler)
+        : isFillingBoiler(isFillingBoiler)
     {
         pinMode(BOILER_PROBE_PIN, INPUT);
         pinMode(OUT_BOILER_VOLTAGE, OUTPUT);
@@ -74,20 +72,6 @@ public:
 
     void handleState() override
     {
-        if (*fillFault)
-            return;
-
-        // Check every loop, including probe settling and the intentional overfill.
-        if (*isFillingBoiler && uint32_t(millis() - fillStartTime) >= BREWPILOT_MAX_BOILER_FILL_MS)
-        {
-            *isFillingBoiler = false;
-            *fillFault = true;
-            digitalWrite(OUT_BOILER_VOLTAGE, LOW);
-            hasTurnedOnBoilerProbeVoltage = false;
-            Serial.println("BoilerStateHandler: FILL TIMEOUT; water outputs locked. Release, press and hold Continuous to acknowledge");
-            return;
-        }
-
         if (uint32_t(millis() - lastCheckTime) > BOILER_FILL_WAIT_TIME || lastCheckTime == 0)
         {
             bool boilerIsFilled = readBoilerProbe();
@@ -103,7 +87,6 @@ public:
                 {
                     Serial.println("BoilerStateHandler: Start filling");
                     *isFillingBoiler = true;
-                    fillStartTime = millis();
                     internalState = BoilerState::BOILER_BELOW_TARGET;
                 }
                 break;
@@ -123,15 +106,6 @@ public:
                 break;
             }
         }
-    }
-
-    void acknowledgeFault()
-    {
-        *fillFault = false;
-        *isFillingBoiler = false;
-        internalState = BoilerState::BOILER_ABOVE_TARGET_AND_FILLED;
-        lastCheckTime = 0;
-        Serial.println("BoilerStateHandler: Fault acknowledged; will check probe again");
     }
 };
 

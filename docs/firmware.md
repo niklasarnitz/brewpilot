@@ -10,19 +10,11 @@
 Maschine über `rancilio-s27` beziehungsweise `la-cimbali-m29-select` wählen.
 Pinbelegung und PCB-Kompatibilität stehen im [Pin-Audit](esp32-pin-audit.md).
 
-## Schutzgrenzen
+## Flowmeter konfigurieren
 
-Diese Defaults sind nicht an der Maschine vermessen. Insbesondere die maximale
-Boilerfüllzeit muss zur Kesselgröße und tatsächlichen Füllleistung passen.
-Overrides kommen als `-DNAME=WERT` in die `build_flags` des jeweiligen
-PlatformIO-Environments; das vorhandene Maschinen-Makro dabei beibehalten.
-
-| Flag | Default | Bedeutung |
-|---|---:|---|
-| `BREWPILOT_HAS_FLOWMETERS` | `1` | `0` für Maschinen ohne Flowmeter |
-| `BREWPILOT_NO_FLOW_TIMEOUT_MS` | `10000` | Höchstens 10 s ohne beobachteten Impuls während eines Gruppenbezugs |
-| `BREWPILOT_MAX_EXTRACTION_MS` | `120000` | Höchstens 120 s pro Gruppenbezug, auch Continuous und Lernen |
-| `BREWPILOT_MAX_BOILER_FILL_MS` | `120000` | Höchstens 120 s je zusammenhängender Boilerfüllung, einschließlich Nachfüllverzögerung |
+`BREWPILOT_HAS_FLOWMETERS` ist standardmäßig `1`. Für Maschinen ohne Flowmeter
+`-DBREWPILOT_HAS_FLOWMETERS=0` in die `build_flags` des jeweiligen
+PlatformIO-Environments aufnehmen; das vorhandene Maschinen-Makro dabei beibehalten.
 
 Beispiel für eine S27 **ohne Flowmeter**, als Ersatz des bestehenden Abschnitts:
 
@@ -33,56 +25,58 @@ build_flags =
     -DBREWPILOT_HAS_FLOWMETERS=0
 ```
 
-Die Flag `0` deaktiviert ausschließlich die Impulsausfallüberwachung und die
-Flowmeter-Interrupts, **nicht** die maximale Bezugs- oder Boilerfüllzeit.
+Die Flag `0` deaktiviert die Flowmeter-Interrupts. Fehlende oder ausbleibende
+Flowmeter-Impulse lösen keinen eigenen Abbruch aus, unabhängig von dieser Flag.
 Sie ersetzt keine Volumetrik durch eine Zeitdosierung: Ohne Sensoren Continuous
 mit manuellem Stop verwenden. Gespeicherte Impulsdosen können ohne Impulse nicht
 automatisch erreicht und neue Impulsdosen nicht gelernt werden. Ein Bezug über
-eine bereits gespeicherte Dosistaste endet dann durch Stop oder die Zeitgrenze.
+eine bereits gespeicherte Dosistaste muss ohne Impulse manuell gestoppt werden.
 
-Ein Gruppen-Timeout beendet den Bezug ohne Speichern einer Lerndosis. Ein neuer
-Tastendruck kann einen neuen Bezug starten. Rückspülen verwendet wegen des
-Blindsiebs keine Impulsüberwachung; es bleibt auf fünf Phasen à 10 s mit vier
-Pausen à 5 s begrenzt. Tee behält seine gespeicherte Zeitdosierung; die
-Gruppen-Zeitgrenzen gelten nicht für Tee.
+Gruppenbezüge haben keine maximale Laufzeit: Dosierungen enden beim Erreichen
+der gespeicherten Impulszahl oder durch Continuous; Continuous- und Lernbezüge
+enden manuell. Das gilt auch über zwei Minuten hinaus und bei ausbleibenden
+Impulsen. Rückspülen bleibt auf fünf Phasen à 10 s mit vier Pausen à 5 s begrenzt.
+Normaler Tee behält seine gespeicherte Zeitdosierung.
 
-Die Grenzen werden in der Hauptschleife geprüft, nicht von einer unabhängigen
-Hardwareabschaltung. Die Abschaltung erfolgt beim nächsten Schleifendurchlauf;
-zwischen Prüfungen liegen regulär 50 ms plus die Laufzeit der Schleifenarbeit.
-Blockierte Firmware, klebende Relais und die Heizung werden damit nicht abgesichert.
+Die Boilerfüllung hat keine maximale Laufzeit und keine Fehlersperre oder
+Quittierung. Sie läuft, solange die Sonde „leer“ meldet, und endet nach einem
+„voll“-Sample und der bestehenden Nachfüllverzögerung. Eine dauerhaft „leer“
+meldende oder ausgefallene Sonde wird nicht durch einen Füllzeit-Timeout abgefangen.
 
-## Boiler-Füllfehler quittieren
-
-Bei Überschreiten der Füllzeit werden Pumpe, Füllventil, beide Gruppen und Tee
-ausgeschaltet. Rückspülen und Programmierung werden verworfen. Die Sperre bleibt
-auch dann bestehen, wenn die Sonde später wieder „voll“ meldet; normale
-Bezugstasten lösen keinen Neustart aus. Der Fehler wird über Serial gemeldet.
-
-Erst die Ursache prüfen. Dann Continuous an einer Gruppe loslassen, **neu drücken
-und etwa zwei Sekunden halten**. Eine beim Fehler bereits gehaltene Taste zählt
-nicht. Die Quittierung startet weder einen Bezug noch den Programmiermodus.
-Anschließend wird die Sonde erneut gemessen; ist der Kessel noch leer, beginnt
-ein neuer, wieder zeitlich begrenzter Füllversuch.
-
-Die Verriegelung liegt im RAM: Ein Neustart löscht sie ebenfalls. Es gibt keine
-automatischen Wiederholungen während einer verriegelten Sitzung.
-
-## Dosis oder Tee programmieren
+## Gruppendosis programmieren
 
 1. An einer inaktiven Gruppe Continuous drücken und etwa zwei Sekunden halten.
-   Der kurz gestartete Bezug stoppt; die Firmware wartet auf eine Auswahl.
-2. Continuous loslassen und die gewünschte Dosistaste an einer inaktiven Gruppe
-   oder Tee bei inaktivem Teebezug drücken. Nur dieser neue Bezug lernt.
-3. Gruppen-Lernbezug mit dessen Continuous-Taste, Tee mit erneutem Tee-Druck
-   beenden. Andere laufende Bezüge behalten ihre Abschaltgrenzen und können
-   unabhängig gestoppt werden.
+   Der kurz gestartete Bezug stoppt; **nur diese Gruppe** ist zum Programmieren
+   reserviert und wartet auf die Auswahl einer ihrer vier Dosistasten.
+2. Continuous loslassen und die gewünschte Dosistaste **derselben Gruppe** drücken.
+   Dieser Bezug lernt die Impulszahl und ignoriert die bisher gespeicherte Dosis.
+3. Mit Continuous **derselben Gruppe** stoppen und speichern. Die Programmierung
+   endet damit. Vor der Dosisauswahl bricht diese Taste den Modus ohne Wasser ab.
 
-Vor der Auswahl kann Continuous an einer inaktiven Gruppe die Programmierung
-abbrechen, ohne Wasser zu starten oder eine alte Dosis zu überschreiben.
+Die andere Gruppe arbeitet normal weiter. Ihre Dosistasten wählen keinen
+Lernbezug aus, und ihre Continuous-Taste kann die reservierte Gruppe weder
+übernehmen noch deren Dosis speichern. Die vier Impuls-Dosiseinstellungen
+bleiben gemeinsam: Eine gespeicherte Dosis gilt anschließend für beide Gruppen.
+
+## Tee programmieren
+
+1. **Tee** drücken und etwa zwei Sekunden halten. Ein eventuell laufender
+   Teebezug stoppt; Tee ist jetzt zum Programmieren reserviert.
+2. Tee loslassen und erneut kurz drücken. Dieser neue Bezug lernt die Dauer
+   und ignoriert die bisher gespeicherte Teezeit.
+3. Tee erneut drücken, um zu stoppen, die Dauer zu speichern und den Modus zu verlassen.
+
+Das funktioniert auch ohne gespeicherte Teezeit oder wenn diese kürzer als die
+Haltezeit ist. Ein Continuous-Hold an einer Gruppe aktiviert keine Teeprogrammierung.
+
+Es kann nur eine Programmiersitzung gleichzeitig geben, auch während der
+Dosisauswahl: Ein Hold an einer anderen Gruppe oder an Tee übernimmt keine
+bereits reservierte Sitzung. Andere normale Bezüge können weiterhin gestartet
+und unabhängig gestoppt werden.
+
 Nullwerte und fehlgeschlagene NVS-Schreibvorgänge ersetzen keine aktive
 Einstellung; der Lernbezug endet trotzdem, die Fehlermeldung erscheint auf Serial.
-Nach einem Speicherfehler erneut programmieren. Die vorhandenen vier
-Impuls-Dosiseinstellungen werden weiterhin von beiden Gruppen gemeinsam genutzt.
+Nach einem Speicherfehler erneut programmieren.
 
 Stop hat Vorrang vor der Rückspülkombination. Während Stop gehalten bleibt,
 werden weitere Dosis-/Rückspülstarts an dieser Gruppe unterdrückt.

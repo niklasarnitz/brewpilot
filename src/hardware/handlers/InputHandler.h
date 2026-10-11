@@ -36,7 +36,7 @@ public:
         buttonMatrixHandler.handle();
 
         // Write Events
-        buttonEvent->tea = teaButtonHandler.getEvent().event == ButtonEventType::BUTTON_PRESSED;
+        buttonEvent->tea = teaButtonHandler.getEvent().event;
         groupOneHandler.handle();
         groupTwoHandler.handle();
     };

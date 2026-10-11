@@ -68,7 +68,7 @@ PanelDecoder &panelDecoder()
 
 struct GpioMachine : StateMachineFixture
 {
-    GpioMachine()
+    explicit GpioMachine(uint32_t teaDuration = 3000)
     {
         releasePanel();
         testDigitalReadHook = readPanelPin;
@@ -76,7 +76,8 @@ struct GpioMachine : StateMachineFixture
         const unsigned settings[] = {5, 8, 11, 14};
         for (unsigned key = 0; key < 4; ++key)
             require(volumes.writeFlowMeterSetting(panelEvents[key], settings[key]), "seed physical panel dose");
-        require(volumes.writeTeaWaterSetting(3000), "seed physical panel tea duration");
+        if (teaDuration != 0)
+            require(volumes.writeTeaWaterSetting(teaDuration), "seed physical panel tea duration");
     }
 
     ~GpioMachine()
@@ -108,24 +109,41 @@ struct GpioMachine : StateMachineFixture
                 "physical valves and pump must match expected outputs and machine polarity");
     }
 
-    void selectFromPanel()
+    void selectFromPanel(unsigned group = 0)
     {
-        panelKeys[0][stopKey] = true;
+        panelKeys[group][stopKey] = true;
         tick();
-        expectWater(true, false, false);
+        expectWater(group == 0, group == 1, false);
         for (int sample = 2; sample < 40; ++sample)
         {
             tick();
-            expectWater(true, false, false);
+            expectWater(group == 0, group == 1, false);
         }
         tick();
         expectWater(false, false, false);
-        require(events.groupOne == Event::CONTINUOUS_HELD && state.programmingTarget == ProgrammingTarget::SELECTING,
+        const auto owner = group == 0 ? ProgrammingTarget::GROUP_ONE : ProgrammingTarget::GROUP_TWO;
+        require((group == 0 ? events.groupOne : events.groupTwo) == Event::CONTINUOUS_HELD &&
+                    state.programmingTarget == owner,
                 "40 real GPIO samples must enter programming without water");
         tick();
-        require(events.groupOne == Event::NONE && state.programmingTarget == ProgrammingTarget::SELECTING,
+        require((group == 0 ? events.groupOne : events.groupTwo) == Event::NONE && state.programmingTarget == owner,
                 "held panel key must not repeatedly enter programming");
-        panelKeys[0][stopKey] = false;
+        panelKeys[group][stopKey] = false;
+        tick();
+    }
+
+    void selectTeaFromPanel()
+    {
+        panelTea = true;
+        for (int sample = 1; sample <= 40; ++sample)
+            tick();
+        expectWater(false, false, false);
+        require(events.tea == ButtonEventType::BUTTON_HELD && state.programmingTarget == ProgrammingTarget::TEA,
+                "Tea's 40th physical sample reserves its own programming session");
+        tick();
+        require(events.tea == ButtonEventType::BUTTON_NONE && state.programmingTarget == ProgrammingTarget::TEA,
+                "Tea's 41st sample must not repeat or cancel programming");
+        panelTea = false;
         tick();
     }
 };
@@ -173,20 +191,34 @@ void physicalTeaAndStopPriority()
     GpioMachine machine;
     panelTea = true;
     machine.tick();
-    require(machine.events.tea, "physical tea press must emit a tea event");
+    require(machine.events.tea == ButtonEventType::BUTTON_PRESSED, "physical tea press must emit a tea event");
     machine.expectWater(false, false, true);
-    for (int sample = 2; sample <= 40; ++sample)
+    for (int sample = 2; sample < 40; ++sample)
     {
         machine.tick();
-        require(!machine.events.tea, "holding tea, including its HELD sample, must not emit another press");
+        require(machine.events.tea == ButtonEventType::BUTTON_NONE, "holding tea before sample 40 must not emit another press");
         machine.expectWater(false, false, true);
     }
-    machine.tick(1049); // 39 x 50ms + 1049ms = 2999ms since the initial press.
-    machine.expectWater(false, false, true);
-    machine.tick(1);
+    machine.tick();
+    require(machine.state.programmingTarget == ProgrammingTarget::TEA,
+            "40th physical tea sample must arm Tea programming without any group hold");
     machine.expectWater(false, false, false);
     machine.tick();
     machine.expectWater(false, false, false);
+    releasePanel();
+    machine.tick();
+    panelTea = true;
+    machine.tick();
+    machine.expectWater(false, false, true);
+    panelTea = false;
+    machine.tick(4100);
+    machine.expectWater(false, false, true);
+    panelTea = true;
+    machine.tick(0);
+    machine.expectWater(false, false, false);
+    require(machine.volumes.getTeaWaterSetting() == 4100 &&
+                machine.state.programmingTarget == ProgrammingTarget::NONE,
+            "physical tea presses start learning and save only its duration");
     releasePanel();
     machine.tick();
 
@@ -220,7 +252,7 @@ void physicalTeaAndStopPriority()
     machine.expectWater(false, false, false);
 }
 
-void physicalFaultAcknowledgement()
+void physicalProlongedBoilerFilling()
 {
     for (unsigned group = 0; group < panelGroups; ++group)
     {
@@ -234,34 +266,101 @@ void physicalFaultAcknowledgement()
         machine.tick(119999);
         machine.expectWater(group == 0, group == 1, true, true);
         machine.tick(1);
-        machine.expectWater(false, false, false);
-        require(machine.state.boilerFillFault, "fill timeout must lock actual GPIO-started operations");
-        for (int sample = 0; sample < 45; ++sample)
-        {
-            machine.tick();
-            machine.expectWater(false, false, false);
-            require(machine.state.boilerFillFault, "pre-fault held key must never acknowledge the lock");
-        }
+        machine.expectWater(group == 0, group == 1, true, true);
         releasePanel();
         machine.tick();
-        panelKeys[group][stopKey] = true;
-        for (int sample = 1; sample < 40; ++sample)
-        {
-            machine.tick();
-            machine.expectWater(false, false, false);
-            require(machine.state.boilerFillFault, "fresh press must not acknowledge before its 40th sample");
-        }
-        machine.tick();
-        machine.expectWater(false, false, false);
-        require(!machine.state.boilerFillFault && machine.state.programmingTarget == ProgrammingTarget::NONE,
-                "40th fresh GPIO sample must acknowledge without starting water or programming");
+        machine.expectWater(group == 0, group == 1, true, true);
         testProbe = 0;
-        releasePanel();
-        machine.tick();
-        machine.tick();
-        panelKeys[group][1] = true;
-        machine.tick();
+        machine.tick(2001);
+        machine.tick(0);
+        machine.expectWater(group == 0, group == 1, true, true);
+        machine.tick(2001);
+        machine.tick(0);
         machine.expectWater(group == 0, group == 1, false);
+        panelKeys[group][stopKey] = true;
+        machine.tick();
+        machine.expectWater(false, false, false);
+    }
+}
+
+void physicalGroupProgramming()
+{
+    const unsigned oldTargets[] = {5, 8, 11, 14};
+    for (unsigned group = 0; group < panelGroups; ++group)
+        for (unsigned key = 0; key < 4; ++key)
+        {
+            GpioMachine machine;
+            machine.selectFromPanel(group);
+            const auto owner = group == 0 ? ProgrammingTarget::GROUP_ONE : ProgrammingTarget::GROUP_TWO;
+            panelTea = true;
+            for (int sample = 1; sample <= 40; ++sample)
+                machine.tick();
+            require(machine.events.tea == ButtonEventType::BUTTON_HELD && machine.state.programmingTarget == owner,
+                    "physical Tea hold cannot steal an armed group session");
+            releasePanel();
+            machine.tick(1050);
+            machine.expectWater(false, false, false);
+            if (panelGroups == 2)
+            {
+                const unsigned other = 1 - group;
+                panelKeys[other][stopKey] = true;
+                for (int sample = 1; sample <= 40; ++sample)
+                    machine.tick();
+                require(machine.state.programmingTarget == owner,
+                        "physical Continuous hold on the other panel cannot steal programming");
+                machine.expectWater(other == 0, other == 1, false);
+                releasePanel();
+                machine.tick();
+                panelKeys[other][stopKey] = true;
+                machine.tick();
+                machine.expectWater(false, false, false);
+                releasePanel();
+                machine.tick();
+            }
+            panelKeys[group][key] = true;
+            machine.tick();
+            machine.expectWater(group == 0, group == 1, false);
+            releasePanel();
+            machine.tick();
+#if BREWPILOT_HAS_FLOWMETERS
+            machine.pulses(group + 1, oldTargets[key] + 3);
+#endif
+            machine.tick(240000);
+            machine.expectWater(group == 0, group == 1, false);
+            panelKeys[group][stopKey] = true;
+            machine.tick();
+            machine.expectWater(false, false, false);
+            require(machine.state.programmingTarget == ProgrammingTarget::NONE,
+                    "only the selected panel's Continuous ends its programming session");
+            for (unsigned dose = 0; dose < 4; ++dose)
+            {
+                unsigned expected = oldTargets[dose];
+#if BREWPILOT_HAS_FLOWMETERS
+                if (dose == key)
+                    expected += 3;
+#endif
+                require(machine.volumes.getFlowMeterSetting(panelEvents[dose]) == expected,
+                        "physical programming updates only the selected shared dose; no pulses preserve the old value");
+            }
+        }
+}
+
+void physicalTeaProgrammingWithMissingOrShortDuration()
+{
+    for (uint32_t duration : {0u, 1000u})
+    {
+        GpioMachine machine(duration);
+        machine.selectTeaFromPanel();
+        panelTea = true;
+        machine.tick();
+        machine.expectWater(false, false, true);
+        releasePanel();
+        machine.tick(2300);
+        panelTea = true;
+        machine.tick(0);
+        machine.expectWater(false, false, false);
+        require(machine.volumes.getTeaWaterSetting() == 2300 && machine.state.programmingTarget == ProgrammingTarget::NONE,
+                "physical Tea hold can program an unset duration or one shorter than the hold threshold");
     }
 }
 
@@ -309,7 +408,7 @@ void mixedPanelSessions()
         }
         else
         {
-            machine.selectFromPanel();
+            machine.selectTeaFromPanel();
             panelTea = true;
             machine.tick();
             machine.expectWater(false, false, true);
@@ -340,7 +439,9 @@ void runInputOutputTests()
 {
     physicalDoseButtons();
     physicalTeaAndStopPriority();
-    physicalFaultAcknowledgement();
+    physicalProlongedBoilerFilling();
+    physicalGroupProgramming();
+    physicalTeaProgrammingWithMissingOrShortDuration();
     mixedPanelSessions();
-    std::cout << "PASS: physical GPIO panels, input-to-output doses/tea/STOP/fault acknowledgement and 24 mixed sessions\n";
+    std::cout << "PASS: physical GPIO panels, input-to-output doses/tea/STOP/prolonged boiler filling and 24 mixed sessions\n";
 }

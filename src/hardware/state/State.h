@@ -8,7 +8,6 @@
 enum class ProgrammingTarget
 {
     NONE,
-    SELECTING,
     GROUP_ONE,
     GROUP_TWO,
     TEA
@@ -17,7 +16,6 @@ enum class ProgrammingTarget
 struct State
 {
     bool isFillingBoiler = false;
-    bool boilerFillFault = false;
     bool groupOneIsExtracting = false;
     bool groupTwoIsExtracting = false;
     bool isExtractingTeaWater = false;

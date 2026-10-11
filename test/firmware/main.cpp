@@ -21,10 +21,11 @@ struct Machine
         volumes.writeTeaWaterSetting(3000);
     }
 
-    void tick(Event one = Event::NONE, Event two = Event::NONE, bool tea = false, uint32_t elapsed = 50)
+    void tick(Event one = Event::NONE, Event two = Event::NONE, bool tea = false, uint32_t elapsed = 50, bool teaHeld = false)
     {
         testMillis += elapsed;
-        events = {one, tea, two};
+        events = {one, teaHeld ? ButtonEventType::BUTTON_HELD :
+                           (tea ? ButtonEventType::BUTTON_PRESSED : ButtonEventType::BUTTON_NONE), two};
         handler.handleState();
         actor.loop();
     }
@@ -40,10 +41,12 @@ struct Machine
         }
     }
 
-    void selectProgramming()
+    void selectProgramming(int group = 1)
     {
-        tick(Event::CONTINUOUS);
-        tick(Event::CONTINUOUS_HELD, Event::NONE, false, 2000);
+        tick(group == 1 ? Event::CONTINUOUS : Event::NONE,
+             group == 2 ? Event::CONTINUOUS : Event::NONE);
+        tick(group == 1 ? Event::CONTINUOUS_HELD : Event::NONE,
+             group == 2 ? Event::CONTINUOUS_HELD : Event::NONE, false, 2000);
     }
 };
 
@@ -112,7 +115,7 @@ void programmingDoesNotCaptureOtherDrinks()
     require(machine.volumes.getFlowMeterSetting(Event::RIGHT_DOUBLE_ESPRESSO) == 17,
             "only the selected dose must be learned");
 
-    machine.selectProgramming();
+    machine.selectProgramming(2);
     machine.tick(Event::NONE, Event::LEFT_SINGLE_ESPRESSO);
     machine.pulses(2, 11);
     machine.tick();
@@ -121,7 +124,7 @@ void programmingDoesNotCaptureOtherDrinks()
     require(machine.volumes.getFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO) == 11,
             "group two must save its own learned dose");
 
-    machine.selectProgramming();
+    machine.tick(Event::NONE, Event::NONE, false, 2000, true);
     machine.tick(Event::NONE, Event::NONE, true);
     machine.tick(Event::RIGHT_DOUBLE_ESPRESSO);
     machine.pulses(1, 17);
@@ -200,55 +203,36 @@ void normalDosesAndBoilerStillStop()
     testProbe = 0;
     for (int i = 0; i < 100; ++i)
         machine.tick();
-    require(!machine.state.isFillingBoiler && !machine.state.boilerFillFault,
-            "full boiler must stop normally without a latched fault");
+    require(!machine.state.isFillingBoiler, "full boiler must stop normally");
 }
 
-void extractionSafetyLimits()
+void extractionHasNoDeadline()
 {
     for (uint32_t start : {1u, 0xfffff000u})
-    {
-        Machine machine;
-        testMillis = start;
-        machine.tick(Event::LEFT_SINGLE_ESPRESSO);
-        machine.tick(Event::NONE, Event::NONE, false, 9999);
-        require(machine.state.groupOneIsExtracting, "initial no-flow grace period must last ten seconds");
-        machine.tick(Event::NONE, Event::NONE, false, 1);
-#if BREWPILOT_HAS_FLOWMETERS
-        require(!machine.state.groupOneIsExtracting, "no-flow must stop exactly at ten seconds, including clock rollover");
-        machine.tick(Event::LEFT_SINGLE_ESPRESSO);
-        machine.tick(Event::NONE, Event::NONE, false, 9000);
-        machine.pulses(1, 3);
-        machine.tick(Event::NONE, Event::NONE, false, 1);
-        machine.tick(Event::NONE, Event::NONE, false, 9999);
-        require(machine.state.groupOneIsExtracting, "new pulses must refresh the no-flow deadline");
-        machine.tick(Event::NONE, Event::NONE, false, 1);
-        require(!machine.state.groupOneIsExtracting, "stalled flow after initial pulses must also stop");
-#else
-        require(machine.state.groupOneIsExtracting, "machines without flowmeters must skip no-flow detection");
-        machine.tick(Event::NONE, Event::NONE, false, 110000);
-        require(!machine.state.groupOneIsExtracting, "no-flow opt-out must not disable maximum extraction duration");
-#endif
-        machine.tick(Event::CONTINUOUS);
-        for (int second = 1; second <= 119; ++second)
+        for (Event mode : {Event::NONE, Event::CONTINUOUS, Event::LEFT_SINGLE_ESPRESSO})
         {
-            machine.pulses(1, 1);
-            machine.tick(Event::NONE, Event::NONE, false, 1000);
+            Machine machine;
+            testMillis = start;
+            const bool learning = mode == Event::NONE;
+            if (learning)
+                machine.selectProgramming();
+            machine.tick(learning ? Event::LEFT_SINGLE_ESPRESSO : mode);
+            const uint32_t began = testMillis;
+            for (uint32_t elapsed : {9999u, 10000u, 10001u, 119999u, 120000u, 120001u, 240000u})
+            {
+                testMillis = uint32_t(began + elapsed);
+                machine.tick(Event::NONE, Event::NONE, false, 0);
+                require(machine.state.groupOneIsExtracting, "dose, continuous and learning have no elapsed-time cutoff");
+                require(testPins[RELAY_GROUP_ONE] == (config.relayConfig.groupOneInverted ? LOW : HIGH) &&
+                            testPins[RELAY_PUMP] == (config.relayConfig.pumpInverted ? LOW : HIGH),
+                        "prolonged extraction keeps the group valve and pump active");
+            }
+            machine.pulses(1, 3);
+            machine.tick(Event::CONTINUOUS, Event::NONE, false, 0);
+            require(!machine.state.groupOneIsExtracting &&
+                        machine.volumes.getFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO) == (learning ? 3 : 7),
+                    "manual stop remains effective and only learning saves after prolonged extraction");
         }
-        machine.tick(Event::NONE, Event::NONE, false, 999);
-        require(machine.state.groupOneIsExtracting, "continuous extraction may run up to maximum duration");
-        machine.tick(Event::NONE, Event::NONE, false, 1);
-        require(!machine.state.groupOneIsExtracting, "continuous extraction must stop at 120 seconds despite flowing water");
-
-        machine.selectProgramming();
-        machine.tick(Event::LEFT_SINGLE_ESPRESSO);
-        machine.pulses(1, 3);
-        machine.tick();
-        machine.tick(Event::NONE, Event::NONE, false, 120000);
-        require(!machine.state.groupOneIsExtracting, "learning must also obey safety limits");
-        require(machine.volumes.getFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO) == 7,
-                "safety abort must never save a partial learning extraction");
-    }
 }
 
 void backflushRemainsBoundedWithoutFlow()
@@ -269,61 +253,6 @@ void backflushRemainsBoundedWithoutFlow()
     require(!machine.state.groupOneIsExtracting, "backflush must finish after five cycles");
 }
 
-void boilerTimeoutRequiresAcknowledgement()
-{
-    for (uint32_t start : {1u, 0xfffff000u})
-    {
-        Machine machine;
-        testMillis = start;
-        testProbe = 3000;
-        machine.tick(); // Energize probe.
-        machine.tick(); // Start filling after the actual sample.
-        require(machine.state.isFillingBoiler, "dry probe must start filling");
-        machine.tick(Event::NONE, Event::NONE, false, 119000);
-        machine.tick(Event::AUTO_BACKFLUSH, Event::CONTINUOUS, true, 999);
-        require(machine.state.isFillingBoiler && machine.state.groupOneIsExtracting &&
-                    machine.state.groupTwoIsExtracting && machine.state.isExtractingTeaWater,
-                "water operations may run just before the fill deadline");
-        machine.tick(Event::NONE, Event::NONE, false, 1);
-        auto requireAllOff = [&] {
-            require(!machine.state.isFillingBoiler && !machine.state.groupOneIsExtracting &&
-                        !machine.state.groupTwoIsExtracting && !machine.state.isExtractingTeaWater,
-                    "boiler timeout must stop every water operation, including backflush");
-            require(testPins[RELAY_PUMP] == (config.relayConfig.pumpInverted ? HIGH : LOW),
-                    "pump output must physically be commanded off");
-            require(testPins[RELAY_BOILER_FILL] == (config.relayConfig.boilerFillInverted ? HIGH : LOW),
-                    "fill valve must physically be commanded off");
-        };
-        requireAllOff();
-        machine.tick(Event::CONTINUOUS_HELD); // Held before the fault: not an acknowledgement.
-        testProbe = 0;
-        machine.tick(Event::LEFT_SINGLE_ESPRESSO, Event::AUTO_BACKFLUSH, true, 5000);
-        requireAllOff(); // Even a wet probe and new drink requests must not clear the latch.
-
-        GroupButtonMatrixState keys{};
-        Event event = Event::NONE;
-        GroupHeadButtonHandler buttons(&keys, &event, 1);
-        keys.continuous = true;
-        for (int sample = 0; sample < 40; ++sample)
-        {
-            buttons.handle();
-            machine.tick(event);
-            requireAllOff(); // Acknowledgement itself must not start a drink.
-        }
-        machine.tick();
-        machine.tick();
-        machine.tick(Event::LEFT_SINGLE_ESPRESSO);
-        require(machine.state.groupOneIsExtracting, "fresh press-and-hold must allow operation again");
-        machine.tick(Event::CONTINUOUS);
-        testProbe = 3000;
-        for (int sample = 0; sample < 50; ++sample)
-            machine.tick();
-        require(machine.state.isFillingBoiler, "acknowledged machine can fill again");
-        machine.tick(Event::NONE, Event::NONE, false, 120000);
-        requireAllOff(); // Acknowledgement does not disable the next timeout.
-    }
-}
-
 int runFirmwareRegressionTests()
 {
     try
@@ -337,11 +266,9 @@ int runFirmwareRegressionTests()
         std::cout << "PASS: STOP takes priority over backflush\n";
         normalDosesAndBoilerStillStop();
         std::cout << "PASS: normal doses, shared pump, tea duration and boiler filling\n";
-        extractionSafetyLimits();
+        extractionHasNoDeadline();
         backflushRemainsBoundedWithoutFlow();
-        std::cout << "PASS: extraction timeouts, flow opt-out, clock rollover and bounded backflush\n";
-        boilerTimeoutRequiresAcknowledgement();
-        std::cout << "PASS: boiler timeout, all outputs off, explicit acknowledgement and repeat fault\n";
+        std::cout << "PASS: prolonged extraction, missing pulses, clock rollover and bounded backflush\n";
     }
     catch (const std::exception &error)
     {

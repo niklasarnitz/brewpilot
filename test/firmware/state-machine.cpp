@@ -34,54 +34,21 @@ void outputStateMatrix()
     }
 }
 
-void requireLocked(const StateMachineFixture &machine)
-{
-    require(machine.state.boilerFillFault && !machine.state.isFillingBoiler &&
-                !machine.state.groupOneIsExtracting && !machine.state.groupTwoIsExtracting &&
-                !machine.state.isExtractingTeaWater && machine.state.programmingTarget == ProgrammingTarget::NONE,
-            "latched fill fault must lock every water operation and cancel programming");
-}
-
-void faultAcknowledgementIsGroupSpecific()
-{
-    for (int group : {1, 2})
-    {
-        StateMachineFixture machine;
-        machine.volumes.writeTeaWaterSetting(5000);
-        testProbe = 1001;
-        machine.tick();
-        machine.tick();
-        machine.selectProgramming(group);
-        machine.tick(Event::AUTO_BACKFLUSH, Event::AUTO_BACKFLUSH, true);
-        machine.tick(Event::CONTINUOUS, Event::CONTINUOUS, true, 120000);
-        requireLocked(machine); // Presses on the fault transition must not arm acknowledgement.
-        machine.tick(Event::CONTINUOUS_HELD, Event::CONTINUOUS_HELD);
-        requireLocked(machine);
-        machine.tick(group == 1 ? Event::CONTINUOUS : Event::NONE,
-                     group == 2 ? Event::CONTINUOUS : Event::NONE);
-        requireLocked(machine);
-        machine.tick(group == 2 ? Event::CONTINUOUS_HELD : Event::NONE,
-                     group == 1 ? Event::CONTINUOUS_HELD : Event::NONE);
-        requireLocked(machine); // The other group's held event cannot use this group's press.
-        machine.tick(group == 1 ? Event::CONTINUOUS_HELD : Event::NONE,
-                     group == 2 ? Event::CONTINUOUS_HELD : Event::NONE, true);
-        require(!machine.state.boilerFillFault && !machine.state.isFillingBoiler &&
-                    !machine.state.groupOneIsExtracting && !machine.state.groupTwoIsExtracting &&
-                    !machine.state.isExtractingTeaWater && machine.state.programmingTarget == ProgrammingTarget::NONE,
-                "acknowledgement must be consumed without starting water or programming");
-        machine.tick();
-        require(!machine.state.isFillingBoiler, "acknowledged probe must settle before filling again");
-        machine.tick();
-        require(machine.state.isFillingBoiler, "acknowledgement must reset boiler sampling and allow a fresh fill");
-        machine.tick(Event::NONE, Event::NONE, false, 120000);
-        requireLocked(machine);
-        machine.tick(Event::CONTINUOUS_HELD, Event::CONTINUOUS_HELD);
-        requireLocked(machine); // Previous acknowledgement must not remain armed.
-    }
-}
-
 void simultaneousProgrammingHasOneOwner()
 {
+    {
+        StateMachineFixture competing;
+        competing.tick(Event::CONTINUOUS, Event::CONTINUOUS);
+        competing.tick(Event::CONTINUOUS_HELD, Event::CONTINUOUS_HELD);
+        const auto owner = competing.state.programmingTarget;
+        require((owner == ProgrammingTarget::GROUP_ONE && !competing.state.groupOneIsExtracting && competing.state.groupTwoIsExtracting) ||
+                    (owner == ProgrammingTarget::GROUP_TWO && competing.state.groupOneIsExtracting && !competing.state.groupTwoIsExtracting),
+                "simultaneous holds arm exactly one group while the other remains in normal Continuous");
+        competing.tick(Event::CONTINUOUS, Event::CONTINUOUS);
+        require(competing.state.programmingTarget == ProgrammingTarget::NONE &&
+                    !competing.state.groupOneIsExtracting && !competing.state.groupTwoIsExtracting,
+                "both stops cancel the winner's selection and stop the non-owner normally");
+    }
     StateMachineFixture machine;
     machine.volumes.writeFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO, 9);
     machine.volumes.writeFlowMeterSetting(Event::RIGHT_DOUBLE_ESPRESSO, 15);
@@ -104,10 +71,128 @@ void simultaneousProgrammingHasOneOwner()
             "simultaneous drinks must not overwrite each other's settings");
 }
 
+void programmingIsGroupScoped()
+{
+    for (int group : {1, 2})
+    {
+        StateMachineFixture machine;
+        machine.volumes.writeFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO, 9);
+        machine.volumes.writeFlowMeterSetting(Event::RIGHT_DOUBLE_ESPRESSO, 15);
+        const auto owner = group == 1 ? ProgrammingTarget::GROUP_ONE : ProgrammingTarget::GROUP_TWO;
+        machine.selectProgramming(group);
+        require(machine.state.programmingTarget == owner,
+                "holding Continuous reserves only that group before selecting any dose");
+        machine.tick(group == 2 ? Event::LEFT_DOUBLE_ESPRESSO : Event::NONE,
+                     group == 1 ? Event::LEFT_DOUBLE_ESPRESSO : Event::NONE);
+        require(!machine.state.groupOneIsExtracting && !machine.state.groupTwoIsExtracting &&
+                    machine.state.programmingTarget == owner,
+                "an unset dose on the other group cannot select or start learning");
+        machine.tick(group == 2 ? Event::CONTINUOUS : Event::NONE,
+                     group == 1 ? Event::CONTINUOUS : Event::NONE);
+        machine.tick(group == 2 ? Event::CONTINUOUS_HELD : Event::NONE,
+                     group == 1 ? Event::CONTINUOUS_HELD : Event::NONE);
+        require(machine.state.programmingTarget == owner &&
+                    (group == 1 ? machine.state.groupTwoIsExtracting : machine.state.groupOneIsExtracting),
+                "other group's Continuous remains normal and its hold cannot take ownership");
+        machine.tick(group == 2 ? Event::CONTINUOUS : Event::NONE,
+                     group == 1 ? Event::CONTINUOUS : Event::NONE);
+        require(machine.state.programmingTarget == owner,
+                "stopping the other group must not cancel the waiting programming owner");
+        machine.tick(group == 1 ? Event::RIGHT_DOUBLE_ESPRESSO : Event::LEFT_SINGLE_ESPRESSO,
+                     group == 2 ? Event::RIGHT_DOUBLE_ESPRESSO : Event::LEFT_SINGLE_ESPRESSO);
+        machine.pulses(group, 17);
+        machine.pulses(3 - group, 9);
+        machine.tick();
+        require((group == 1 ? machine.state.groupOneIsExtracting : machine.state.groupTwoIsExtracting) &&
+                    !(group == 1 ? machine.state.groupTwoIsExtracting : machine.state.groupOneIsExtracting),
+                "only the armed group learns beyond its old dose; other group keeps normal dose stop");
+        machine.tick(group == 1 ? Event::CONTINUOUS : Event::NONE,
+                     group == 2 ? Event::CONTINUOUS : Event::NONE);
+        require(machine.state.programmingTarget == ProgrammingTarget::NONE &&
+                    machine.volumes.getFlowMeterSetting(Event::RIGHT_DOUBLE_ESPRESSO) == 17 &&
+                    machine.volumes.getFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO) == 9,
+                "only the owner's Continuous saves its selected shared dose");
+        machine.tick(group == 2 ? Event::RIGHT_DOUBLE_ESPRESSO : Event::NONE,
+                     group == 1 ? Event::RIGHT_DOUBLE_ESPRESSO : Event::NONE);
+        machine.pulses(3 - group, 16);
+        machine.tick();
+        require(group == 1 ? machine.state.groupTwoIsExtracting : machine.state.groupOneIsExtracting,
+                "other group uses the newly programmed shared pulse value");
+        machine.pulses(3 - group, 1);
+        machine.tick();
+        require(!machine.state.groupOneIsExtracting && !machine.state.groupTwoIsExtracting,
+                "shared dose stops at seventeen pulses on the other group");
+    }
+}
+
+void teaAndGroupProgrammingAreExclusive()
+{
+    for (int group : {1, 2})
+        for (bool learning : {false, true})
+        {
+            StateMachineFixture machine;
+            machine.volumes.writeFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO, 5);
+            machine.volumes.writeTeaWaterSetting(3000);
+            machine.selectProgramming(group);
+            const auto owner = group == 1 ? ProgrammingTarget::GROUP_ONE : ProgrammingTarget::GROUP_TWO;
+            if (learning)
+            {
+                machine.tick(group == 1 ? Event::LEFT_SINGLE_ESPRESSO : Event::NONE,
+                             group == 2 ? Event::LEFT_SINGLE_ESPRESSO : Event::NONE);
+                machine.pulses(group, 2);
+            }
+            machine.tick(Event::NONE, Event::NONE, true);
+            machine.tick(Event::NONE, Event::NONE, false, 2000, true);
+            require(machine.state.programmingTarget == owner && machine.state.isExtractingTeaWater,
+                    "Tea hold cannot steal a waiting or learning group's programming session");
+            machine.tick(Event::NONE, Event::NONE, false, 1000);
+            require(!machine.state.isExtractingTeaWater && machine.volumes.getTeaWaterSetting() == 3000 &&
+                        machine.state.programmingTarget == owner,
+                    "Tea remains normally timed while a group owns programming");
+            machine.tick(group == 1 ? Event::CONTINUOUS : Event::NONE,
+                         group == 2 ? Event::CONTINUOUS : Event::NONE);
+            require(machine.state.programmingTarget == ProgrammingTarget::NONE &&
+                        machine.volumes.getFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO) == (learning ? 2 : 5),
+                    "only the group's stop cancels selection or saves its learning dose");
+        }
+
+    for (bool learning : {false, true})
+    {
+        StateMachineFixture machine;
+        machine.volumes.writeFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO, 5);
+        machine.volumes.writeTeaWaterSetting(3000);
+        machine.tick(Event::NONE, Event::NONE, false, 2000, true);
+        if (learning)
+            machine.tick(Event::NONE, Event::NONE, true);
+        machine.tick(Event::CONTINUOUS, Event::CONTINUOUS);
+        machine.tick(Event::CONTINUOUS_HELD, Event::CONTINUOUS_HELD);
+        require(machine.state.programmingTarget == ProgrammingTarget::TEA &&
+                    machine.state.groupOneIsExtracting && machine.state.groupTwoIsExtracting &&
+                    machine.state.isExtractingTeaWater == learning,
+                "neither group hold can steal waiting or learning Tea programming");
+        machine.tick(Event::CONTINUOUS, Event::CONTINUOUS);
+        require(machine.state.programmingTarget == ProgrammingTarget::TEA &&
+                    machine.volumes.getFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO) == 5,
+                "normal group stops cannot cancel Tea programming or save a dose");
+        if (!learning)
+            machine.tick(Event::NONE, Event::NONE, true);
+        machine.tick(Event::NONE, Event::NONE, true, 4100);
+        require(machine.state.programmingTarget == ProgrammingTarget::NONE &&
+                    !machine.state.isExtractingTeaWater &&
+                    machine.volumes.getTeaWaterSetting() == (learning ? 4250 : 4100),
+                "Tea can save and release ownership after competing group holds");
+        machine.selectProgramming(2);
+        machine.tick(Event::NONE, Event::CONTINUOUS);
+        require(machine.state.programmingTarget == ProgrammingTarget::NONE,
+                "a completed Tea session does not block later group programming");
+    }
+}
+
 int main()
 {
     try
     {
+        programmingIsGroupScoped();
         require(runFirmwareRegressionTests() == 0, "firmware regression suite failed");
         require(runGroupStateTests() == 0, "group state suite failed");
         require(runBoilerTeaStateTests() == 0, "boiler/tea state suite failed");
@@ -115,9 +200,9 @@ int main()
         std::cout << "PASS: button Press/Held/Release boundaries, all dose events, chords and STOP priorities\n";
         runInputOutputTests();
         outputStateMatrix();
-        faultAcknowledgementIsGroupSpecific();
         simultaneousProgrammingHasOneOwner();
-        std::cout << "PASS: output matrix, group-specific fault acknowledgement, programming arbitration\n";
+        teaAndGroupProgrammingAreExclusive();
+        std::cout << "PASS: output matrix and programming arbitration\n";
     }
     catch (const std::exception &error)
     {
