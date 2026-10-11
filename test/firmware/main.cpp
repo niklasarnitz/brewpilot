@@ -1,17 +1,5 @@
-#include <iostream>
-#include <stdexcept>
-#include "structs/ButtonEvent.h"
-#include "hardware/state-handlers/StateHandler.h"
+#include "StateMachineFixture.h"
 #include "hardware/handlers/GroupHeadButtonHandler.h"
-#include "hardware/actors/StateActor.h"
-
-using Event = GroupHeadButtonEvent;
-
-void require(bool condition, const char *message)
-{
-    if (!condition)
-        throw std::runtime_error(message);
-}
 
 struct Machine
 {
@@ -336,7 +324,7 @@ void boilerTimeoutRequiresAcknowledgement()
     }
 }
 
-int main()
+int runFirmwareRegressionTests()
 {
     try
     {
@@ -360,4 +348,5 @@ int main()
         std::cerr << "FAIL: " << error.what() << '\n';
         return 1;
     }
+    return 0;
 }

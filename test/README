@@ -12,6 +12,41 @@ Coverage includes programming isolation/cancellation, stop precedence, NVS open
 and write failure, successful reload, timeout boundaries, clock rollover,
 backflush without flow, and the boiler fault acknowledgement interlock.
 
+The focused state-machine suites additionally exercise every dose button on both
+groups, programming ownership and save failures, boiler probe sampling and
+overfill transitions, tea start/stop/learning, group-specific fault acknowledgement,
+simultaneous programming selection, and all 16 valve/pump state combinations.
+Assertions use public handler methods, State, saved settings and GPIO outputs;
+they do not access private handler state.
+
+Run ./tools/test-firmware.sh --coverage for instrumented tests and a strict 100%
+line, function, region and reachable-branch gate, separately for each of the four
+machine/flowmeter variants. Requires Clang, matching llvm-cov/llvm-profdata and
+Python 3 in addition to the sanitizers. On macOS the LLVM tools are found through
+xcrun; elsewhere they must be on PATH. CXX, LLVM_COV and LLVM_PROFDATA can select
+a matching toolchain.
+
+The measured scope is BoilerStateHandler.h, GroupHeadHandler.h, StateHandler.h,
+TeaStateHandler.h and StateActor.h. State.h only defines data and
+GenericStateHandler.h only defines an abstract interface, so neither contains
+executable behavior. Input decoding, persistence helpers, device drivers and
+Arduino setup/loop are not included in the state-machine coverage percentage.
+Raw LLVM reports are not filtered or rewritten. LLVM counts one unreachable
+implicit default branch for the exhaustive private BoilerState switch: public
+transitions can only assign its three declared enum values. The gate explicitly
+prints this one uncovered outcome as UNREACHABLE and tolerates only that switch's
+false outcome, not its cases or any other branch. Consequently raw branch coverage
+is below 100% even though every reachable branch is covered. No private-state
+injection or production-code changes are used to manufacture a higher percentage.
+
+HTML reports, summary.txt and coverage.json are written per variant under
+.amp/in/artifacts/state-coverage/ (override with COVERAGE_DIR). Add /.amp/in/ to
+the repository-local .git/info/exclude before using this default output path.
+Any missing measured header or uncovered reachable line/branch/function/region fails the
+command. Existing regression tests run alongside the focused suites in both
+normal and coverage modes, linked into one binary per variant to avoid profile
+collisions between separate test entry points.
+
 These tests do not verify electrical behavior, actual NVS, ISR scheduling or boot
 levels. Build both targets with ./tools/build-firmware.sh and test the assembled
 hardware separately before operating real loads. See docs/firmware.md.
