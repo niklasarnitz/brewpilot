@@ -47,6 +47,13 @@ command. Existing regression tests run alongside the focused suites in both
 normal and coverage modes, linked into one binary per variant to avoid profile
 collisions between separate test entry points.
 
+GitHub Actions runs both commands on pushes, pull requests and manual dispatches
+via .github/workflows/firmware-tests.yml. It uses Ubuntu 24.04 with matching
+Clang/LLVM 18 tools, and sanitizer errors fail the job. Coverage reports for all
+four variants are uploaded as the state-machine-coverage artifact; reports
+already generated before a failure are uploaded as well. The same documented
+unreachable BoilerState default exception applies to the CI coverage gate.
+
 These tests do not verify electrical behavior, actual NVS, ISR scheduling or boot
 levels. Build both targets with ./tools/build-firmware.sh and test the assembled
 hardware separately before operating real loads. See docs/firmware.md.
