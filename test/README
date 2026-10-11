@@ -57,9 +57,17 @@ Raw LLVM reports are not filtered or rewritten. LLVM counts one unreachable
 implicit default branch for the exhaustive private BoilerState switch: public
 transitions can only assign its three declared enum values. The gate explicitly
 prints this one uncovered outcome as UNREACHABLE and tolerates only that switch's
-false outcome, not its cases or any other branch. Consequently raw branch coverage
-is below 100% even though every reachable branch is covered. No private-state
-injection or production-code changes are used to manufacture a higher percentage.
+implicit default, not its cases or any other branch. LLVM 18 and newer LLVM
+versions export its executed/unexecuted counters in opposite orders; both are
+accepted only at this switch location. Consequently raw branch coverage is below
+100% even though every reachable branch is covered. No private-state injection
+or production-code changes are used to manufacture a higher percentage.
+
+The gate is tools/check-state-coverage.py. Its CLI regression tests run
+automatically before instrumented firmware tests (or separately with
+python3 test/coverage-gate.py). They cover both LLVM counter orders and ensure
+that additional uncovered branches, an unexecuted switch, incomplete coverage
+and missing headers still fail.
 
 HTML reports, summary.txt and coverage.json are written per variant under
 .amp/in/artifacts/state-coverage/ (override with COVERAGE_DIR). Add /.amp/in/ to

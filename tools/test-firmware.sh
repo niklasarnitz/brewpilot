@@ -24,6 +24,7 @@ if [ "$coverage" = 1 ]; then
     fi
     coverage_dir=${COVERAGE_DIR:-$project_dir/.amp/in/artifacts/state-coverage}
     mkdir -p "$coverage_dir"
+    python3 "$project_dir/test/coverage-gate.py"
 fi
 
 for machine in RANCILIO_S27 LA_CIMBALI_M29_SELECT; do
@@ -56,43 +57,7 @@ for machine in RANCILIO_S27 LA_CIMBALI_M29_SELECT; do
             cat "$report_dir/summary.txt"
             "$llvm_cov" show "$@" -show-branches=count -format=html -output-dir="$report_dir/html"
             "$llvm_cov" export "$@" > "$report_dir/coverage.json"
-            python3 - "$report_dir/coverage.json" <<'PY'
-import json
-import sys
-from pathlib import Path
-
-with open(sys.argv[1]) as report:
-    files = json.load(report)["data"][0]["files"]
-expected = {"BoilerStateHandler.h", "GroupHeadHandler.h", "StateHandler.h", "TeaStateHandler.h", "StateActor.h"}
-seen = set()
-failures = []
-for file in files:
-    name = file["filename"].rsplit("/", 1)[-1]
-    if name not in expected:
-        continue
-    seen.add(name)
-    for metric in ("lines", "functions", "regions"):
-        counts = file["summary"][metric]
-        if counts["covered"] != counts["count"]:
-            failures.append(f'{name}: {metric} {counts["covered"]}/{counts["count"]}')
-    unreachable = 0
-    source_lines = Path(file["filename"]).read_text().splitlines()
-    for branch in file["branches"]:
-        # LLVM counts a synthetic default for the exhaustive private BoilerState
-        # switch. No public transition can create an out-of-enum value. Keep the
-        # raw report unchanged and tolerate ONLY this switch's false outcome.
-        if (name == "BoilerStateHandler.h" and branch[4] > 0 and branch[5] == 0 and
-                source_lines[branch[0] - 1].strip() == "switch (internalState)"):
-            unreachable += 1
-            print(f"UNREACHABLE (not covered): {name}:{branch[0]} implicit switch default")
-    counts = file["summary"]["branches"]
-    if unreachable > 1 or counts["covered"] + unreachable != counts["count"]:
-        failures.append(f'{name}: branches {counts["covered"]}/{counts["count"]} ({unreachable} unreachable)')
-failures.extend(f"Missing coverage: {name}" for name in sorted(expected - seen))
-if failures:
-    sys.exit("Reachable coverage must be 100%:\n" + "\n".join(failures))
-print("PASS: 100% state-machine lines, functions, regions and reachable branches; raw branches above")
-PY
+            python3 "$project_dir/tools/check-state-coverage.py" "$report_dir/coverage.json"
         fi
     done
 done
