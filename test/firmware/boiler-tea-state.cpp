@@ -151,6 +151,61 @@ void teaNormalOperation()
             "selection without press must not start tea");
 }
 
+void teaNormalRollover()
+{
+    TeaTest machine;
+    require(machine.volumes.writeTeaWaterSetting(3000), "seed rollover tea duration");
+    testMillis = 0xfffffa24u; // Wrap 1500ms after start, well before the deadline.
+    machine.step(true);
+    for (uint32_t elapsed : {1499u, 1500u, 1501u, 2999u, 3000u})
+    {
+        testMillis = uint32_t(0xfffffa24u + elapsed);
+        machine.step();
+        const bool expected = elapsed < 3000;
+        if (machine.state.isExtractingTeaWater != expected)
+            throw std::runtime_error("tea rollover elapsed=" + std::to_string(elapsed) +
+                                     " expected active=" + std::to_string(expected) +
+                                     " actual=" + std::to_string(machine.state.isExtractingTeaWater));
+    }
+}
+
+void teaLearningRollover()
+{
+    for (uint32_t duration : {2999u, 3000u, 4100u})
+    {
+        TeaTest machine;
+        require(machine.volumes.writeTeaWaterSetting(3000), "seed prior learning duration");
+        machine.state.programmingTarget = ProgrammingTarget::SELECTING;
+        testMillis = 0xfffffa24u;
+        machine.step(true);
+        for (uint32_t elapsed : {1499u, 1500u, 1501u})
+        {
+            testMillis = uint32_t(0xfffffa24u + elapsed);
+            machine.step();
+            require(machine.state.isExtractingTeaWater &&
+                        machine.state.programmingTarget == ProgrammingTarget::TEA,
+                    "tea learning stays active before, exactly at and after wrap");
+        }
+        testMillis = uint32_t(0xfffffa24u + duration);
+        machine.step();
+        require(machine.state.isExtractingTeaWater, "learning ignores normal duration boundary");
+        machine.step(true);
+        require(!machine.state.isExtractingTeaWater &&
+                    machine.state.programmingTarget == ProgrammingTarget::NONE,
+                "rollover learning save stops water and releases ownership");
+        PreferenceHelper rebootPreferences;
+        VolumetricsHelper rebootVolumes{&rebootPreferences};
+        rebootVolumes.setup();
+        // Independent duration, not subtraction using the firmware's host-width type.
+        const auto actual = machine.volumes.getTeaWaterSetting();
+        const auto reloaded = rebootVolumes.getTeaWaterSetting();
+        if (actual != duration || reloaded != duration)
+            throw std::runtime_error("tea learning rollover expected=" + std::to_string(duration) +
+                                     " actual=" + std::to_string(actual) +
+                                     " reload=" + std::to_string(reloaded));
+    }
+}
+
 void teaProgramming()
 {
     // Successful save, both persistence failure modes, and zero-duration rejection.
@@ -195,6 +250,8 @@ int runBoilerTeaStateTests()
         boilerTimeoutAndAcknowledgement();
         teaNormalOperation();
         teaProgramming();
+        teaNormalRollover();
+        teaLearningRollover();
         std::cout << "PASS: boiler sampling, thresholds, overfill, timeout/ack and tea normal/programming states\n";
     }
     catch (const std::exception &error)

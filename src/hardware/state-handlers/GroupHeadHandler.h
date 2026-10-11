@@ -36,7 +36,7 @@ class GroupHeadStateHandler : public GenericStateHandler
 
     bool isAutoBackflushing = false;
     int autoBackflushCycle = 0;
-    unsigned long autoBackflushStartTime = 0;
+    uint32_t autoBackflushStartTime = 0;
     static const int EXTRACT_DURATION_MS = 10000; // 10 seconds
     static const int PAUSE_DURATION_MS = 5000;    // 5 seconds
     static const int TOTAL_CYCLES = 5;
@@ -191,7 +191,7 @@ private:
             return;
         }
 
-        unsigned long elapsed = millis() - autoBackflushStartTime;
+        const uint32_t elapsed = uint32_t(millis() - autoBackflushStartTime);
         int cyclePosition = autoBackflushCycle % 2; // 0 = extract, 1 = pause
 
         int currentCycle = (autoBackflushCycle / 2) + 1;

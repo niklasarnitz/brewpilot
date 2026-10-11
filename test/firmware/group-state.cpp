@@ -232,6 +232,99 @@ void backflushContracts()
             "a subsequent idle continuous event cancels selection");
 }
 
+void pulseBoundaryContracts()
+{
+    for (int number : {1, 2})
+        for (Event dose : doses)
+        {
+            GroupFixture f(number);
+            require(f.volumes.writeFlowMeterSetting(dose, 2), "seed two-pulse dose");
+            f.flow(1); // Immediately before start: excluded by the start snapshot.
+            f.step(dose);
+            f.flow(1); // Immediately after start: included without a clock tick.
+            f.step();
+            require(f.extracting, "pre-start pulse excluded; post-start pulse below target");
+            f.flow(1);
+            f.step(Event::CONTINUOUS);
+            require(!f.extracting && f.volumes.getFlowMeterSetting(dose) == 2,
+                    "last pulse with normal STOP stops without changing the dose");
+
+            require(f.volumes.writeFlowMeterSetting(dose, 5), "seed distinct prior learning dose");
+            f.select();
+            f.flow(1);
+            f.step(dose);
+            f.flow(1);
+            f.step();
+            require(f.extracting, "post-start pulse leaves learning active");
+            f.flow(1); // Final pulse and save are processed in the same loop.
+            f.step(Event::CONTINUOUS);
+            require(!f.extracting && f.state.programmingTarget == ProgrammingTarget::NONE &&
+                        f.volumes.getFlowMeterSetting(dose) == 2,
+                    "learning save includes final pulse and excludes pre-start pulse");
+            PreferenceHelper rebootPreferences;
+            VolumetricsHelper reboot{&rebootPreferences};
+            reboot.setup();
+            require(reboot.getFlowMeterSetting(dose) == 2, "boundary dose survives reload");
+            f.flow(7);
+            f.step();
+            f.flow(1);
+            f.step(dose);
+            f.step();
+            require(f.extracting, "idle pulses after save cannot complete the next dose");
+            f.flow(1);
+            f.step();
+            require(f.extracting, "next dose still needs its own second pulse");
+            f.flow(1);
+            f.step();
+            require(!f.extracting, "next dose stops at its own exact pulse count");
+        }
+}
+
+void backflushRollover(bool wrapDuringPause)
+{
+    for (int number : {1, 2})
+    {
+        GroupFixture f(number);
+        // Wrap 2000ms into extraction or pause, never at a phase transition.
+        testMillis = wrapDuringPause ? 0xffffd120u : 0xfffff830u;
+        f.step(Event::AUTO_BACKFLUSH);
+        auto checkPhase = [&](uint32_t duration, bool active, bool crossesWrap, int cycle)
+        {
+            const uint32_t phaseStart = testMillis;
+            for (uint32_t elapsed : {1999u, 2000u, 2001u, duration - 1, duration})
+            {
+                if (!crossesWrap && elapsed < duration - 1)
+                    continue;
+                testMillis = uint32_t(phaseStart + elapsed);
+                f.step();
+                const bool expected = elapsed < duration ? active : (!active && cycle < 5);
+                if (f.extracting != expected)
+                    throw std::runtime_error("backflush group=" + std::to_string(number) +
+                                             " cycle=" + std::to_string(cycle) +
+                                             " phase=" + (active ? "extract" : "pause") +
+                                             " elapsed=" + std::to_string(elapsed) +
+                                             " expected active=" + std::to_string(expected) +
+                                             " actual=" + std::to_string(f.extracting));
+            }
+        };
+        for (int cycle = 1; cycle <= 5; ++cycle)
+        {
+            require(f.extracting, "rollover backflush starts each of five extractions");
+            checkPhase(10000, true, cycle == 1 && !wrapDuringPause, cycle);
+            if (cycle < 5)
+                checkPhase(5000, false, cycle == 1 && wrapDuringPause, cycle);
+        }
+        f.step(Event::NONE, 5000);
+        require(!f.extracting, "rollover backflush ends after fifth extraction");
+        f.step(Event::CONTINUOUS);
+        require(f.extracting, "normal operation resumes after rollover backflush");
+        f.group.stop();
+    }
+}
+
+void backflushExtractionRollover() { backflushRollover(false); }
+void backflushPauseRollover() { backflushRollover(true); }
+
 void safetyContracts()
 {
     for (uint32_t start : {1u, 0xfffff000u})
@@ -303,6 +396,9 @@ int runGroupStateTests()
         programmingContracts();
         backflushContracts();
         safetyContracts();
+        pulseBoundaryContracts();
+        backflushExtractionRollover();
+        backflushPauseRollover();
         std::cout << "PASS: group doses, continuous, programming, backflush and safety (flowmeters="
                   << BREWPILOT_HAS_FLOWMETERS << ")\n";
     }

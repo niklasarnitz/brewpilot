@@ -19,7 +19,7 @@ private:
 
     VolumetricsHelper *volumetricsHelper;
 
-    unsigned long startTime = 0;
+    uint32_t startTime = 0;
 
 public:
     TeaStateHandler(bool *teaButtonPressed, bool *isExtractingTeaWater, VolumetricsHelper *volumetricsHelper, ProgrammingTarget *programmingTarget)
@@ -32,11 +32,12 @@ public:
     {
         if (*isExtractingTeaWater)
         {
+            const uint32_t elapsed = uint32_t(millis() - startTime);
             if (*teaButtonPressed)
             {
                 if (*programmingTarget == ProgrammingTarget::TEA)
                 {
-                    bool saved = volumetricsHelper->writeTeaWaterSetting(millis() - startTime);
+                    bool saved = volumetricsHelper->writeTeaWaterSetting(elapsed);
                     Serial.println(saved ? "TeaStateHandler: Tea duration saved; left programming"
                                          : "TeaStateHandler: Tea duration NOT saved; left programming");
                     *programmingTarget = ProgrammingTarget::NONE;
@@ -45,7 +46,7 @@ public:
                 *isExtractingTeaWater = false;
             }
 
-            if (*programmingTarget != ProgrammingTarget::TEA && ((millis() - startTime) >= volumetricsHelper->getTeaWaterSetting()))
+            if (*programmingTarget != ProgrammingTarget::TEA && elapsed >= volumetricsHelper->getTeaWaterSetting())
             {
                 Serial.println("TeaStateHandler: Stop extracting");
                 *isExtractingTeaWater = false;
