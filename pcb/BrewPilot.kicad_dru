@@ -13,3 +13,31 @@
 	(condition "A.NetClass == 'AC_HIGH_CURRENT' && B.NetClass != 'AC_HIGH_CURRENT' && B.NetName != ''")
 	(constraint clearance (min 6mm))
 )
+
+# J11/J12 have 0.102 mm solder-mask expansion. Measure the existing
+# clearances from the aperture edge, not just from the copper pad edge.
+(rule "Fuse mask to low-voltage copper"
+	(condition "A.Type == 'Pad' && A.memberOfFootprint('J12') && B.NetClass != 'AC_HIGH_CURRENT'")
+	(constraint clearance (min 0.602mm))
+)
+
+(rule "Fuse mask to GND pour"
+	(condition "A.Type == 'Pad' && A.memberOfFootprint('J12') && B.Type == 'Zone' && B.NetName == 'GND'")
+	(constraint clearance (min 0.602mm))
+)
+
+(rule "Fuse mask to mains copper"
+	(condition "A.Type == 'Pad' && A.memberOfFootprint('J11') && B.NetClass == 'AC_HIGH_CURRENT'")
+	(constraint clearance (min 1.602mm))
+)
+
+(rule "Fuse mask mains to low-voltage separation"
+	(condition "A.Type == 'Pad' && ((A.memberOfFootprint('J11') && B.NetClass != 'AC_HIGH_CURRENT') || (A.memberOfFootprint('J12') && B.NetClass == 'AC_HIGH_CURRENT')) && B.NetName != ''")
+	(constraint clearance (min 6.102mm))
+)
+
+# Netless mounting-pad apertures also keep the pour outside their mask edge.
+(rule "Unnetted pad mask to GND pour"
+	(condition "A.Type == 'Pad' && A.NetName == '' && B.Type == 'Zone' && B.NetName == 'GND'")
+	(constraint physical_clearance (min 0.5mm))
+)

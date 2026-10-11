@@ -199,7 +199,7 @@
 				(hide yes)
 			)
 		)
-		(property "ki_fp_filters" "G3MB-202P DC5_OMR"
+		(property "ki_fp_filters" "G3MB-202P*DC5_OMR"
 			(at 0 0 0)
 			(effects
 				(font

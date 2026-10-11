@@ -50,6 +50,20 @@
 		)
 	)
 	(attr through_hole)
+	(fp_rect
+		(start -14.27 0.28)
+		(end -11.23 49.04)
+		(stroke (width 0.05) (type solid))
+		(fill none)
+		(layer "F.CrtYd")
+	)
+	(fp_rect
+		(start 11.23 0.28)
+		(end 14.27 49.04)
+		(stroke (width 0.05) (type solid))
+		(fill none)
+		(layer "F.CrtYd")
+	)
 	(fp_line
 		(start -12.75 48.79)
 		(end -12.75 0.53)

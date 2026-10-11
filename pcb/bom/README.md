@@ -1,11 +1,11 @@
 # BrewPilot PCB BOM
 
-This BOM was generated for one assembly from the current:
+This BOM covers one assembly of the approved GPIO/pull-up revision:
 
-- `pcb/BrewPilot.kicad_sch`
-- `pcb/BrewPilot.kicad_pcb`
+- Schematic: `pcb/BrewPilot.kicad_sch`
+- Layout: `pcb/BrewPilot.kicad_pcb`
 
-The schematic contains 53 BOM references, and the PCB contains the same 53 references. No placed reference is missing from either file.
+The schematic and PCB contain the same 64 electrical BOM references, verified against a fresh netlist. The PCB also contains four mechanical mounting holes.
 
 ## Files
 
@@ -14,12 +14,27 @@ The schematic contains 53 BOM references, and the PCB contains the same 53 refer
 
 ## Quantity summary
 
-- 53 schematic/PCB-referenced components
+- 64 schematic-referenced electrical components
 - 16 referenced components marked on hand: 10 Phoenix terminal blocks, 5 solid-state relays, and 1 ESP32 board
-- 37 referenced components remaining to buy
+- 48 referenced components remaining to buy
 - 2 on-hand ESP32 socket/header rows added as assembly-only items
 - 2 required 5 × 20 mm fuse elements added as assembly-only items
 - 1 bare PCB added as a fabrication item
+
+R17–R21 add one 4.7 kΩ base-emitter pulldown to Q1–Q5 respectively, using the same resistor part and horizontal footprint as the existing 4.7 kΩ resistors. These bias the transistor bases low for high-impedance GPIOs with weak internal pull-ups; they do not override an actively driven HIGH. Physical boot/reset and brownout testing remains necessary.
+
+The approved revision supersedes the interim revert: J4.1/J4.3 use GPIO36/39,
+J5.4/J5.5 use GPIO13/14, and J13 independently uses GPIO21/22 with existing
+4.7 kΩ R15/R16. R22–R27 are 10 kΩ pull-ups to 3.3 V on GPIO36/39/23/25/26/27.
+Together with flowmeter pull-ups R8/R9, this is eight identical
+`CFR-25JB-52-10K` parts, in the existing horizontal 7.62 mm THT footprint.
+These externally biased inputs use `INPUT` in both machine variants. GPIO12
+alone retains a post-boot internal pull-up: a permanent external high risks
+the MTDI 1.8 V flash strap. Boiler GPIO34/R7/R5 remain unchanged.
+Choose the machine through the `rancilio-s27` or `la-cimbali-m29-select`
+PlatformIO environment; `tools/build-firmware.sh` builds both without uploading.
+Old PCB wiring and new firmware are incompatible. See
+[the current pin assignment and build commands](../../docs/esp32-pin-audit.md).
 
 ## Unresolved selections
 
@@ -38,8 +53,19 @@ The five LEDs have no color specification in the schematic. Green `L-934GD` part
 
 This is a complete count/sourcing BOM, not a release-to-production approval.
 
-- KiCad 10.0.5 CLI ERC completes with 0 violations under the current project exclusions.
-- KiCad 10.0.5 crashes while running CLI DRC on the current PCB (`Array index out of range`), so no valid current DRC result is available. Resolve the crash and obtain a clean DRC result before fabrication or mains testing.
+- R17–R21 remain fitted. KiCad 10.0.6 CLI ERC reports 0 violations on the
+  integrated project. Filled-zone DRC reports 0 errors, 0 warnings,
+  0 open connections and 0 schematic-parity issues, with all seven formerly
+  ignored checks enabled and no DRC exclusions. Independent netlist comparison
+  confirms every electrical pad net and component value.
+- All ten pull-ups now share one row, with unchanged values and quantities.
+  Current routing measurements are in [the pin audit](../../docs/esp32-pin-audit.md);
+  current layout checks and both machine-target builds are in
+  `.amp/in/artifacts/warning-fix/`. Earlier isolated-contact host tests remain in
+  `.amp/in/artifacts/pullups-final/`. These checks do not replace real
+  keyboard/reset testing. J13's local board-edge footprint changes only silk
+  extent, not its pads or the ordered connector. U1's two-part courtyard assumes
+  the confirmed elevated module and PCB-level socket strips.
 - Several 3.81 mm Phoenix terminal blocks carry AC mains in the current netlist. Phoenix lists the selected MKDS 1 family at 200 V in overvoltage category III / pollution degree 2 and 400 V in category II / pollution degree 2. Confirm the actual installation category and required creepage/clearance before using them at 230 VAC.
 - Omron discontinued `G3MB-202P DC5` in 2011. The on-hand relays should be known-authentic and verified; do not replenish them from an unverified marketplace.
 - Confirm that the on-hand ESP32 is a 38-pin DevKitC-style board. A common 30-pin DOIT ESP32 DevKit V1 is not mechanically or electrically interchangeable with this footprint.
