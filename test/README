@@ -19,6 +19,28 @@ simultaneous programming selection, and all 16 valve/pump state combinations.
 Assertions use public handler methods, State, saved settings and GPIO outputs;
 they do not access private handler state.
 
+Button tests cover one-shot Press/Held events (Held exactly on sample 40, not
+sample 41), release/reset, all dose buttons, every two-dose priority pair,
+both backflush chord orders, and STOP/held-STOP precedence on both groups.
+
+Input/output tests close simulated physical panel contacts and run the real
+InputHandler, machine-specific matrix scanner, StateHandler and StateActor.
+GPIO reads depend on the actual driven scan rows, rather than injecting decoded
+events or matrix state. Both machine pinouts and output polarities are checked.
+Scenarios include doses, tea (including ignored tea Held), STOP/backflush,
+fresh GPIO press-and-hold fault acknowledgement, programming and 24 consecutive
+mixed sessions on the same machine. S27 has only one physical group panel;
+Cimbali tests both. Without flowmeters, GPIO-started doses are stopped manually.
+The input decoder has process lifetime like the real firmware; keys are released
+between scenarios, without resetting its private edge counters.
+
+Additional state tests cross millis() rollover inside both backflush phases,
+normal tea and tea learning, checking before/at/after rollover and exact duration
+boundaries. Pulse tests cover immediately before/after extraction start, the
+final pulse alongside STOP/learning save, and idle pulses before the next dose.
+Tea/backflush timestamp arithmetic explicitly uses uint32_t to retain ESP32's
+32-bit rollover behavior on hosts where unsigned long is 64 bits.
+
 Run ./tools/test-firmware.sh --coverage for instrumented tests and a strict 100%
 line, function, region and reachable-branch gate, separately for each of the four
 machine/flowmeter variants. Requires Clang, matching llvm-cov/llvm-profdata and

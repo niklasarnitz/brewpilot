@@ -5,6 +5,8 @@
 #include "main.cpp"
 #include "group-state.cpp"
 #include "boiler-tea-state.cpp"
+#include "button-events.cpp"
+#include "input-output.cpp"
 
 void outputStateMatrix()
 {
@@ -109,6 +111,9 @@ int main()
         require(runFirmwareRegressionTests() == 0, "firmware regression suite failed");
         require(runGroupStateTests() == 0, "group state suite failed");
         require(runBoilerTeaStateTests() == 0, "boiler/tea state suite failed");
+        runButtonEventTests();
+        std::cout << "PASS: button Press/Held/Release boundaries, all dose events, chords and STOP priorities\n";
+        runInputOutputTests();
         outputStateMatrix();
         faultAcknowledgementIsGroupSpecific();
         simultaneousProgrammingHasOneOwner();
