@@ -23,18 +23,19 @@ public:
         pinMode(OUT_DOSE_BUTTONS, OUTPUT);
         pinMode(OUT_TEA_WATER, OUTPUT);
 
+        // Dose inputs and tea use external 10k pull-ups (R22, R24-R27).
         // Dose 1
-        pinMode(IN_DOSE_1, INPUT_PULLUP);
+        pinMode(IN_DOSE_1, INPUT);
         // Dose 2
-        pinMode(IN_DOSE_2, INPUT_PULLUP);
+        pinMode(IN_DOSE_2, INPUT);
         // Dose 3
-        pinMode(IN_DOSE_3, INPUT_PULLUP);
+        pinMode(IN_DOSE_3, INPUT);
         // Dose 4
-        pinMode(IN_DOSE_4, INPUT_PULLUP);
-        // Continuous
+        pinMode(IN_DOSE_4, INPUT);
+        // GPIO12: a permanent external pull-up risks the boot flash-voltage strap.
         pinMode(IN_CONTINUOUS, INPUT_PULLUP);
 
-        pinMode(IN_TEA_WATER, INPUT_PULLUP);
+        pinMode(IN_TEA_WATER, INPUT);
 
         digitalWrite(OUT_DOSE_BUTTONS, LOW);
         digitalWrite(OUT_TEA_WATER, LOW);
