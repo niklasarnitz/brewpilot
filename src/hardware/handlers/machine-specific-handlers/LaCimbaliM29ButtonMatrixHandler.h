@@ -36,15 +36,17 @@ public:
         pinMode(OUT_GROUP_TWO_RIGHT_HALF, OUTPUT);
         pinMode(OUT_TEA_WATER, OUTPUT);
 
-        pinMode(IN_GROUP_ONE_BIG_DRINKS, INPUT_PULLUP);
-        pinMode(IN_GROUP_ONE_SMALL_DRINKS, INPUT_PULLUP);
-        pinMode(IN_GROUP_ONE_STOP, INPUT_PULLUP);
+        // R22-R27 provide external 10k pull-ups on these six inputs.
+        pinMode(IN_GROUP_ONE_BIG_DRINKS, INPUT);
+        pinMode(IN_GROUP_ONE_SMALL_DRINKS, INPUT);
+        pinMode(IN_GROUP_ONE_STOP, INPUT);
 
-        pinMode(IN_GROUP_TWO_BIG_DRINKS, INPUT_PULLUP);
+        pinMode(IN_GROUP_TWO_BIG_DRINKS, INPUT);
+        // GPIO12: a permanent external pull-up risks the boot flash-voltage strap.
         pinMode(IN_GROUP_TWO_SMALL_DRINKS, INPUT_PULLUP);
-        pinMode(IN_GROUP_TWO_STOP, INPUT_PULLUP);
+        pinMode(IN_GROUP_TWO_STOP, INPUT);
 
-        pinMode(IN_TEA_WATER, INPUT_PULLUP);
+        pinMode(IN_TEA_WATER, INPUT);
 
         digitalWrite(OUT_GROUP_ONE_LEFT_HALF_AND_STOP, HIGH);
         digitalWrite(OUT_GROUP_ONE_RIGHT_HALF, HIGH);
