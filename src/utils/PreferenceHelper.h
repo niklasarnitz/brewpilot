@@ -39,17 +39,21 @@ private:
     }
 
 public:
-    void setULong(PreferenceKey key, unsigned long value)
+    bool setULong(PreferenceKey key, unsigned long value)
     {
         if (key == PreferenceKey::INVALID)
         {
             Serial.println("PreferenceHelper::setULong::Invalid_Key");
-            return;
+            return false;
         }
 
-        open();
-        preferences.putULong(toString(key), value);
+        if (!open())
+            return false;
+        bool saved = preferences.putULong(toString(key), value) == sizeof(uint32_t);
         close();
+        if (!saved)
+            Serial.println("PreferenceHelper: NVS write failed; previous setting retained");
+        return saved;
     }
 
     unsigned long getULong(PreferenceKey key, unsigned long defaultValue = 0)
@@ -65,9 +69,14 @@ public:
         return returnValue;
     }
 
-    void open()
+    bool open()
     {
-        preferences.begin("brewpilot", false);
+        if (!preferences.begin("brewpilot", false))
+        {
+            Serial.println("PreferenceHelper: Could not open NVS");
+            return false;
+        }
+        return true;
     }
 
     void close()
