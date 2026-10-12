@@ -14,7 +14,7 @@ private:
 
     PreferenceHelper *preferenceHelper;
 
-    void logVolumetricSettings(VolumetricSettings *volumetricSettings)
+    void logVolumetricSettings(const VolumetricSettings *volumetricSettings) const
     {
         Serial.println("Volumetric Settings:");
         Serial.printf("Left Single Espresso: %ld pulses\n", volumetricSettings->leftSingleEspressoPulses);
@@ -24,7 +24,7 @@ private:
         Serial.printf("Tea Water: %ld ms\n", volumetricSettings->teaWaterMilliseconds);
     }
 
-    PreferenceKey convertButtonEventToPreferenceKey(GroupHeadButtonEvent event)
+    PreferenceKey convertButtonEventToPreferenceKey(GroupHeadButtonEvent event) const
     {
         switch (event)
         {
@@ -47,7 +47,8 @@ public:
 
     void setup()
     {
-        preferenceHelper->open();
+        if (!preferenceHelper->open())
+            return;
 
         volumetricSettings.leftSingleEspressoPulses = preferenceHelper->getULong(PreferenceKey::FlowMeterPulsesLeftSingleEspresso);
         volumetricSettings.leftDoubleEspressoPulses = preferenceHelper->getULong(PreferenceKey::FlowMeterPulsesLeftDoubleEspresso);
@@ -60,9 +61,10 @@ public:
         logVolumetricSettings(&volumetricSettings);
     }
 
-    void writeFlowMeterSetting(GroupHeadButtonEvent event, unsigned long value)
+    bool writeFlowMeterSetting(GroupHeadButtonEvent event, unsigned long value)
     {
-        preferenceHelper->setULong(convertButtonEventToPreferenceKey(event), value);
+        if (value == 0 || !preferenceHelper->setULong(convertButtonEventToPreferenceKey(event), value))
+            return false;
 
         switch (event)
         {
@@ -81,18 +83,21 @@ public:
         };
 
         logVolumetricSettings(&volumetricSettings);
+        return true;
     }
 
-    void writeTeaWaterSetting(long value)
+    bool writeTeaWaterSetting(unsigned long value)
     {
-        preferenceHelper->setULong(PreferenceKey::TeaWaterMilliseconds, value);
+        if (value == 0 || !preferenceHelper->setULong(PreferenceKey::TeaWaterMilliseconds, value))
+            return false;
 
         volumetricSettings.teaWaterMilliseconds = value;
 
         logVolumetricSettings(&volumetricSettings);
+        return true;
     }
 
-    unsigned long getFlowMeterSetting(GroupHeadButtonEvent key)
+    unsigned long getFlowMeterSetting(GroupHeadButtonEvent key) const
     {
         switch (key)
         {
@@ -110,7 +115,7 @@ public:
         return 0;
     }
 
-    unsigned long getTeaWaterSetting()
+    unsigned long getTeaWaterSetting() const
     {
         return volumetricSettings.teaWaterMilliseconds;
     }

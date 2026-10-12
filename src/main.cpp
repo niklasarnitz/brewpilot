@@ -16,7 +16,7 @@ ButtonEvent buttonEvent{};
 State state{};
 StateHandler stateHandler(&state, &buttonEvent, &volumetricsHelper);
 StateActor stateActor(&state);
-InputHandler inputHandler(&buttonEvent, &state.isInProgrammingMode);
+InputHandler inputHandler(&buttonEvent);
 
 void IRAM_ATTR groupOneFlowMeterHandler()
 {
@@ -35,8 +35,10 @@ void setup()
     // R9 / R8 provide external 10k pull-ups for the flow meters.
     pinMode(GROUP_ONE_FLOW_METER_PIN, INPUT);
     pinMode(GROUP_TWO_FLOW_METER_PIN, INPUT);
+#if BREWPILOT_HAS_FLOWMETERS
     attachInterrupt(digitalPinToInterrupt(GROUP_ONE_FLOW_METER_PIN), groupOneFlowMeterHandler, FALLING);
     attachInterrupt(digitalPinToInterrupt(GROUP_TWO_FLOW_METER_PIN), groupTwoFlowMeterHandler, FALLING);
+#endif
 
     // Load Volumetric Settings
     volumetricsHelper.setup();
