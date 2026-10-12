@@ -1,11 +1,101 @@
 
-This directory is intended for PlatformIO Test Runner and project tests.
+Run ./tools/test-firmware.sh from the repository root (or by absolute path).
+Requires a C++17 compiler with AddressSanitizer and UndefinedBehaviorSanitizer;
+set CXX to select a compiler. This is a host runner, not `pio test`.
 
-Unit Testing is a software testing method by which individual units of
-source code, sets of one or more MCU program modules together with associated
-control data, usage procedures, and operating procedures, are tested to
-determine whether they are fit for use. Unit testing finds problems early
-in the development cycle.
+The same regression suite runs for both machines, with flowmeters enabled and
+disabled. It exercises real button handlers, state handlers, persistence helpers
+and output actors. Only Arduino time/GPIO/Serial and the external Preferences
+API are replaced. The fake clock wraps at 32 bits like millis() on ESP32.
 
-More information about PlatformIO Unit Testing:
-- https://docs.platformio.org/en/latest/advanced/unit-testing/index.html
+Coverage includes programming isolation/cancellation, stop precedence, NVS open
+and write failure, successful reload, sampling/timing boundaries, clock rollover,
+backflush without flow, and prolonged probe-controlled boiler filling.
+Missing or stalled flowmeter pulses do not abort extraction or learning;
+regressions check both groups across the former ten-second and two-minute cutoffs,
+with manual stopping and learning-save after prolonged extraction.
+
+The focused state-machine suites additionally exercise every dose button on both
+groups, programming ownership and save failures, boiler probe sampling and
+overfill transitions, tea start/stop/learning,
+simultaneous programming selection, and all 16 valve/pump state combinations.
+Continuous hold reserves only its own group before dose selection; the other
+group cannot learn, cancel or save that session. Tea's own hold arms Tea
+programming, followed by one press to start learning and one to stop/save.
+Only one session can own programming at a time, including the waiting phase.
+The four group dose settings remain shared, and normal drinks retain their
+own pulse/time stop behavior while another operation is being programmed.
+Assertions use public handler methods, State, saved settings and GPIO outputs;
+they do not access private handler state.
+
+Button tests cover one-shot Press/Held events (Held exactly on sample 40, not
+sample 41), release/reset, all dose buttons, every two-dose priority pair,
+both backflush chord orders, and STOP/held-STOP precedence on both groups.
+
+Input/output tests close simulated physical panel contacts and run the real
+InputHandler, machine-specific matrix scanner, StateHandler and StateActor.
+GPIO reads depend on the actual driven scan rows, rather than injecting decoded
+events or matrix state. Both machine pinouts and output polarities are checked.
+Scenarios include doses, Tea Press/Held at samples 1/40/41, STOP/backflush,
+prolonged boiler filling without locking drinks, programming and 24 consecutive
+mixed sessions on the same machine. S27 has only one physical group panel;
+Cimbali tests both. Without flowmeters, GPIO-started doses are stopped manually.
+All four physical dose buttons can be learned only from their own panel's
+Continuous hold. Competing panel/Tea holds cannot steal the session. Tea can
+be programmed even with no saved duration or one shorter than its hold threshold.
+The input decoder has process lifetime like the real firmware; keys are released
+between scenarios, without resetting its private edge counters.
+
+Additional state tests cross millis() rollover inside both backflush phases,
+normal tea and tea learning, checking before/at/after rollover and exact duration
+boundaries. Pulse tests cover immediately before/after extraction start, the
+final pulse alongside STOP/learning save, and idle pulses before the next dose.
+Tea/backflush timestamp arithmetic explicitly uses uint32_t to retain ESP32's
+32-bit rollover behavior on hosts where unsigned long is 64 bits.
+
+Run ./tools/test-firmware.sh --coverage for instrumented tests and a strict 100%
+line, function, region and reachable-branch gate, separately for each of the four
+machine/flowmeter variants. Requires Clang, matching llvm-cov/llvm-profdata and
+Python 3 in addition to the sanitizers. On macOS the LLVM tools are found through
+xcrun; elsewhere they must be on PATH. CXX, LLVM_COV and LLVM_PROFDATA can select
+a matching toolchain.
+
+The measured scope is BoilerStateHandler.h, GroupHeadHandler.h, StateHandler.h,
+TeaStateHandler.h and StateActor.h. State.h only defines data and
+GenericStateHandler.h only defines an abstract interface, so neither contains
+executable behavior. Input decoding, persistence helpers, device drivers and
+Arduino setup/loop are not included in the state-machine coverage percentage.
+Raw LLVM reports are not filtered or rewritten. LLVM counts one unreachable
+implicit default branch for the exhaustive private BoilerState switch: public
+transitions can only assign its three declared enum values. The gate explicitly
+prints this one uncovered outcome as UNREACHABLE and tolerates only that switch's
+implicit default, not its cases or any other branch. LLVM 18 and newer LLVM
+versions export its executed/unexecuted counters in opposite orders; both are
+accepted only at this switch location. Consequently raw branch coverage is below
+100% even though every reachable branch is covered. No private-state injection
+or production-code changes are used to manufacture a higher percentage.
+
+The gate is tools/check-state-coverage.py. Its CLI regression tests run
+automatically before instrumented firmware tests (or separately with
+python3 test/coverage-gate.py). They cover both LLVM counter orders and ensure
+that additional uncovered branches, an unexecuted switch, incomplete coverage
+and missing headers still fail.
+
+HTML reports, summary.txt and coverage.json are written per variant under
+.amp/in/artifacts/state-coverage/ (override with COVERAGE_DIR). Add /.amp/in/ to
+the repository-local .git/info/exclude before using this default output path.
+Any missing measured header or uncovered reachable line/branch/function/region fails the
+command. Existing regression tests run alongside the focused suites in both
+normal and coverage modes, linked into one binary per variant to avoid profile
+collisions between separate test entry points.
+
+GitHub Actions runs both commands on pushes, pull requests and manual dispatches
+via .github/workflows/firmware-tests.yml. It uses Ubuntu 24.04 with matching
+Clang/LLVM 18 tools, and sanitizer errors fail the job. Coverage reports for all
+four variants are uploaded as the state-machine-coverage artifact; reports
+already generated before a failure are uploaded as well. The same documented
+unreachable BoilerState default exception applies to the CI coverage gate.
+
+These tests do not verify electrical behavior, actual NVS, ISR scheduling or boot
+levels. Build both targets with ./tools/build-firmware.sh and test the assembled
+hardware separately before operating real loads. See docs/firmware.md.
