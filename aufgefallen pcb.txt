@@ -1,0 +1,9 @@
+Kompakter bauen, schon viel ungenutzte Fläche
+Footprints von den SSRs sind iwie geflippt
+Footprint vom ESP stimmt kein Strich / eine Seite gespiegelt. Da auch drauf achten, dass man am Ende den USB benutzen kann wenn die Stecker drin sind und so
+Die Widerstände alle legen statt stehend
+Transistor Footprints grosszuegiger / pinabstand
+Fuse Hodler ordern
+Cs Ordern
+LEDs question
+Transistoren ordern
