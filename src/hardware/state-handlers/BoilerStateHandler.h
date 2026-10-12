@@ -23,7 +23,7 @@ private:
 
     bool *isFillingBoiler;
 
-    unsigned long lastCheckTime = 0;
+    uint32_t lastCheckTime = 0;
 
     bool hasTurnedOnBoilerProbeVoltage = false;
 
@@ -72,7 +72,7 @@ public:
 
     void handleState() override
     {
-        if (millis() - lastCheckTime > BOILER_FILL_WAIT_TIME || lastCheckTime == 0)
+        if (uint32_t(millis() - lastCheckTime) > BOILER_FILL_WAIT_TIME || lastCheckTime == 0)
         {
             bool boilerIsFilled = readBoilerProbe();
             if (hasTurnedOnBoilerProbeVoltage) {

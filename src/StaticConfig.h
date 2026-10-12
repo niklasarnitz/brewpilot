@@ -41,4 +41,11 @@
 // Boiler Stuff
 #define BOILER_FILL_LEVEL 1000 // Value for the LaCimbali M29 Select DT2 / R
 
+// Override with -D flags for the installed machine.
+#ifndef BREWPILOT_HAS_FLOWMETERS
+#define BREWPILOT_HAS_FLOWMETERS 1
+#endif
+
+static_assert(BREWPILOT_HAS_FLOWMETERS == 0 || BREWPILOT_HAS_FLOWMETERS == 1, "Flowmeters flag must be 0 or 1");
+
 #endif // BREWPILOT_CONFIG_H

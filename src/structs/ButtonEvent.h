@@ -6,11 +6,12 @@
 #define BREWPILOT_BUTTONEVENT_H
 
 #include "hardware/enums/GroupHeadButtonEvent.h"
+#include "hardware/handlers/ButtonHandler.h"
 
 struct ButtonEvent
 {
     GroupHeadButtonEvent groupOne = GroupHeadButtonEvent::NONE;
-    bool tea = false;
+    ButtonEventType tea = ButtonEventType::BUTTON_NONE;
     GroupHeadButtonEvent groupTwo = GroupHeadButtonEvent::NONE;
 };
 

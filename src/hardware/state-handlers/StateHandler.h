@@ -6,6 +6,7 @@
 #define BREWPILOT_STATEHANDLER_H
 
 #include "../state/State.h"
+#include "../../structs/ButtonEvent.h"
 #include "BoilerStateHandler.h"
 #include "GroupHeadHandler.h"
 #include "TeaStateHandler.h"
@@ -14,6 +15,8 @@
 class StateHandler : public GenericStateHandler
 {
 private:
+    State *state;
+    ButtonEvent *buttonEvent;
     BoilerStateHandler boilerStateHandler;
     GroupHeadStateHandler groupOneStateHandler;
     GroupHeadStateHandler groupTwoStateHandler;
@@ -21,13 +24,14 @@ private:
 
 public:
     StateHandler(State *state, ButtonEvent *buttonEvent, VolumetricsHelper *volumetricsHelper)
-        : boilerStateHandler(&state->isFillingBoiler),
+        : state(state), buttonEvent(buttonEvent),
+          boilerStateHandler(&state->isFillingBoiler),
           groupOneStateHandler(&state->groupOneIsExtracting,
-                               &buttonEvent->groupOne, volumetricsHelper, &state->isInProgrammingMode, 1),
+                               &buttonEvent->groupOne, volumetricsHelper, &state->programmingTarget, 1),
           groupTwoStateHandler(&state->groupTwoIsExtracting,
-                               &buttonEvent->groupTwo, volumetricsHelper, &state->isInProgrammingMode, 2),
+                               &buttonEvent->groupTwo, volumetricsHelper, &state->programmingTarget, 2),
           teaStateHandler(&buttonEvent->tea,
-                          &state->isExtractingTeaWater, volumetricsHelper, &state->isInProgrammingMode) {};
+                          &state->isExtractingTeaWater, volumetricsHelper, &state->programmingTarget) {};
 
     void handleState() override
     {
