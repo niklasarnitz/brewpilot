@@ -40,20 +40,4 @@ void RancilioS27ButtonMatrixHandler::handle()
     buttonMatrixState.groupOne.rightDoubleDose = !digitalRead(IN_DOSE_4);
 
     buttonMatrixState.tea = !digitalRead(IN_TEA_WATER);
-
-    // Logging ButtonMatrixState
-    // Serial.println("ButtonMatrixState:");
-    // Serial.printf("Group1: LSingle=%d, LDouble=%d, Cont=%d, RSingle=%d, RDouble=%d\n",
-    //               buttonMatrixState.groupOne.leftSingleDose,
-    //               buttonMatrixState.groupOne.leftDoubleDose,
-    //               buttonMatrixState.groupOne.continuous,
-    //               buttonMatrixState.groupOne.rightSingleDose,
-    //               buttonMatrixState.groupOne.rightDoubleDose);
-    // Serial.printf("Group2: LSingle=%d, LDouble=%d, Cont=%d, RSingle=%d, RDouble=%d\n",
-    //               buttonMatrixState.groupTwo.leftSingleDose,
-    //               buttonMatrixState.groupTwo.leftDoubleDose,
-    //               buttonMatrixState.groupTwo.continuous,
-    //               buttonMatrixState.groupTwo.rightSingleDose,
-    //               buttonMatrixState.groupTwo.rightDoubleDose);
-    // Serial.printf("Tea: %d\n", buttonMatrixState.tea);
 }

@@ -15,8 +15,6 @@ private:
 
     void logVolumetricSettings() const;
 
-    PreferenceKey convertButtonEventToPreferenceKey(GroupHeadButtonEvent event) const;
-
 public:
     explicit VolumetricsHelper(PreferenceHelper &preferenceHelper);
 

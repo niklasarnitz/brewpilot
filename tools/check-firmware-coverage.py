@@ -37,12 +37,9 @@ for path in sorted(sources & files.keys()):
     name = path.name
     source = (src / path).read_text().splitlines()
     allowed = dict(lines=0, functions=0, regions=0, branches=0)
-    post_save_branches = set()
     for fn in data['functions']:
         if Path(fn['filenames'][0]) != src / path:
             continue
-        if name == 'VolumetricsHelper.cpp' and 'writeFlowMeterSetting' in fn['name']:
-            post_save_branches.update(branch[0] for branch in fn['branches'])
         off_isr = (path == Path('main.cpp') and args.flowmeters == '0' and fn['name'] in
                    ('_Z24groupOneFlowMeterHandlerv', '_Z24groupTwoFlowMeterHandlerv'))
         if off_isr and not fn['count']:
@@ -51,8 +48,7 @@ for path in sorted(sources & files.keys()):
             if kind != 0 or count:
                 continue
             line = source[start - 1].strip()
-            if (off_isr or
-                    (name == 'PreferenceHelper.cpp' and line == 'return "INVALID";')):
+            if off_isr:
                 allowed['regions'] += 1
                 allowed['lines'] += end - start + 1
                 print(f'UNREACHABLE (not covered): {path}:{start}-{end} {line}')
@@ -63,10 +59,11 @@ for path in sorted(sources & files.keys()):
             continue
         line = source[start - 1].strip()
         # LLVM versions swap the two counters for synthetic switch defaults.
-        if max(yes, no) and ((name, line) in {
+        if max(yes, no) and (name, line) in {
                 ('BoilerStateHandler.cpp', 'switch (internalState)'),
                 ('PreferenceHelper.cpp', 'switch (key)'),
-        } or (start in post_save_branches and line == 'switch (event)')):
+                ('VolumetricsHelper.cpp', 'switch (event)'),
+        }:
             allowed['branches'] += (yes == 0) + (no == 0)
             print(f'UNREACHABLE (not covered): {path}:{start} {line}')
         else:

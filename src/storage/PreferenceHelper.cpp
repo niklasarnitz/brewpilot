@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 
+// The on-flash name of a key, or nullptr for PreferenceKey::INVALID.
 const char *PreferenceHelper::toString(PreferenceKey key) const
 {
     switch (key)
@@ -16,15 +17,17 @@ const char *PreferenceHelper::toString(PreferenceKey key) const
         return "FM_P_R_D";
     case PreferenceKey::TeaWaterMilliseconds:
         return "T_M";
+    case PreferenceKey::INVALID:
+        break;
     }
 
-    // This won't happen - it is just to suppress the compiler warning :D
-    return "INVALID";
+    return nullptr;
 }
 
 bool PreferenceHelper::setULong(PreferenceKey key, uint32_t value)
 {
-    if (key == PreferenceKey::INVALID)
+    const char *name = toString(key);
+    if (name == nullptr)
     {
         Serial.println("PreferenceHelper::setULong::Invalid_Key");
         return false;
@@ -32,7 +35,7 @@ bool PreferenceHelper::setULong(PreferenceKey key, uint32_t value)
 
     if (!open())
         return false;
-    bool saved = preferences.putULong(toString(key), value) == sizeof(uint32_t);
+    bool saved = preferences.putULong(name, value) == sizeof(uint32_t);
     close();
     if (!saved)
         Serial.println("PreferenceHelper: NVS write failed; previous setting retained");
@@ -41,15 +44,14 @@ bool PreferenceHelper::setULong(PreferenceKey key, uint32_t value)
 
 uint32_t PreferenceHelper::getULong(PreferenceKey key, uint32_t defaultValue)
 {
-    if (key == PreferenceKey::INVALID)
+    const char *name = toString(key);
+    if (name == nullptr)
     {
         Serial.println("PreferenceHelper::getULong::Invalid_Key");
         return defaultValue;
     }
 
-    uint32_t returnValue = preferences.getULong(toString(key), defaultValue);
-
-    return returnValue;
+    return preferences.getULong(name, defaultValue);
 }
 
 bool PreferenceHelper::open()

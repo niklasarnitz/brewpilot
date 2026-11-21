@@ -75,9 +75,9 @@ selected build. It prints its exceptions instead of rewriting raw LLVM counts:
 - Only the selected panel driver runs. The S27 doesn't use the M29 settling loop.
 - The machine is selected at compile time; an invalid selection fails
   compilation. Disabled flowmeters have no registered ISR.
-- The boiler state switch is exhaustive. Invalid preference keys and non-dose
-  events are rejected before the private key lookup and post-save dose switch.
-  Tests exercise those public rejections, not invented private states.
+- The boiler state, preference key and dose slot switches handle every enum
+  value; LLVM still counts an implicit default that no value reaches. Tests
+  exercise invalid keys and non-dose events through the public API.
 - Headers only declare; executable code lives in .cpp files. The gate fails if
   LLVM reports functions in a header.
 

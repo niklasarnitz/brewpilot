@@ -3,6 +3,39 @@
 #include <Arduino.h>
 #include <inttypes.h>
 
+namespace
+{
+// Where a dose button's pulse target is kept, in RAM and in NVS.
+struct DoseSlot
+{
+    uint32_t VolumetricSettings::*setting;
+    PreferenceKey key;
+};
+
+// Only the four dose buttons have a slot; every other event gets {nullptr, INVALID}.
+DoseSlot doseSlot(GroupHeadButtonEvent event)
+{
+    switch (event)
+    {
+    case GroupHeadButtonEvent::LEFT_SINGLE_ESPRESSO:
+        return {&VolumetricSettings::leftSingleEspressoPulses, PreferenceKey::FlowMeterPulsesLeftSingleEspresso};
+    case GroupHeadButtonEvent::RIGHT_SINGLE_ESPRESSO:
+        return {&VolumetricSettings::rightSingleEspressoPulses, PreferenceKey::FlowMeterPulsesRightSingleEspresso};
+    case GroupHeadButtonEvent::LEFT_DOUBLE_ESPRESSO:
+        return {&VolumetricSettings::leftDoubleEspressoPulses, PreferenceKey::FlowMeterPulsesLeftDoubleEspresso};
+    case GroupHeadButtonEvent::RIGHT_DOUBLE_ESPRESSO:
+        return {&VolumetricSettings::rightDoubleEspressoPulses, PreferenceKey::FlowMeterPulsesRightDoubleEspresso};
+    case GroupHeadButtonEvent::CONTINUOUS:
+    case GroupHeadButtonEvent::CONTINUOUS_HELD:
+    case GroupHeadButtonEvent::AUTO_BACKFLUSH:
+    case GroupHeadButtonEvent::NONE:
+        break;
+    }
+
+    return {nullptr, PreferenceKey::INVALID};
+}
+} // namespace
+
 void VolumetricsHelper::logVolumetricSettings() const
 {
     Serial.println("Volumetric Settings:");
@@ -11,23 +44,6 @@ void VolumetricsHelper::logVolumetricSettings() const
     Serial.printf("Right Single Espresso: %" PRIu32 " pulses\n", volumetricSettings.rightSingleEspressoPulses);
     Serial.printf("Right Double Espresso: %" PRIu32 " pulses\n", volumetricSettings.rightDoubleEspressoPulses);
     Serial.printf("Tea Water: %" PRIu32 " ms\n", volumetricSettings.teaWaterMilliseconds);
-}
-
-PreferenceKey VolumetricsHelper::convertButtonEventToPreferenceKey(GroupHeadButtonEvent event) const
-{
-    switch (event)
-    {
-    case GroupHeadButtonEvent::LEFT_SINGLE_ESPRESSO:
-        return PreferenceKey::FlowMeterPulsesLeftSingleEspresso;
-    case GroupHeadButtonEvent::RIGHT_SINGLE_ESPRESSO:
-        return PreferenceKey::FlowMeterPulsesRightSingleEspresso;
-    case GroupHeadButtonEvent::LEFT_DOUBLE_ESPRESSO:
-        return PreferenceKey::FlowMeterPulsesLeftDoubleEspresso;
-    case GroupHeadButtonEvent::RIGHT_DOUBLE_ESPRESSO:
-        return PreferenceKey::FlowMeterPulsesRightDoubleEspresso;
-    };
-
-    return PreferenceKey::INVALID;
 }
 
 VolumetricsHelper::VolumetricsHelper(PreferenceHelper &preferenceHelper)
@@ -51,24 +67,11 @@ void VolumetricsHelper::setup()
 
 bool VolumetricsHelper::writeFlowMeterSetting(GroupHeadButtonEvent event, uint32_t value)
 {
-    if (value == 0 || !preferenceHelper.setULong(convertButtonEventToPreferenceKey(event), value))
+    const DoseSlot slot = doseSlot(event);
+    if (value == 0 || slot.setting == nullptr || !preferenceHelper.setULong(slot.key, value))
         return false;
 
-    switch (event)
-    {
-    case GroupHeadButtonEvent::LEFT_SINGLE_ESPRESSO:
-        volumetricSettings.leftSingleEspressoPulses = value;
-        break;
-    case GroupHeadButtonEvent::RIGHT_SINGLE_ESPRESSO:
-        volumetricSettings.rightSingleEspressoPulses = value;
-        break;
-    case GroupHeadButtonEvent::LEFT_DOUBLE_ESPRESSO:
-        volumetricSettings.leftDoubleEspressoPulses = value;
-        break;
-    case GroupHeadButtonEvent::RIGHT_DOUBLE_ESPRESSO:
-        volumetricSettings.rightDoubleEspressoPulses = value;
-        break;
-    };
+    volumetricSettings.*slot.setting = value;
 
     logVolumetricSettings();
     return true;
@@ -87,20 +90,8 @@ bool VolumetricsHelper::writeTeaWaterSetting(uint32_t value)
 
 uint32_t VolumetricsHelper::getFlowMeterSetting(GroupHeadButtonEvent key) const
 {
-    switch (key)
-    {
-    case GroupHeadButtonEvent::LEFT_SINGLE_ESPRESSO:
-        return volumetricSettings.leftSingleEspressoPulses;
-    case GroupHeadButtonEvent::RIGHT_SINGLE_ESPRESSO:
-        return volumetricSettings.rightSingleEspressoPulses;
-    case GroupHeadButtonEvent::LEFT_DOUBLE_ESPRESSO:
-        return volumetricSettings.leftDoubleEspressoPulses;
-    case GroupHeadButtonEvent::RIGHT_DOUBLE_ESPRESSO:
-        return volumetricSettings.rightDoubleEspressoPulses;
-    };
-
-    // This won't happen - it is just to suppress the compiler warning :D
-    return 0;
+    const DoseSlot slot = doseSlot(key);
+    return slot.setting == nullptr ? 0 : volumetricSettings.*slot.setting;
 }
 
 uint32_t VolumetricsHelper::getTeaWaterSetting() const
