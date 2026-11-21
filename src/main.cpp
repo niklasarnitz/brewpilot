@@ -32,8 +32,8 @@ void setup()
 {
     Serial.begin(115200);
 
-    pinMode(GROUP_ONE_FLOW_METER_PIN, INPUT_PULLUP);
-    // TODO: has external pullup
+    // R9 / R8 provide external 10k pull-ups for the flow meters.
+    pinMode(GROUP_ONE_FLOW_METER_PIN, INPUT);
     pinMode(GROUP_TWO_FLOW_METER_PIN, INPUT);
     attachInterrupt(digitalPinToInterrupt(GROUP_ONE_FLOW_METER_PIN), groupOneFlowMeterHandler, FALLING);
     attachInterrupt(digitalPinToInterrupt(GROUP_TWO_FLOW_METER_PIN), groupTwoFlowMeterHandler, FALLING);

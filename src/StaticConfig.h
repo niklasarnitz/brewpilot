@@ -9,25 +9,25 @@
 
 // Pins
 // Outputs
-#define RELAY_PUMP 18
-#define RELAY_GROUP_ONE 5
-#define RELAY_GROUP_TWO 4
-#define RELAY_BOILER_FILL 2
+#define RELAY_PUMP 5
+#define RELAY_GROUP_ONE 4
+#define RELAY_GROUP_TWO 2
+#define RELAY_BOILER_FILL 18
 #define RELAY_TEA 15
 
 // Inputs
 // Keyboard Matrix
-#define FLEXIBLE_IO_1 13
+#define FLEXIBLE_IO_1 36
 #define FLEXIBLE_IO_2 12
-#define FLEXIBLE_IO_3 14
+#define FLEXIBLE_IO_3 39
 #define FLEXIBLE_IO_4 27
 #define FLEXIBLE_IO_5 26
 #define FLEXIBLE_IO_6 25
 #define FLEXIBLE_IO_7 33
 #define FLEXIBLE_IO_8 32
 #define FLEXIBLE_IO_9 19
-#define FLEXIBLE_IO_10 21
-#define FLEXIBLE_IO_11 22
+#define FLEXIBLE_IO_10 13
+#define FLEXIBLE_IO_11 14
 #define FLEXIBLE_IO_12 23
 
 // Boiler Probe
@@ -36,7 +36,6 @@
 
 // Flow Meters
 #define GROUP_ONE_FLOW_METER_PIN 16
-// TODO: Move 35 to a pin with internall pull up resitor once we're using the bigger esp32 board
 #define GROUP_TWO_FLOW_METER_PIN 35
 
 // Boiler Stuff
