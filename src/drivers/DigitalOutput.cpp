@@ -5,9 +5,12 @@
 DigitalOutput::DigitalOutput(uint8_t pin, const char *name, bool isInverted, Labels labels)
     : pin(pin), name(name), isInverted(isInverted), labels(labels)
 {
-    pinMode(pin, OUTPUT);
-
+    // Latch the inactive level before enabling the output driver, so inverted
+    // loads never see their active level at boot. Arduino-ESP32 ignores
+    // digitalWrite() until pinMode() has claimed the pin, so claim it as an input first.
+    pinMode(pin, INPUT);
     setActive(false);
+    pinMode(pin, OUTPUT);
 }
 
 void DigitalOutput::setActive(bool newState)

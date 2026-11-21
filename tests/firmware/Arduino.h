@@ -16,6 +16,8 @@ inline uint32_t testMillis = 1;
 inline uint16_t testProbe = 0;
 inline int testPins[64]{};
 inline int testPinModes[64]{};
+// Like Arduino-ESP32 3.x, digitalWrite() is ignored until pinMode() claims the pin.
+inline bool testPinIsGpio[64]{};
 struct TestInterrupt { void (*callback)() = nullptr; int mode = 0; unsigned registrations = 0; };
 inline TestInterrupt testInterrupts[64]{};
 // Optional physical keyboard model: reads depend on the actual scan outputs.
@@ -25,11 +27,14 @@ inline uint32_t millis() { return testMillis; }
 inline void pinMode(int pin, int mode)
 {
     testPinModes[pin] = mode;
+    testPinIsGpio[pin] = true;
     if (testGpioChangeHook)
         testGpioChangeHook();
 }
 inline void digitalWrite(int pin, int value)
 {
+    if (!testPinIsGpio[pin])
+        return;
     testPins[pin] = value;
     if (testGpioChangeHook)
         testGpioChangeHook();

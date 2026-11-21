@@ -82,8 +82,29 @@ void standaloneDeviceDrivers()
         const int solenoidPin = 52 + inverted;
         const int on = inverted ? LOW : HIGH;
         const int off = inverted ? HIGH : LOW;
+        // Fresh pins after reset: unclaimed, output latch LOW. Inverted loads
+        // are active LOW, so enabling the output before latching HIGH glitches.
+        static int watchedPins[2];
+        static int activeLevel;
+        static bool glitched;
+        watchedPins[0] = relayPin;
+        watchedPins[1] = solenoidPin;
+        activeLevel = on;
+        glitched = false;
+        for (int pin : watchedPins)
+        {
+            testPinIsGpio[pin] = false;
+            testPinModes[pin] = INPUT;
+            testPins[pin] = LOW;
+        }
+        testGpioChangeHook = [] {
+            for (int pin : watchedPins)
+                glitched |= testPinModes[pin] == OUTPUT && testPins[pin] == activeLevel;
+        };
         Relay relay(relayPin, "test relay", inverted);
         Solenoid solenoid(solenoidPin, "test solenoid", inverted);
+        testGpioChangeHook = nullptr;
+        require(!glitched, "drivers must never drive their active level while starting up");
         require(testPinModes[relayPin] == OUTPUT && testPinModes[solenoidPin] == OUTPUT &&
                     !relay.isEnabled() && !solenoid.isOpen() &&
                     testPins[relayPin] == off && testPins[solenoidPin] == off,
