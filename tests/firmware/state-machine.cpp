@@ -1,4 +1,5 @@
 #include "StateMachineFixture.h"
+#include <unity.h>
 
 // Firmware headers define non-inline functions (e.g. getMachineConfig), so
 // build the suites as one translation unit, just like the Arduino firmware.
@@ -7,6 +8,8 @@
 #include "boiler-tea-state.cpp"
 #include "button-events.cpp"
 #include "input-output.cpp"
+#include "settings.cpp"
+#include "boot.cpp"
 
 void outputStateMatrix()
 {
@@ -188,25 +191,56 @@ void teaAndGroupProgrammingAreExclusive()
     }
 }
 
-int main()
+void setUp() {}
+void tearDown() {}
+
+// Let C++ fixtures unwind before reporting a failure to the C runner.
+template<void (*scenario)()> void unityScenario()
 {
     try
     {
-        programmingIsGroupScoped();
-        require(runFirmwareRegressionTests() == 0, "firmware regression suite failed");
-        require(runGroupStateTests() == 0, "group state suite failed");
-        require(runBoilerTeaStateTests() == 0, "boiler/tea state suite failed");
-        runButtonEventTests();
-        std::cout << "PASS: button Press/Held/Release boundaries, all dose events, chords and STOP priorities\n";
-        runInputOutputTests();
-        outputStateMatrix();
-        simultaneousProgrammingHasOneOwner();
-        teaAndGroupProgrammingAreExclusive();
-        std::cout << "PASS: output matrix and programming arbitration\n";
+        scenario();
     }
     catch (const std::exception &error)
     {
-        std::cerr << "FAIL: " << error.what() << '\n';
-        return 1;
+        TEST_FAIL_MESSAGE(error.what());
     }
+}
+
+#define SCENARIO(name) UnityDefaultTestRun(unityScenario<name>, #name, __LINE__)
+int main()
+{
+    UNITY_BEGIN();
+    SCENARIO(testFirmwareBoot);
+    SCENARIO(settingsKeyMapping);
+    SCENARIO(settingsInvalidAndLoadFailure);
+    SCENARIO(standaloneDeviceDrivers);
+    SCENARIO(programmingIsGroupScoped);
+    SCENARIO(failedStoragePreservesSettings);
+    SCENARIO(programmingDoesNotCaptureOtherDrinks);
+    SCENARIO(programmingCancelPreservesLastDose);
+    SCENARIO(stopWinsOverBackflush);
+    SCENARIO(normalDosesAndBoilerStillStop);
+    SCENARIO(extractionHasNoDeadline);
+    SCENARIO(backflushRemainsBoundedWithoutFlow);
+    SCENARIO(doseContracts);
+    SCENARIO(continuousAndOwnership);
+    SCENARIO(programmingContracts);
+    SCENARIO(backflushContracts);
+    SCENARIO(prolongedGroupExtractions);
+    SCENARIO(pulseBoundaryContracts);
+    SCENARIO(backflushExtractionRollover);
+    SCENARIO(backflushPauseRollover);
+    SCENARIO(boilerSamplingAndOverfill);
+    SCENARIO(boilerFillingHasNoDeadline);
+    SCENARIO(teaNormalOperation);
+    SCENARIO(teaProgramming);
+    SCENARIO(teaNormalRollover);
+    SCENARIO(teaLearningRollover);
+    SCENARIO(runButtonEventTests);
+    SCENARIO(runInputOutputTests);
+    SCENARIO(outputStateMatrix);
+    SCENARIO(simultaneousProgrammingHasOneOwner);
+    SCENARIO(teaAndGroupProgrammingAreExclusive);
+    return UNITY_END();
 }

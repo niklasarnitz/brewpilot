@@ -1,7 +1,9 @@
 
 Run ./tools/test-firmware.sh from the repository root (or by absolute path).
-Requires a C++17 compiler with AddressSanitizer and UndefinedBehaviorSanitizer;
-set CXX to select a compiler. This is a host runner, not `pio test`.
+Requires Python 3, a C99 compiler and a C++17 compiler with AddressSanitizer and
+UndefinedBehaviorSanitizer. CC and CXX select the compilers. This host suite uses
+ThrowTheSwitch/Unity v2.6.1 (unmodified C sources and MIT license in vendor/unity);
+it needs neither PlatformIO nor a network connection.
 
 The same regression suite runs for both machines, with flowmeters enabled and
 disabled. It exercises real button handlers, state handlers, persistence helpers
@@ -60,42 +62,29 @@ Python 3 in addition to the sanitizers. On macOS the LLVM tools are found throug
 xcrun; elsewhere they must be on PATH. CXX, LLVM_COV and LLVM_PROFDATA can select
 a matching toolchain.
 
-The measured scope is BoilerStateHandler.h, GroupHeadHandler.h, StateHandler.h,
-TeaStateHandler.h and StateActor.h. State.h only defines data and
-GenericStateHandler.h only defines an abstract interface, so neither contains
-executable behavior. Input decoding, persistence helpers, device drivers and
-Arduino setup/loop are not included in the state-machine coverage percentage.
-Raw LLVM reports are not filtered or rewritten. LLVM counts one unreachable
-implicit default branch for the exhaustive private BoilerState switch: public
-transitions can only assign its three declared enum values. The gate explicitly
-prints this one uncovered outcome as UNREACHABLE and tolerates only that switch's
-implicit default, not its cases or any other branch. LLVM 18 and newer LLVM
-versions export its executed/unexecuted counters in opposite orders; both are
-accepted only at this switch location. Consequently raw branch coverage is below
-100% even though every reachable branch is covered. No private-state injection
-or production-code changes are used to manufacture a higher percentage.
+LLVM measures the whole src/ directory, including the real setup(), loop() and
+flowmeter callbacks. The boot scenario reads pre-existing settings and drives
+the physical panel through loop(), checking outputs, timing and interrupt routing.
+Storage tests use literal on-flash keys so swapping two keys breaks the test even
+if the reader and writer are both changed. Python tests cover the build CLI,
+compile-time configuration guards and the coverage gate itself; run them alone
+with python3 -m unittest discover -s tests.
 
-The gate is tools/check-state-coverage.py. Its CLI regression tests run
-automatically before instrumented firmware tests (or separately with
-python3 test/coverage-gate.py). They cover both LLVM counter orders and ensure
-that additional uncovered branches, an unexecuted switch, incomplete coverage
-and missing headers still fail.
+tools/check-firmware-coverage.py requires every executable source file in the
+selected build. It prints its exceptions instead of rewriting raw LLVM counts:
+- Only the selected panel driver runs. The S27 doesn't use the M29 settling loop.
+- Model selectors are compile-time constants. An invalid model fails compilation;
+  the unknown-model default cannot run. Disabled flowmeters have no registered ISR.
+- The boiler state switch is exhaustive. Invalid preference keys and non-dose
+  events are rejected before the private key lookup and post-save dose switch.
+  Tests exercise those public rejections, not invented private states.
+- Data-only headers and pure interfaces have no runtime instructions to count.
 
-HTML reports, summary.txt and coverage.json are written per variant under
-.amp/in/artifacts/state-coverage/ (override with COVERAGE_DIR). Add /.amp/in/ to
-the repository-local .git/info/exclude before using this default output path.
-Any missing measured header or uncovered reachable line/branch/function/region fails the
-command. Existing regression tests run alongside the focused suites in both
-normal and coverage modes, linked into one binary per variant to avoid profile
-collisions between separate test entry points.
+The raw per-variant HTML, JSON and summary.txt reports are under
+.amp/in/artifacts/firmware-coverage/ (override with COVERAGE_DIR). CI runs both
+commands with Clang/LLVM 18 and publishes the firmware-coverage artifact.
 
-GitHub Actions runs both commands on pushes, pull requests and manual dispatches
-via .github/workflows/firmware-tests.yml. It uses Ubuntu 24.04 with matching
-Clang/LLVM 18 tools, and sanitizer errors fail the job. Coverage reports for all
-four variants are uploaded as the state-machine-coverage artifact; reports
-already generated before a failure are uploaded as well. The same documented
-unreachable BoilerState default exception applies to the CI coverage gate.
-
-These tests do not verify electrical behavior, actual NVS, ISR scheduling or boot
-levels. Build both targets with ./tools/build-firmware.sh and test the assembled
-hardware separately before operating real loads. See docs/firmware.md.
+Unit tests don't cover PCB connectivity, electrical levels, analog settling,
+real flash persistence, or ISR scheduling on the ESP32. Use ERC/DRC and bench
+tests for those. The framework, SDK, docs and design assets aren't firmware
+units. Build both ESP32 targets with ./tools/build-firmware.sh; it never uploads.

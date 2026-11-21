@@ -12,11 +12,13 @@ inline bool testFailWrite = false;
 class Preferences
 {
     bool opened = false;
+    bool readOnly = true;
 
 public:
-    bool begin(const char *, bool)
+    bool begin(const char *name, bool readOnlyMode)
     {
-        opened = !testFailOpen;
+        opened = !testFailOpen && std::string(name) == "brewpilot";
+        readOnly = readOnlyMode;
         return opened;
     }
     void end() { opened = false; }
@@ -26,7 +28,7 @@ public:
     }
     size_t putULong(const char *key, uint32_t value)
     {
-        if (!opened || testFailWrite)
+        if (!opened || readOnly || testFailWrite)
             return 0;
         testStorage[key] = value;
         return sizeof(uint32_t);
