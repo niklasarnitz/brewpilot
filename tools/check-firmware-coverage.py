@@ -29,8 +29,6 @@ failures.extend(f'Unexpected source: {p}' for p in files.keys() - sources)
 failures.extend(f'{p}: executable code in a header; move it to a .cpp file' for p in sorted(headers & files.keys())
                 if files[p]['summary']['functions']['count'])
 
-other_case = 'case MachineType::' + next(m for m in models if m != args.machine) + ':'
-selectors = {'ButtonMatrixHandler.cpp'}
 for path in sorted(sources & files.keys()):
     file = files[path]
     if path in unused:
@@ -53,7 +51,7 @@ for path in sorted(sources & files.keys()):
             if kind != 0 or count:
                 continue
             line = source[start - 1].strip()
-            if (off_isr or (name in selectors and line == other_case) or
+            if (off_isr or
                     (name == 'PreferenceHelper.cpp' and line == 'return "INVALID";')):
                 allowed['regions'] += 1
                 allowed['lines'] += end - start + 1
@@ -65,13 +63,10 @@ for path in sorted(sources & files.keys()):
             continue
         line = source[start - 1].strip()
         # LLVM versions swap the two counters for synthetic switch defaults.
-        # It can also fold one outcome of the constant machine switch entirely.
-        if ((name in selectors and line in {other_case, f'case MachineType::{args.machine}:',
-                                             'default:', 'switch (HARDWARE_MODEL)'}) or
-                (max(yes, no) and ((name, line) in {
-                    ('BoilerStateHandler.cpp', 'switch (internalState)'),
-                    ('PreferenceHelper.cpp', 'switch (key)'),
-                } or (start in post_save_branches and line == 'switch (event)')))):
+        if max(yes, no) and ((name, line) in {
+                ('BoilerStateHandler.cpp', 'switch (internalState)'),
+                ('PreferenceHelper.cpp', 'switch (key)'),
+        } or (start in post_save_branches and line == 'switch (event)')):
             allowed['branches'] += (yes == 0) + (no == 0)
             print(f'UNREACHABLE (not covered): {path}:{start} {line}')
         else:

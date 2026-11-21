@@ -78,14 +78,14 @@ class ConfigurationTests(unittest.TestCase):
         )
 
     def test_machine_selection(self):
-        for macro, model in (
-            ("BREWPILOT_MACHINE_RANCILIO_S27", "RANCILIO_S27"),
-            ("BREWPILOT_MACHINE_LA_CIMBALI_M29_SELECT", "LA_CIMBALI_M29_SELECT"),
+        for macro, driver in (
+            ("BREWPILOT_MACHINE_RANCILIO_S27", "RancilioS27ButtonMatrixHandler"),
+            ("BREWPILOT_MACHINE_LA_CIMBALI_M29_SELECT", "LaCimbaliM29ButtonMatrixHandler"),
         ):
             with self.subTest(machine=macro):
                 result = self.compile_config(
-                    '#include "config/BuildConfig.h"\n'
-                    f'static_assert(HARDWARE_MODEL == MachineType::{model}, "wrong machine");\n',
+                    '#include <type_traits>\n#include "input/matrix/ButtonMatrix.h"\n'
+                    f'static_assert(std::is_same_v<ButtonMatrix, {driver}>, "wrong machine");\n',
                     macro,
                 )
                 self.assertEqual(result.returncode, 0, result.stderr)

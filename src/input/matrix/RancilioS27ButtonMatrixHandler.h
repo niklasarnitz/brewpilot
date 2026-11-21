@@ -1,9 +1,11 @@
 #pragma once
 
-#include "input/matrix/MachineButtonMatrixHandler.h"
+#include "input/ButtonMatrixState.h"
 
-class RancilioS27ButtonMatrixHandler : public MachineButtonMatrixHandler
+class RancilioS27ButtonMatrixHandler
 {
+    ButtonMatrixState *buttonMatrixState;
+
 public:
     RancilioS27ButtonMatrixHandler(ButtonMatrixState *buttonMatrixState);
 

@@ -3,10 +3,10 @@
 #include <stdint.h>
 
 #include "input/ButtonEvents.h"
-#include "state/GenericStateHandler.h"
+#include "state/State.h"
 #include "storage/VolumetricsHelper.h"
 
-class TeaStateHandler : public GenericStateHandler
+class TeaStateHandler
 {
 private:
     ButtonEventType *event;
@@ -20,5 +20,5 @@ private:
 public:
     TeaStateHandler(ButtonEventType *event, bool *isExtractingTeaWater, VolumetricsHelper *volumetricsHelper, ProgrammingTarget *programmingTarget);
 
-    void handleState() override;
+    void handleState();
 };

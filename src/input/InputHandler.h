@@ -4,14 +4,14 @@
 #include "input/ButtonHandler.h"
 #include "input/ButtonMatrixState.h"
 #include "input/GroupHeadButtonHandler.h"
-#include "input/matrix/ButtonMatrixHandler.h"
+#include "input/matrix/ButtonMatrix.h"
 
 class InputHandler
 {
 private:
     ButtonMatrixState buttonMatrixState{};
 
-    ButtonMatrixHandler buttonMatrixHandler;
+    ButtonMatrix buttonMatrix;
 
     GroupHeadButtonHandler groupOneHandler;
     GroupHeadButtonHandler groupTwoHandler;

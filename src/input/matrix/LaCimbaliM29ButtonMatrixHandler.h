@@ -2,10 +2,12 @@
 
 #include <stdint.h>
 
-#include "input/matrix/MachineButtonMatrixHandler.h"
+#include "input/ButtonMatrixState.h"
 
-class LaCimbaliM29ButtonMatrixHandler : public MachineButtonMatrixHandler
+class LaCimbaliM29ButtonMatrixHandler
 {
+    ButtonMatrixState *buttonMatrixState;
+
     static void selectScanLine(uint8_t pin);
 
 public:

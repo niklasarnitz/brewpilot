@@ -4,10 +4,10 @@
 #include <stdint.h>
 
 #include "input/ButtonEvents.h"
-#include "state/GenericStateHandler.h"
+#include "state/State.h"
 #include "storage/VolumetricsHelper.h"
 
-class GroupHeadStateHandler : public GenericStateHandler
+class GroupHeadStateHandler
 {
     VolumetricsHelper *volumetricsHelper;
     GroupHeadButtonEvent *event;
@@ -35,7 +35,7 @@ class GroupHeadStateHandler : public GenericStateHandler
 public:
     GroupHeadStateHandler(bool *isExtracting, GroupHeadButtonEvent *event, VolumetricsHelper *volumetricsHelper, ProgrammingTarget *programmingTarget, int groupNumber);
 
-    void handleState() override;
+    void handleState();
 
     // Runs in interrupt context and is placed in IRAM.
     void flowMeterPulseInterrupt();

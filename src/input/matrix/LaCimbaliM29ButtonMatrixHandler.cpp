@@ -7,7 +7,7 @@
 
 using namespace la_cimbali_m29_select::panel;
 
-LaCimbaliM29ButtonMatrixHandler::LaCimbaliM29ButtonMatrixHandler(ButtonMatrixState *buttonMatrixState) : MachineButtonMatrixHandler(buttonMatrixState) {}
+LaCimbaliM29ButtonMatrixHandler::LaCimbaliM29ButtonMatrixHandler(ButtonMatrixState *buttonMatrixState) : buttonMatrixState(buttonMatrixState) {}
 
 void LaCimbaliM29ButtonMatrixHandler::selectScanLine(uint8_t pin)
 {

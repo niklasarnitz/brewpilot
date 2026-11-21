@@ -6,7 +6,7 @@
 
 using namespace rancilio_s27::panel;
 
-RancilioS27ButtonMatrixHandler::RancilioS27ButtonMatrixHandler(ButtonMatrixState *buttonMatrixState) : MachineButtonMatrixHandler(buttonMatrixState) {}
+RancilioS27ButtonMatrixHandler::RancilioS27ButtonMatrixHandler(ButtonMatrixState *buttonMatrixState) : buttonMatrixState(buttonMatrixState) {}
 
 void RancilioS27ButtonMatrixHandler::initializePins()
 {

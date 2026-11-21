@@ -73,8 +73,8 @@ with python3 -m unittest discover -s tests.
 tools/check-firmware-coverage.py requires every executable source file in the
 selected build. It prints its exceptions instead of rewriting raw LLVM counts:
 - Only the selected panel driver runs. The S27 doesn't use the M29 settling loop.
-- Model selectors are compile-time constants. An invalid model fails compilation;
-  the unknown-model default cannot run. Disabled flowmeters have no registered ISR.
+- The machine is selected at compile time; an invalid selection fails
+  compilation. Disabled flowmeters have no registered ISR.
 - The boiler state switch is exhaustive. Invalid preference keys and non-dose
   events are rejected before the private key lookup and post-save dose switch.
   Tests exercise those public rejections, not invented private states.

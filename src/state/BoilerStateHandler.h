@@ -2,9 +2,7 @@
 
 #include <stdint.h>
 
-#include "state/GenericStateHandler.h"
-
-class BoilerStateHandler : public GenericStateHandler
+class BoilerStateHandler
 {
 private:
     enum class BoilerState
@@ -27,5 +25,5 @@ private:
 public:
     explicit BoilerStateHandler(bool *isFillingBoiler);
 
-    void handleState() override;
+    void handleState();
 };
