@@ -8,7 +8,6 @@ from pathlib import Path
 parser = argparse.ArgumentParser(description=__doc__)
 models = ('RANCILIO_S27', 'LA_CIMBALI_M29_SELECT')
 parser.add_argument('machine', choices=models)
-parser.add_argument('flowmeters', choices=('0', '1'))
 args = parser.parse_args()
 src = Path(__file__).resolve().parents[1] / 'src'
 data = json.load(sys.stdin)['data'][0]
@@ -40,20 +39,11 @@ for path in sorted(sources & files.keys()):
     for fn in data['functions']:
         if Path(fn['filenames'][0]) != src / path:
             continue
-        off_isr = (path == Path('main.cpp') and args.flowmeters == '0' and fn['name'] in
-                   ('_Z24groupOneFlowMeterHandlerv', '_Z24groupTwoFlowMeterHandlerv'))
-        if off_isr and not fn['count']:
-            allowed['functions'] += 1
         for start, _, end, _, count, _, _, kind in fn['regions']:
             if kind != 0 or count:
                 continue
             line = source[start - 1].strip()
-            if off_isr:
-                allowed['regions'] += 1
-                allowed['lines'] += end - start + 1
-                print(f'UNREACHABLE (not covered): {path}:{start}-{end} {line}')
-            else:
-                failures.append(f'{path}:{start}-{end}: uncovered region: {line}')
+            failures.append(f'{path}:{start}-{end}: uncovered region: {line}')
     for start, _, _, _, yes, no, *_ in file['branches']:
         if yes and no:
             continue

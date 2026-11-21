@@ -6,8 +6,7 @@
 #error "This machine config belongs to another build; include config/SelectedMachine.h"
 #endif
 
-// The same values as below, for #if around code this configuration lacks.
-#define BREWPILOT_HAS_FLOWMETERS 1
+// The same group values as below, for #if around code for absent groups.
 #define BREWPILOT_GROUP_ONE_ACTIVE 1
 #define BREWPILOT_GROUP_TWO_ACTIVE 1
 
@@ -28,7 +27,7 @@ constexpr MachineConfig config = {
     },
     .groupOneActive = BREWPILOT_GROUP_ONE_ACTIVE != 0,
     .groupTwoActive = BREWPILOT_GROUP_TWO_ACTIVE != 0,
-    .hasFlowMeters = BREWPILOT_HAS_FLOWMETERS != 0,
+    .hasFlowMeters = true,
 };
 
 // Two group panels scanned row by row, plus the tea button.

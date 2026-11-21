@@ -33,10 +33,7 @@ sources=$(find "$project_dir/src" "$project_dir/tests/firmware" -name '*.cpp' | 
 "${CC:-cc}" -std=c99 -DUNITY_EXCLUDE_SETJMP_H -c "$unity/unity.c" -o "$build_dir/unity.o"
 
 for machine in RANCILIO_S27 LA_CIMBALI_M29_SELECT; do
-    # Each machine config fixes its flowmeters; read the value for the report.
-    flowmeters=$(printf '#include "config/SelectedMachine.h"\nBREWPILOT_HAS_FLOWMETERS\n' |
-        "$compiler" -std=c++17 -E -P -DBREWPILOT_MACHINE_"$machine" -I "$project_dir/src" -x c++ - | tail -n 1)
-    echo "Testing $machine, BREWPILOT_HAS_FLOWMETERS=$flowmeters"
+    echo "Testing $machine"
     variant="$machine"
     mkdir -p "$build_dir/$variant"
     binary="$build_dir/$variant/tests"
@@ -64,6 +61,6 @@ for machine in RANCILIO_S27 LA_CIMBALI_M29_SELECT; do
         cat "$report_dir/summary.txt"
         "$llvm_cov" show "$@" -show-branches=count -format=html -output-dir="$report_dir/html"
         "$llvm_cov" export "$@" > "$report_dir/coverage.json"
-        python3 "$project_dir/tools/check-firmware-coverage.py" "$machine" "$flowmeters" < "$report_dir/coverage.json"
+        python3 "$project_dir/tools/check-firmware-coverage.py" "$machine" < "$report_dir/coverage.json"
     fi
 done

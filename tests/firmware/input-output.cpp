@@ -207,18 +207,21 @@ void physicalDoseButtons()
             machine.tick();
             require(machine.events.groupOne == Event::NONE && machine.events.groupTwo == Event::NONE,
                     "held physical dose contact must not repeat its event");
-#if BREWPILOT_HAS_FLOWMETERS
-            machine.pulses(group + 1, targets[key] - 1);
-            machine.tick();
-            machine.expectWater(group == 0, group == 1, false);
-            machine.pulses(group + 1, 1);
-            machine.tick();
-#else
-            machine.tick(10000);
-            machine.expectWater(group == 0, group == 1, false);
-            panelKeys[group][stopKey] = true;
-            machine.tick();
-#endif
+            if constexpr (machineConfig.hasFlowMeters)
+            {
+                machine.pulses(group + 1, targets[key] - 1);
+                machine.tick();
+                machine.expectWater(group == 0, group == 1, false);
+                machine.pulses(group + 1, 1);
+                machine.tick();
+            }
+            else
+            {
+                machine.tick(10000);
+                machine.expectWater(group == 0, group == 1, false);
+                panelKeys[group][stopKey] = true;
+                machine.tick();
+            }
             machine.expectWater(false, false, false);
             machine.tick();
             machine.expectWater(false, false, false);
@@ -363,9 +366,8 @@ void physicalGroupProgramming()
             machine.expectWater(group == 0, group == 1, false);
             releasePanel();
             machine.tick();
-#if BREWPILOT_HAS_FLOWMETERS
-            machine.pulses(group + 1, oldTargets[key] + 3);
-#endif
+            if constexpr (machineConfig.hasFlowMeters)
+                machine.pulses(group + 1, oldTargets[key] + 3);
             machine.tick(240000);
             machine.expectWater(group == 0, group == 1, false);
             panelKeys[group][stopKey] = true;
@@ -376,10 +378,8 @@ void physicalGroupProgramming()
             for (unsigned dose = 0; dose < 4; ++dose)
             {
                 unsigned expected = oldTargets[dose];
-#if BREWPILOT_HAS_FLOWMETERS
-                if (dose == key)
+                if (machineConfig.hasFlowMeters && dose == key)
                     expected += 3;
-#endif
                 require(machine.volumes.getFlowMeterSetting(panelEvents[dose]) == expected,
                         "physical programming updates only the selected shared dose; no pulses preserve the old value");
             }

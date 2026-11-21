@@ -99,24 +99,12 @@ class ConfigurationTests(unittest.TestCase):
                 self.assertIn("Select exactly one BrewPilot machine", result.stderr)
 
     def test_machine_settings_come_only_from_the_machine_config(self):
-        for setting in ("BREWPILOT_HAS_FLOWMETERS=0", "BREWPILOT_GROUP_ONE_ACTIVE=1",
-                        "BREWPILOT_GROUP_TWO_ACTIVE=1"):
+        for setting in ("BREWPILOT_GROUP_ONE_ACTIVE=1", "BREWPILOT_GROUP_TWO_ACTIVE=1"):
             with self.subTest(setting=setting):
                 result = self.compile_config('#include "config/SelectedMachine.h"\n',
                                              "BREWPILOT_MACHINE_RANCILIO_S27", setting)
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn("not with -D", result.stderr)
-
-    def test_flowmeter_flag_matches_each_machine_config(self):
-        for macro in ("BREWPILOT_MACHINE_RANCILIO_S27", "BREWPILOT_MACHINE_LA_CIMBALI_M29_SELECT"):
-            with self.subTest(machine=macro):
-                result = self.compile_config(
-                    '#include "config/SelectedMachine.h"\n'
-                    'static_assert((BREWPILOT_HAS_FLOWMETERS == 0 || BREWPILOT_HAS_FLOWMETERS == 1) &&\n'
-                    '              bool(BREWPILOT_HAS_FLOWMETERS) == machineConfig.hasFlowMeters, "mismatch");\n',
-                    macro,
-                )
-                self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_a_machine_config_is_only_used_by_its_own_build(self):
         result = self.compile_config('#include "config/machines/LaCimbaliM29Select.h"\n',

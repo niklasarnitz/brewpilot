@@ -39,15 +39,13 @@ void setup()
     // R9 / R8 provide external 10k pull-ups for the flow meters.
 #if BREWPILOT_GROUP_ONE_ACTIVE
     pinMode(pins::GROUP_ONE_FLOW_METER, INPUT);
-#if BREWPILOT_HAS_FLOWMETERS
-    attachInterrupt(digitalPinToInterrupt(pins::GROUP_ONE_FLOW_METER), groupOneFlowMeterHandler, FALLING);
-#endif
+    if constexpr (machineConfig.hasFlowMeters)
+        attachInterrupt(digitalPinToInterrupt(pins::GROUP_ONE_FLOW_METER), groupOneFlowMeterHandler, FALLING);
 #endif
 #if BREWPILOT_GROUP_TWO_ACTIVE
     pinMode(pins::GROUP_TWO_FLOW_METER, INPUT);
-#if BREWPILOT_HAS_FLOWMETERS
-    attachInterrupt(digitalPinToInterrupt(pins::GROUP_TWO_FLOW_METER), groupTwoFlowMeterHandler, FALLING);
-#endif
+    if constexpr (machineConfig.hasFlowMeters)
+        attachInterrupt(digitalPinToInterrupt(pins::GROUP_TWO_FLOW_METER), groupTwoFlowMeterHandler, FALLING);
 #endif
 
     // Load Volumetric Settings

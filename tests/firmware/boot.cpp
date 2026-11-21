@@ -45,16 +45,19 @@ void testFirmwareBoot()
     unsigned registrations = 0;
     for (const auto &interrupt : testInterrupts)
         registrations += interrupt.registrations;
-#if BREWPILOT_HAS_FLOWMETERS
-    const unsigned groupTwo = machineConfig.groupTwoActive;
-    require(registrations == 1 + groupTwo && testInterrupts[16].registrations == 1 &&
-                testInterrupts[35].registrations == groupTwo && testInterrupts[16].callback &&
-                bool(testInterrupts[35].callback) == bool(groupTwo) && testInterrupts[16].mode == FALLING &&
-                (testInterrupts[35].mode == FALLING) == bool(groupTwo),
-            "setup must attach one falling-edge interrupt per active group's flow meter, and none otherwise");
-#else
-    require(registrations == 0, "flowmeter-disabled setup must not register interrupts");
-#endif
+    if constexpr (machineConfig.hasFlowMeters)
+    {
+        const unsigned groupTwo = machineConfig.groupTwoActive;
+        require(registrations == 1 + groupTwo && testInterrupts[16].registrations == 1 &&
+                    testInterrupts[35].registrations == groupTwo && testInterrupts[16].callback &&
+                    bool(testInterrupts[35].callback) == bool(groupTwo) && testInterrupts[16].mode == FALLING &&
+                    (testInterrupts[35].mode == FALLING) == bool(groupTwo),
+                "setup must attach one falling-edge interrupt per active group's flow meter, and none otherwise");
+    }
+    else
+    {
+        require(registrations == 0, "flowmeter-disabled setup must not register interrupts");
+    }
 
     const uint32_t before = testMillis;
     for (auto &group : panelKeys)
@@ -67,21 +70,24 @@ void testFirmwareBoot()
             "a physical group two dose must start through the firmware loop exactly when group two exists");
     releasePanel();
     loop();
-#if BREWPILOT_HAS_FLOWMETERS
-    for (int i = 0; i < 3; ++i)
-        testInterrupts[16].callback();
-    loop();
-    require(!state.groupOneIsExtracting, "GPIO16 callbacks must finish group one's dose");
-    if (machineConfig.groupTwoActive)
+    if constexpr (machineConfig.hasFlowMeters)
     {
-        require(state.groupTwoIsExtracting, "GPIO16 callbacks must not advance group two");
         for (int i = 0; i < 3; ++i)
-            testInterrupts[35].callback();
+            testInterrupts[16].callback();
         loop();
-        require(!state.groupTwoIsExtracting, "GPIO35 callbacks must finish group two's dose");
+        require(!state.groupOneIsExtracting, "GPIO16 callbacks must finish group one's dose");
+        if (machineConfig.groupTwoActive)
+        {
+            require(state.groupTwoIsExtracting, "GPIO16 callbacks must not advance group two");
+            for (int i = 0; i < 3; ++i)
+                testInterrupts[35].callback();
+            loop();
+            require(!state.groupTwoIsExtracting, "GPIO35 callbacks must finish group two's dose");
+        }
     }
-#else
-    loop();
-    require(state.groupOneIsExtracting, "disabled flowmeters must not stop the physical dose automatically");
-#endif
+    else
+    {
+        loop();
+        require(state.groupOneIsExtracting, "disabled flowmeters must not stop the physical dose automatically");
+    }
 }

@@ -3,8 +3,8 @@
 #include "config/MachineConfig.h"
 
 // Each machine configuration sets these itself; they are not build options.
-#if defined(BREWPILOT_HAS_FLOWMETERS) || defined(BREWPILOT_GROUP_ONE_ACTIVE) || defined(BREWPILOT_GROUP_TWO_ACTIVE)
-#error "Set flowmeters and group heads in the machine config under config/machines/, not with -D"
+#if defined(BREWPILOT_GROUP_ONE_ACTIVE) || defined(BREWPILOT_GROUP_TWO_ACTIVE)
+#error "Set group heads in the machine config under config/machines/, not with -D"
 #endif
 
 #if defined(BREWPILOT_MACHINE_RANCILIO_S27) == defined(BREWPILOT_MACHINE_LA_CIMBALI_M29_SELECT)
