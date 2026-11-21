@@ -1,35 +1,14 @@
 #include "drivers/Relay.h"
 
-#include <Arduino.h>
-
-Relay::Relay(int pin, const char *name, bool isInverted)
-    : pin(pin), name(name), isInverted(isInverted)
-{
-    pinMode(pin, OUTPUT);
-
-    this->setEnabled(false);
-}
+Relay::Relay(uint8_t pin, const char *name, bool isInverted)
+    : output(pin, name, isInverted, {"Relay", "Enable", "Disable"}) {}
 
 void Relay::setEnabled(bool newState)
 {
-    if (newState != enabled)
-    {
-        Serial.printf("Relay: %s %s\n", newState ? "Enable" : "Disable", this->name);
-    }
-
-    enabled = newState;
-
-    if (isInverted)
-    {
-        digitalWrite(pin, newState ? LOW : HIGH);
-    }
-    else
-    {
-        digitalWrite(pin, newState ? HIGH : LOW);
-    }
+    output.setActive(newState);
 }
 
-bool Relay::isEnabled()
+bool Relay::isEnabled() const
 {
-    return enabled;
+    return output.isActive();
 }

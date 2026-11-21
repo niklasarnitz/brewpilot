@@ -1,35 +1,14 @@
 #include "drivers/Solenoid.h"
 
-#include <Arduino.h>
-
-Solenoid::Solenoid(int pin, const char *name, bool isInverted)
-    : pin(pin), name(name), isInverted(isInverted)
-{
-    pinMode(pin, OUTPUT);
-
-    this->setOpen(false);
-}
+Solenoid::Solenoid(uint8_t pin, const char *name, bool isInverted)
+    : output(pin, name, isInverted, {"Solenoid", "Open", "Close"}) {}
 
 void Solenoid::setOpen(bool newState)
 {
-    if (newState != open)
-    {
-        Serial.printf("Solenoid: %s %s\n", newState ? "Open" : "Close", this->name);
-    }
-
-    this->open = newState;
-
-    if (isInverted)
-    {
-        digitalWrite(pin, newState ? LOW : HIGH);
-    }
-    else
-    {
-        digitalWrite(pin, newState ? HIGH : LOW);
-    }
+    output.setActive(newState);
 }
 
-bool Solenoid::isOpen()
+bool Solenoid::isOpen() const
 {
-    return open;
+    return output.isActive();
 }

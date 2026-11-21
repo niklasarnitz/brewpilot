@@ -1,19 +1,18 @@
 #pragma once
 
+#include <stdint.h>
+
+#include "drivers/DigitalOutput.h"
+
 class Relay
 {
-private:
-    int pin;
-
-    const char *name;
-
-    bool isInverted;
-    bool enabled = false;
-
 public:
-    Relay(int pin, const char *name, bool isInverted = false);
+    Relay(uint8_t pin, const char *name, bool isInverted = false);
 
     void setEnabled(bool newState);
 
-    bool isEnabled();
+    bool isEnabled() const;
+
+private:
+    DigitalOutput output;
 };

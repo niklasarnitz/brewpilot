@@ -1,19 +1,18 @@
 #pragma once
 
+#include <stdint.h>
+
+#include "drivers/DigitalOutput.h"
+
 class Solenoid
 {
-private:
-    int pin;
-
-    const char *name;
-
-    bool isInverted;
-    bool open = false;
-
 public:
-    Solenoid(int pin, const char *name, bool isInverted = false);
+    Solenoid(uint8_t pin, const char *name, bool isInverted = false);
 
     void setOpen(bool newState);
 
-    bool isOpen();
+    bool isOpen() const;
+
+private:
+    DigitalOutput output;
 };
