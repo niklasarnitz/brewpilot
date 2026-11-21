@@ -81,8 +81,9 @@ selected build. It prints its exceptions instead of rewriting raw LLVM counts:
 - Data-only headers and pure interfaces have no runtime instructions to count.
 
 The raw per-variant HTML, JSON and summary.txt reports are under
-.amp/in/artifacts/firmware-coverage/ (override with COVERAGE_DIR). CI runs both
-commands with Clang/LLVM 18 and publishes the firmware-coverage artifact.
+.amp/in/artifacts/firmware-coverage/ (override with COVERAGE_DIR). CI runs the
+coverage command once per PR update or push to master, with sanitizers enabled
+for all four configurations, and publishes the firmware-coverage artifact.
 
 Unit tests don't cover PCB connectivity, electrical levels, analog settling,
 real flash persistence, or ISR scheduling on the ESP32. Use ERC/DRC and bench

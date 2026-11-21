@@ -2,6 +2,7 @@ name: Firmware tests
 
 on:
   push:
+    branches: [master]
   pull_request:
   workflow_dispatch:
 
@@ -27,10 +28,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install --yes --no-install-recommends clang-18 llvm-18 libclang-rt-18-dev python3
 
-      - name: Run tests with AddressSanitizer and UndefinedBehaviorSanitizer
-        run: ./tools/test-firmware.sh
-
-      - name: Check firmware coverage
+      - name: Run firmware tests with sanitizers and coverage
         env:
           COVERAGE_DIR: ${{ runner.temp }}/firmware-coverage
         run: ./tools/test-firmware.sh --coverage
