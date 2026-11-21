@@ -8,15 +8,16 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-BOILER = ROOT / "src/hardware/state-handlers/BoilerStateHandler.h"
-SWITCH_LINE = BOILER.read_text().splitlines().index("            switch (internalState)") + 1
+BOILER = ROOT / "src/state/BoilerStateHandler.cpp"
+SWITCH_LINE = BOILER.read_text().splitlines().index("        switch (internalState)") + 1
+OTHER_BRANCH_LINE = BOILER.read_text().splitlines().index("            if (boilerIsFilled)") + 1
 
 
 class CoverageGateTests(unittest.TestCase):
     def report(self, counters):
-        group = BOILER.with_name("GroupHeadHandler.h")
-        headers = [BOILER, group, *sorted(set((ROOT / "src").rglob("*.h")) - {BOILER, group}),
-                   ROOT / "src/main.cpp"]
+        group = BOILER.with_name("GroupHeadStateHandler.cpp")
+        main = ROOT / "src/main.cpp"
+        headers = [BOILER, group, *sorted(set((ROOT / "src").rglob("*.cpp")) - {BOILER, group, main}), main]
         files = [{
             "filename": str(header),
             "summary": {metric: {"count": 1, "covered": 1}
@@ -49,7 +50,7 @@ class CoverageGateTests(unittest.TestCase):
             with self.subTest(counters=counters):
                 report = self.report(counters)
                 boiler = report["data"][0]["files"][0]
-                boiler["branches"].append([102, 21, 102, 36, 0, 12, 0, 0, 4])
+                boiler["branches"].append([OTHER_BRANCH_LINE, 21, OTHER_BRANCH_LINE, 36, 0, 12, 0, 0, 4])
                 boiler["summary"]["branches"] = {"count": 4, "covered": 2}
                 result = self.check(report)
                 self.assertNotEqual(result.returncode, 0)
@@ -67,7 +68,7 @@ class CoverageGateTests(unittest.TestCase):
         files[1]["summary"]["branches"] = {"count": 2, "covered": 1}
         result = self.check(report)
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn("GroupHeadHandler.h: branches 1/2 (0 unreachable)", result.stderr)
+        self.assertIn("GroupHeadStateHandler.cpp: branches 1/2 (0 unreachable)", result.stderr)
 
     def test_rejects_uncovered_lines_functions_and_regions(self):
         for metric in ("lines", "functions", "regions"):
@@ -76,7 +77,19 @@ class CoverageGateTests(unittest.TestCase):
                 report["data"][0]["files"][0]["summary"][metric] = {"count": 2, "covered": 1}
                 result = self.check(report)
                 self.assertNotEqual(result.returncode, 0)
-                self.assertIn(f"BoilerStateHandler.h: {metric} 1/2", result.stderr)
+                self.assertIn(f"BoilerStateHandler.cpp: {metric} 1/2", result.stderr)
+
+    def test_rejects_executable_code_in_a_header(self):
+        report = self.report([0, 162])
+        report["data"][0]["files"].append({
+            "filename": str(ROOT / "src/state/GroupHeadStateHandler.h"),
+            "summary": {metric: {"count": 1, "covered": 1}
+                        for metric in ("lines", "functions", "regions", "branches")},
+            "branches": [],
+        })
+        result = self.check(report)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("state/GroupHeadStateHandler.h: executable code in a header", result.stderr)
 
     def test_rejects_a_missing_header(self):
         report = self.report([0, 162])

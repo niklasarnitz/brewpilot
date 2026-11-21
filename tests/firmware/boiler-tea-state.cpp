@@ -1,4 +1,5 @@
 #include "StateMachineFixture.h"
+#include "Scenarios.h"
 
 namespace
 {
@@ -12,10 +13,10 @@ struct BoilerTest : StateMachineFixture
         boiler.handleState();
         actor.loop();
         require(testPins[RELAY_BOILER_FILL] ==
-                    ((state.isFillingBoiler != config.relayConfig.boilerFillInverted) ? HIGH : LOW),
+                    ((state.isFillingBoiler != machineConfig.relayConfig.boilerFillInverted) ? HIGH : LOW),
                 "fill valve must reflect filling state with configured polarity");
         require(testPins[RELAY_PUMP] ==
-                    ((state.isFillingBoiler != config.relayConfig.pumpInverted) ? HIGH : LOW),
+                    ((state.isFillingBoiler != machineConfig.relayConfig.pumpInverted) ? HIGH : LOW),
                 "pump must reflect filling state with configured polarity");
     }
 
@@ -30,6 +31,7 @@ struct BoilerTest : StateMachineFixture
                 "probe voltage must be disabled after sampling");
     }
 };
+} // namespace
 
 void boilerSamplingAndOverfill()
 {
@@ -90,6 +92,8 @@ void boilerFillingHasNoDeadline()
     }
 }
 
+namespace
+{
 struct TeaTest : StateMachineFixture
 {
     TeaStateHandler tea{&events.tea, &state.isExtractingTeaWater,
@@ -103,10 +107,11 @@ struct TeaTest : StateMachineFixture
         tea.handleState();
         actor.loop();
         require(testPins[RELAY_TEA] ==
-                    ((state.isExtractingTeaWater != config.relayConfig.teaInverted) ? HIGH : LOW),
+                    ((state.isExtractingTeaWater != machineConfig.relayConfig.teaInverted) ? HIGH : LOW),
                 "tea valve must reflect extraction state with configured polarity");
     }
 };
+} // namespace
 
 void teaNormalOperation()
 {
@@ -225,4 +230,3 @@ void teaProgramming()
                 "persisted duration must match independent expected value after reboot");
     }
 }
-} // namespace

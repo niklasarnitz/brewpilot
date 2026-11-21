@@ -1,61 +1,11 @@
+#include "PanelModel.h"
+#include "Scenarios.h"
 #include "StateMachineFixture.h"
-#include "hardware/handlers/InputHandler.h"
+#include "input/InputHandler.h"
+#include "input/matrix/LaCimbaliM29ButtonMatrixHandler.h"
 
 namespace
 {
-// Physical contacts from the two panel pinouts, independent of the firmware's
-// IN_/OUT_ aliases. A closed contact pulls its input low only when its row is low.
-struct PanelContact
-{
-    int input;
-    int row;
-};
-
-constexpr Event panelEvents[] = {Event::LEFT_SINGLE_ESPRESSO, Event::LEFT_DOUBLE_ESPRESSO,
-                                 Event::RIGHT_SINGLE_ESPRESSO, Event::RIGHT_DOUBLE_ESPRESSO,
-                                 Event::CONTINUOUS};
-constexpr unsigned stopKey = 4;
-#if defined(BREWPILOT_MACHINE_RANCILIO_S27)
-constexpr PanelContact panelContacts[][5] = {{{27, 33}, {26, 33}, {25, 33}, {36, 33}, {12, 33}}};
-constexpr int outputOn = HIGH;
-constexpr int outputOff = LOW;
-#else
-constexpr PanelContact panelContacts[][5] = {
-    {{26, 33}, {27, 33}, {26, 32}, {27, 32}, {25, 33}},
-    {{12, 13}, {36, 13}, {12, 14}, {36, 14}, {39, 13}}};
-constexpr int outputOn = LOW;
-constexpr int outputOff = HIGH;
-#endif
-constexpr unsigned panelGroups = sizeof(panelContacts) / sizeof(panelContacts[0]);
-bool panelKeys[panelGroups][5]{};
-bool panelTea = false;
-
-// Model independently decoded contacts, not ghosting through the real keypad.
-int readPanelPin(int pin)
-{
-    if (pin == 12)
-        require(testPinModes[pin] == INPUT_PULLUP, "GPIO12 needs its internal return pull-up");
-    for (unsigned group = 0; group < panelGroups; ++group)
-        for (unsigned key = 0; key < 5; ++key)
-        {
-            const auto contact = panelContacts[group][key];
-            if (contact.input == pin && panelKeys[group][key] &&
-                testPinModes[contact.row] == OUTPUT && testPins[contact.row] == LOW)
-                return LOW;
-        }
-    if (pin == 23 && panelTea && testPinModes[19] == OUTPUT && testPins[19] == LOW)
-        return LOW;
-    return HIGH;
-}
-
-void releasePanel()
-{
-    for (auto &group : panelKeys)
-        for (bool &pressed : group)
-            pressed = false;
-    panelTea = false;
-}
-
 #if defined(BREWPILOT_MACHINE_LA_CIMBALI_M29_SELECT)
 void physicalM29MatrixDecoding()
 {

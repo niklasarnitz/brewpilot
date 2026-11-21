@@ -1,7 +1,8 @@
 #include "StateMachineFixture.h"
+#include "Scenarios.h"
+#include "drivers/Relay.h"
+#include "drivers/Solenoid.h"
 
-namespace
-{
 void settingsKeyMapping()
 {
     testStorage.clear();
@@ -105,4 +106,3 @@ void standaloneDeviceDrivers()
         }
     }
 }
-} // namespace

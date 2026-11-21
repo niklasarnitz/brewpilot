@@ -14,25 +14,23 @@ src = Path(__file__).resolve().parents[1] / 'src'
 data = json.load(sys.stdin)['data'][0]
 files = {Path(f['filename']).relative_to(src): f for f in data['files']}
 
-# New source files must appear in LLVM's inventory unless reviewed as declarative.
-declarations = set(map(Path, '''StaticConfig.h UserConfig.h configs/MachineConfig.h
-configs/machineConfigs/LaCimbaliM29Select.h configs/machineConfigs/RancilioS27.h
-hardware/MachineType.h hardware/enums/GroupHeadButtonEvent.h hardware/state/State.h
-hardware/state-handlers/GenericStateHandler.h structs/ButtonEvent.h structs/ButtonMatrixState.h
-structs/VolumetricSettings.h'''.split()))
-inactive = ('LaCimbaliM29ButtonMatrixHandler.h' if args.machine == models[0]
-            else 'RancilioS27ButtonMatrixHandler.h')
-unused = {Path('hardware/handlers/machine-specific-handlers') / inactive}
-if args.machine == models[0]:
-    unused.add(Path('utils/noop.h'))  # Only the M29 scanner needs settling time.
+# Headers only declare; every executable line lives in a .cpp file that LLVM must report.
 sources = {p.relative_to(src) for p in src.rglob('*')
            if p.suffix in {'.h', '.hpp', '.cpp', '.c', '.cc', '.ino'} and p.resolve().is_relative_to(src)}
-expected = sources - declarations - unused
+headers = {p for p in sources if p.suffix in {'.h', '.hpp'}}
+inactive = ('LaCimbaliM29ButtonMatrixHandler.cpp' if args.machine == models[0]
+            else 'RancilioS27ButtonMatrixHandler.cpp')
+unused = {Path('input/matrix') / inactive}
+if args.machine == models[0]:
+    unused.add(Path('utils/noop.cpp'))  # Only the M29 scanner needs settling time.
+expected = sources - headers - unused
 failures = [f'Missing coverage: {p}' for p in sorted(expected - files.keys())]
 failures.extend(f'Unexpected source: {p}' for p in files.keys() - sources)
+failures.extend(f'{p}: executable code in a header; move it to a .cpp file' for p in sorted(headers & files.keys())
+                if files[p]['summary']['functions']['count'])
 
 other_case = 'case MachineType::' + next(m for m in models if m != args.machine) + ':'
-selectors = {'ButtonMatrixHandler.h', 'getMachineConfig.h'}
+selectors = {'ButtonMatrixHandler.cpp'}
 for path in sorted(sources & files.keys()):
     file = files[path]
     if path in unused:
@@ -45,7 +43,7 @@ for path in sorted(sources & files.keys()):
     for fn in data['functions']:
         if Path(fn['filenames'][0]) != src / path:
             continue
-        if name == 'VolumetricsHelper.h' and 'writeFlowMeterSetting' in fn['name']:
+        if name == 'VolumetricsHelper.cpp' and 'writeFlowMeterSetting' in fn['name']:
             post_save_branches.update(branch[0] for branch in fn['branches'])
         off_isr = (path == Path('main.cpp') and args.flowmeters == '0' and fn['name'] in
                    ('_Z24groupOneFlowMeterHandlerv', '_Z24groupTwoFlowMeterHandlerv'))
@@ -56,8 +54,7 @@ for path in sorted(sources & files.keys()):
                 continue
             line = source[start - 1].strip()
             if (off_isr or (name in selectors and line == other_case) or
-                    (name == 'getMachineConfig.h' and line == 'default:') or
-                    (name == 'PreferenceHelper.h' and line == 'return "INVALID";')):
+                    (name == 'PreferenceHelper.cpp' and line == 'return "INVALID";')):
                 allowed['regions'] += 1
                 allowed['lines'] += end - start + 1
                 print(f'UNREACHABLE (not covered): {path}:{start}-{end} {line}')
@@ -72,8 +69,8 @@ for path in sorted(sources & files.keys()):
         if ((name in selectors and line in {other_case, f'case MachineType::{args.machine}:',
                                              'default:', 'switch (HARDWARE_MODEL)'}) or
                 (max(yes, no) and ((name, line) in {
-                    ('BoilerStateHandler.h', 'switch (internalState)'),
-                    ('PreferenceHelper.h', 'switch (key)'),
+                    ('BoilerStateHandler.cpp', 'switch (internalState)'),
+                    ('PreferenceHelper.cpp', 'switch (key)'),
                 } or (start in post_save_branches and line == 'switch (event)')))):
             allowed['branches'] += (yes == 0) + (no == 0)
             print(f'UNREACHABLE (not covered): {path}:{start} {line}')

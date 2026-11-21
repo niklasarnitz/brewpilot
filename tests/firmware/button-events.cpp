@@ -1,6 +1,7 @@
 #include "StateMachineFixture.h"
-#include "hardware/handlers/ButtonHandler.h"
-#include "hardware/handlers/GroupHeadButtonHandler.h"
+#include "Scenarios.h"
+#include "input/ButtonHandler.h"
+#include "input/GroupHeadButtonHandler.h"
 
 namespace
 {

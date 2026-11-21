@@ -84,7 +84,7 @@ class ConfigurationTests(unittest.TestCase):
         ):
             with self.subTest(machine=macro):
                 result = self.compile_config(
-                    '#include "UserConfig.h"\n'
+                    '#include "config/BuildConfig.h"\n'
                     f'static_assert(HARDWARE_MODEL == MachineType::{model}, "wrong machine");\n',
                     macro,
                 )
@@ -94,7 +94,7 @@ class ConfigurationTests(unittest.TestCase):
         for definitions in ((), ("BREWPILOT_MACHINE_RANCILIO_S27",
                                  "BREWPILOT_MACHINE_LA_CIMBALI_M29_SELECT")):
             with self.subTest(definitions=definitions):
-                result = self.compile_config('#include "UserConfig.h"\n', *definitions)
+                result = self.compile_config('#include "config/BuildConfig.h"\n', *definitions)
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn("Select exactly one BrewPilot machine", result.stderr)
 
@@ -102,9 +102,9 @@ class ConfigurationTests(unittest.TestCase):
         for definition, expected in ((None, 1), ("BREWPILOT_HAS_FLOWMETERS=0", 0),
                                      ("BREWPILOT_HAS_FLOWMETERS=1", 1)):
             with self.subTest(definition=definition):
-                definitions = () if definition is None else (definition,)
+                definitions = ("BREWPILOT_MACHINE_RANCILIO_S27",) + (() if definition is None else (definition,))
                 result = self.compile_config(
-                    '#include "StaticConfig.h"\n'
+                    '#include "config/BuildConfig.h"\n'
                     f'static_assert(BREWPILOT_HAS_FLOWMETERS == {expected}, "wrong flowmeter setting");\n',
                     *definitions,
                 )
@@ -113,8 +113,8 @@ class ConfigurationTests(unittest.TestCase):
     def test_invalid_flowmeter_values_are_rejected(self):
         for value in ("-1", "2"):
             with self.subTest(value=value):
-                result = self.compile_config('#include "StaticConfig.h"\n',
-                                             f"BREWPILOT_HAS_FLOWMETERS={value}")
+                result = self.compile_config('#include "config/BuildConfig.h"\n',
+                                             "BREWPILOT_MACHINE_RANCILIO_S27", f"BREWPILOT_HAS_FLOWMETERS={value}")
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn("Flowmeters flag must be 0 or 1", result.stderr)
 

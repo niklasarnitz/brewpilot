@@ -1,9 +1,12 @@
 #pragma once
 
+#include <Arduino.h>
 #include <iostream>
 #include <stdexcept>
-#include "hardware/state-handlers/StateHandler.h"
-#include "hardware/actors/StateActor.h"
+#include "config/BoardPins.h"
+#include "config/SelectedMachine.h"
+#include "output/StateActor.h"
+#include "state/StateHandler.h"
 
 using Event = GroupHeadButtonEvent;
 

@@ -78,7 +78,10 @@ selected build. It prints its exceptions instead of rewriting raw LLVM counts:
 - The boiler state switch is exhaustive. Invalid preference keys and non-dose
   events are rejected before the private key lookup and post-save dose switch.
   Tests exercise those public rejections, not invented private states.
-- Data-only headers and pure interfaces have no runtime instructions to count.
+- Headers only declare; executable code lives in .cpp files. The gate fails if
+  LLVM reports functions in a header.
+
+Firmware and test sources build as separate translation units, like PlatformIO.
 
 The raw per-variant HTML, JSON and summary.txt reports are under
 .amp/in/artifacts/firmware-coverage/ (override with COVERAGE_DIR). CI runs the

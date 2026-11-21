@@ -28,6 +28,8 @@ fi
 
 python3 -m unittest discover -s "$project_dir/tests"
 unity="$project_dir/tests/vendor/unity"
+# Every firmware and test translation unit, one path per line.
+sources=$(find "$project_dir/src" "$project_dir/tests/firmware" -name '*.cpp' | LC_ALL=C sort)
 "${CC:-cc}" -std=c99 -DUNITY_EXCLUDE_SETJMP_H -c "$unity/unity.c" -o "$build_dir/unity.o"
 
 for machine in RANCILIO_S27 LA_CIMBALI_M29_SELECT; do
@@ -39,11 +41,16 @@ for machine in RANCILIO_S27 LA_CIMBALI_M29_SELECT; do
         set -- -std=c++17 -O2 -g -fsanitize=address,undefined -fno-sanitize-recover=all \
             -DBREWPILOT_MACHINE_"$machine" -DBREWPILOT_HAS_FLOWMETERS="$flowmeters" \
             -DUNITY_EXCLUDE_SETJMP_H -I "$unity" -I "$project_dir/tests/firmware" -I "$project_dir/src" \
-            "$project_dir/tests/firmware/state-machine.cpp" "$build_dir/unity.o" -o "$binary"
+            "$build_dir/unity.o" -o "$binary"
         if [ "$coverage" = 1 ]; then
             set -- "$@" -O0 -fprofile-instr-generate -fcoverage-mapping
         fi
-        "$compiler" "$@"
+        old_ifs=$IFS
+        IFS='
+'
+        # shellcheck disable=SC2086 # Split $sources on newlines only.
+        "$compiler" "$@" $sources
+        IFS=$old_ifs
         LLVM_PROFILE_FILE="$build_dir/$variant/tests.profraw" "$binary"
 
         if [ "$coverage" = 1 ]; then

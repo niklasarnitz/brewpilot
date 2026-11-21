@@ -1,4 +1,5 @@
 #include "StateMachineFixture.h"
+#include "Scenarios.h"
 
 namespace
 {
@@ -40,6 +41,7 @@ struct GroupFixture : StateMachineFixture
                 "held continuous stops water and opens programming selection");
     }
 };
+} // namespace
 
 void doseContracts()
 {
@@ -281,6 +283,8 @@ void pulseBoundaryContracts()
         }
 }
 
+namespace
+{
 void backflushRollover(bool wrapDuringPause)
 {
     for (int number : {1, 2})
@@ -322,10 +326,13 @@ void backflushRollover(bool wrapDuringPause)
         f.group.stop();
     }
 }
+} // namespace
 
 void backflushExtractionRollover() { backflushRollover(false); }
 void backflushPauseRollover() { backflushRollover(true); }
 
+namespace
+{
 void prolongedExtractionContracts(int number)
 {
     for (uint32_t start : {1u, 0xfffff000u})

@@ -1,14 +1,14 @@
 #include <Arduino.h>
 
-#include "structs/ButtonEvent.h"
-#include "StaticConfig.h"
-#include "hardware/state-handlers/StateHandler.h"
-#include "hardware/state/State.h"
-#include "hardware/actors/StateActor.h"
-#include "hardware/handlers/InputHandler.h"
-#include "structs/VolumetricSettings.h"
-#include "utils/PreferenceHelper.h"
-#include "utils/VolumetricsHelper.h"
+#include "config/BoardPins.h"
+#include "config/BuildConfig.h"
+#include "input/ButtonEvents.h"
+#include "input/InputHandler.h"
+#include "output/StateActor.h"
+#include "state/State.h"
+#include "state/StateHandler.h"
+#include "storage/PreferenceHelper.h"
+#include "storage/VolumetricsHelper.h"
 
 PreferenceHelper preferenceHelper;
 VolumetricsHelper volumetricsHelper(&preferenceHelper);
