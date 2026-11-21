@@ -94,30 +94,35 @@ class ConfigurationTests(unittest.TestCase):
         for definitions in ((), ("BREWPILOT_MACHINE_RANCILIO_S27",
                                  "BREWPILOT_MACHINE_LA_CIMBALI_M29_SELECT")):
             with self.subTest(definitions=definitions):
-                result = self.compile_config('#include "config/BuildConfig.h"\n', *definitions)
+                result = self.compile_config('#include "config/SelectedMachine.h"\n', *definitions)
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn("Select exactly one BrewPilot machine", result.stderr)
 
-    def test_flowmeter_default_and_valid_overrides(self):
-        for definition, expected in ((None, 1), ("BREWPILOT_HAS_FLOWMETERS=0", 0),
-                                     ("BREWPILOT_HAS_FLOWMETERS=1", 1)):
-            with self.subTest(definition=definition):
-                definitions = ("BREWPILOT_MACHINE_RANCILIO_S27",) + (() if definition is None else (definition,))
+    def test_machine_settings_come_only_from_the_machine_config(self):
+        for setting in ("BREWPILOT_HAS_FLOWMETERS=0", "BREWPILOT_GROUP_ONE_ACTIVE=1",
+                        "BREWPILOT_GROUP_TWO_ACTIVE=1"):
+            with self.subTest(setting=setting):
+                result = self.compile_config('#include "config/SelectedMachine.h"\n',
+                                             "BREWPILOT_MACHINE_RANCILIO_S27", setting)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("not with -D", result.stderr)
+
+    def test_flowmeter_flag_matches_each_machine_config(self):
+        for macro in ("BREWPILOT_MACHINE_RANCILIO_S27", "BREWPILOT_MACHINE_LA_CIMBALI_M29_SELECT"):
+            with self.subTest(machine=macro):
                 result = self.compile_config(
-                    '#include "config/BuildConfig.h"\n'
-                    f'static_assert(BREWPILOT_HAS_FLOWMETERS == {expected}, "wrong flowmeter setting");\n',
-                    *definitions,
+                    '#include "config/SelectedMachine.h"\n'
+                    'static_assert((BREWPILOT_HAS_FLOWMETERS == 0 || BREWPILOT_HAS_FLOWMETERS == 1) &&\n'
+                    '              bool(BREWPILOT_HAS_FLOWMETERS) == machineConfig.hasFlowMeters, "mismatch");\n',
+                    macro,
                 )
                 self.assertEqual(result.returncode, 0, result.stderr)
 
-    def test_invalid_flowmeter_values_are_rejected(self):
-        for value in ("-1", "2"):
-            with self.subTest(value=value):
-                result = self.compile_config('#include "config/BuildConfig.h"\n',
-                                             "BREWPILOT_MACHINE_RANCILIO_S27", f"BREWPILOT_HAS_FLOWMETERS={value}")
-                self.assertNotEqual(result.returncode, 0)
-                self.assertIn("Flowmeters flag must be 0 or 1", result.stderr)
-
+    def test_a_machine_config_is_only_used_by_its_own_build(self):
+        result = self.compile_config('#include "config/machines/LaCimbaliM29Select.h"\n',
+                                     "BREWPILOT_MACHINE_RANCILIO_S27")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("belongs to another build", result.stderr)
 
 if __name__ == "__main__":
     unittest.main()

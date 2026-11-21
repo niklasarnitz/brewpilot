@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 #include "config/BoardPins.h"
-#include "config/BuildConfig.h"
+#include "config/SelectedMachine.h"
 #include "input/ButtonEvents.h"
 #include "input/InputHandler.h"
 #include "output/StateActor.h"

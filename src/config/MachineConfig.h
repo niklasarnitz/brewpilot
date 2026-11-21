@@ -17,4 +17,8 @@ struct MachineConfig
     // state handling, valve and flow meter are not compiled into the firmware.
     bool groupOneActive;
     bool groupTwoActive;
+
+    // Whether flow meters are installed. Without them no flow-meter interrupt
+    // is attached and doses have to be stopped manually.
+    bool hasFlowMeters;
 };

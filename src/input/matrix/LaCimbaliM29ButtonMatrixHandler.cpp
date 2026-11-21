@@ -5,7 +5,7 @@
 
 #include <Arduino.h>
 
-#include "config/machines/LaCimbaliM29Select.h"
+#include "config/SelectedMachine.h"
 #include "utils/noop.h"
 
 using namespace la_cimbali_m29_select::panel;

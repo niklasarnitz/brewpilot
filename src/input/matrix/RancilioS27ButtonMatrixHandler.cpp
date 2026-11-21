@@ -5,7 +5,7 @@
 
 #include <Arduino.h>
 
-#include "config/machines/RancilioS27.h"
+#include "config/SelectedMachine.h"
 
 using namespace rancilio_s27::panel;
 

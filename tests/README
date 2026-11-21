@@ -5,8 +5,8 @@ UndefinedBehaviorSanitizer. CC and CXX select the compilers. This host suite use
 ThrowTheSwitch/Unity v2.6.1 (unmodified C sources and MIT license in vendor/unity);
 it needs neither PlatformIO nor a network connection.
 
-The same regression suite runs for both machines, with flowmeters enabled and
-disabled. The S27 has only group one: its build contains no group two input,
+The same regression suite runs once per machine configuration, i.e. per file in
+src/config/machines/, which fixes the machine's flowmeters and group heads. The S27 has only group one: its build contains no group two input,
 state handler, valve or flow meter, and scenarios about two interacting groups
 run only on the M29. It exercises real button handlers, state handlers, persistence helpers
 and output actors. Only Arduino time/GPIO/Serial and the external Preferences
@@ -43,7 +43,8 @@ events or matrix state. Both machine pinouts and output polarities are checked.
 Scenarios include doses, Tea Press/Held at samples 1/40/41, STOP/backflush,
 prolonged boiler filling without locking drinks, programming and 24 consecutive
 mixed sessions on the same machine. S27 has only one physical group panel;
-Cimbali tests both. Without flowmeters, GPIO-started doses are stopped manually.
+Cimbali tests both. In a configuration without flowmeters, GPIO-started doses
+are stopped manually.
 All four physical dose buttons can be learned only from their own panel's
 Continuous hold. Competing panel/Tea holds cannot steal the session. Tea can
 be programmed even with no saved duration or one shorter than its hold threshold.
@@ -58,8 +59,8 @@ Tea/backflush timestamp arithmetic explicitly uses uint32_t to retain ESP32's
 32-bit rollover behavior on hosts where unsigned long is 64 bits.
 
 Run ./tools/test-firmware.sh --coverage for instrumented tests and a strict 100%
-line, function, region and reachable-branch gate, separately for each of the four
-machine/flowmeter variants. Requires Clang, matching llvm-cov/llvm-profdata and
+line, function, region and reachable-branch gate, separately for each machine
+configuration. Requires Clang, matching llvm-cov/llvm-profdata and
 Python 3 in addition to the sanitizers. On macOS the LLVM tools are found through
 xcrun; elsewhere they must be on PATH. CXX, LLVM_COV and LLVM_PROFDATA can select
 a matching toolchain.
@@ -76,7 +77,7 @@ tools/check-firmware-coverage.py requires every executable source file in the
 selected build. It prints its exceptions instead of rewriting raw LLVM counts:
 - Only the selected panel driver is compiled. The S27 doesn't use the M29 settling loop.
 - The machine is selected at compile time; an invalid selection fails
-  compilation. Disabled flowmeters have no registered ISR.
+  compilation. A configuration without flowmeters registers no ISR.
 - The boiler state, preference key and dose slot switches handle every enum
   value; LLVM still counts an implicit default that no value reaches. Tests
   exercise invalid keys and non-dose events through the public API.
@@ -89,7 +90,7 @@ with -Wall -Wextra -Werror.
 The raw per-variant HTML, JSON and summary.txt reports are under
 .amp/in/artifacts/firmware-coverage/ (override with COVERAGE_DIR). CI runs the
 coverage command once per PR update or push to master, with sanitizers enabled
-for all four configurations, and publishes the firmware-coverage artifact.
+for every machine configuration, and publishes the firmware-coverage artifact.
 
 Unit tests don't cover PCB connectivity, electrical levels, analog settling,
 real flash persistence, or ISR scheduling on the ESP32. Use ERC/DRC and bench

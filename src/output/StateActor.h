@@ -1,6 +1,6 @@
 #pragma once
 
-#include "config/BuildConfig.h"
+#include "config/SelectedMachine.h"
 #include "drivers/Relay.h"
 #include "drivers/Solenoid.h"
 #include "state/State.h"

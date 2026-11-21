@@ -1,9 +1,15 @@
 #pragma once
 
-#include "config/BuildConfig.h"
 #include "config/MachineConfig.h"
 
-#if defined(BREWPILOT_MACHINE_RANCILIO_S27)
+// Each machine configuration sets these itself; they are not build options.
+#if defined(BREWPILOT_HAS_FLOWMETERS) || defined(BREWPILOT_GROUP_ONE_ACTIVE) || defined(BREWPILOT_GROUP_TWO_ACTIVE)
+#error "Set flowmeters and group heads in the machine config under config/machines/, not with -D"
+#endif
+
+#if defined(BREWPILOT_MACHINE_RANCILIO_S27) == defined(BREWPILOT_MACHINE_LA_CIMBALI_M29_SELECT)
+#error "Select exactly one BrewPilot machine using a machine-specific PlatformIO environment"
+#elif defined(BREWPILOT_MACHINE_RANCILIO_S27)
 #include "config/machines/RancilioS27.h"
 constexpr MachineConfig machineConfig = rancilio_s27::config;
 #elif defined(BREWPILOT_MACHINE_LA_CIMBALI_M29_SELECT)
@@ -11,7 +17,4 @@ constexpr MachineConfig machineConfig = rancilio_s27::config;
 constexpr MachineConfig machineConfig = la_cimbali_m29_select::config;
 #endif
 
-static_assert(machineConfig.groupOneActive == bool(BREWPILOT_GROUP_ONE_ACTIVE) &&
-                  machineConfig.groupTwoActive == bool(BREWPILOT_GROUP_TWO_ACTIVE),
-              "BREWPILOT_GROUP_*_ACTIVE in BuildConfig.h must match the machine config");
 static_assert(machineConfig.groupOneActive || machineConfig.groupTwoActive, "A machine needs at least one group");

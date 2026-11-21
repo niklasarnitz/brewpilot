@@ -1,6 +1,6 @@
 #pragma once
 
-#include "config/BuildConfig.h"
+#include "config/SelectedMachine.h"
 
 // The machine is fixed at compile time, so its panel driver is used directly.
 #if defined(BREWPILOT_MACHINE_RANCILIO_S27)

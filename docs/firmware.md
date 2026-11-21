@@ -12,21 +12,20 @@ Pinbelegung und PCB-Kompatibilität stehen im [Pin-Audit](esp32-pin-audit.md).
 
 ## Flowmeter konfigurieren
 
-`BREWPILOT_HAS_FLOWMETERS` ist standardmäßig `1`. Für Maschinen ohne Flowmeter
-`-DBREWPILOT_HAS_FLOWMETERS=0` in die `build_flags` des jeweiligen
-PlatformIO-Environments aufnehmen; das vorhandene Maschinen-Makro dabei beibehalten.
+Jede Maschinenkonfiguration in `src/config/machines/` legt selbst fest, ob
+Flowmeter verbaut sind und welche Gruppen es gibt. Für eine Maschine ohne
+Flowmeter dort `BREWPILOT_HAS_FLOWMETERS` auf `0` setzen; `hasFlowMeters` in der
+Konfiguration übernimmt den Wert. Per `-D` lässt er sich nicht übersteuern. Für
+eine abweichende Ausstattung desselben Modells eine eigene Konfiguration mit
+eigenem Maschinen-Makro und PlatformIO-Environment anlegen.
 
-Beispiel für eine S27 **ohne Flowmeter**, als Ersatz des bestehenden Abschnitts:
-
-```ini
-[env:rancilio-s27]
-build_flags =
-    -DBREWPILOT_MACHINE_RANCILIO_S27
-    -DBREWPILOT_HAS_FLOWMETERS=0
+```cpp
+// src/config/machines/RancilioS27.h
+#define BREWPILOT_HAS_FLOWMETERS 0
 ```
 
-Die Flag `0` deaktiviert die Flowmeter-Interrupts. Fehlende oder ausbleibende
-Flowmeter-Impulse lösen keinen eigenen Abbruch aus, unabhängig von dieser Flag.
+Der Wert `0` deaktiviert die Flowmeter-Interrupts. Fehlende oder ausbleibende
+Flowmeter-Impulse lösen keinen eigenen Abbruch aus, unabhängig von dieser Einstellung.
 Sie ersetzt keine Volumetrik durch eine Zeitdosierung: Ohne Sensoren Continuous
 mit manuellem Stop verwenden. Gespeicherte Impulsdosen können ohne Impulse nicht
 automatisch erreicht und neue Impulsdosen nicht gelernt werden. Ein Bezug über
