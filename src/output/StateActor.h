@@ -7,7 +7,7 @@
 class StateActor
 {
 private:
-    State *state;
+    const State &state;
 
     Relay pumpRelay;
 
@@ -17,7 +17,7 @@ private:
     Solenoid teaWaterSolenoid;
 
 public:
-    explicit StateActor(State *state);
+    explicit StateActor(const State &state);
 
     void loop();
 };

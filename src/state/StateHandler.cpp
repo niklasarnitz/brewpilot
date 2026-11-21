@@ -2,15 +2,14 @@
 
 #include <Arduino.h>
 
-StateHandler::StateHandler(State *state, ButtonEvent *buttonEvent, VolumetricsHelper *volumetricsHelper)
-    : state(state), buttonEvent(buttonEvent),
-      boilerStateHandler(&state->isFillingBoiler),
-      groupOneStateHandler(&state->groupOneIsExtracting,
-                           &buttonEvent->groupOne, volumetricsHelper, &state->programmingTarget, 1),
-      groupTwoStateHandler(&state->groupTwoIsExtracting,
-                           &buttonEvent->groupTwo, volumetricsHelper, &state->programmingTarget, 2),
-      teaStateHandler(&buttonEvent->tea,
-                      &state->isExtractingTeaWater, volumetricsHelper, &state->programmingTarget) {}
+StateHandler::StateHandler(State &state, const ButtonEvent &buttonEvent, VolumetricsHelper &volumetricsHelper)
+    : boilerStateHandler(state.isFillingBoiler),
+      groupOneStateHandler(state.groupOneIsExtracting,
+                           buttonEvent.groupOne, volumetricsHelper, state.programmingTarget, 1),
+      groupTwoStateHandler(state.groupTwoIsExtracting,
+                           buttonEvent.groupTwo, volumetricsHelper, state.programmingTarget, 2),
+      teaStateHandler(buttonEvent.tea,
+                      state.isExtractingTeaWater, volumetricsHelper, state.programmingTarget) {}
 
 void StateHandler::handleState()
 {

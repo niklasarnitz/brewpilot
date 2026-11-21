@@ -3,14 +3,14 @@
 #include <Arduino.h>
 #include <inttypes.h>
 
-void VolumetricsHelper::logVolumetricSettings(const VolumetricSettings *volumetricSettings) const
+void VolumetricsHelper::logVolumetricSettings() const
 {
     Serial.println("Volumetric Settings:");
-    Serial.printf("Left Single Espresso: %" PRIu32 " pulses\n", volumetricSettings->leftSingleEspressoPulses);
-    Serial.printf("Left Double Espresso: %" PRIu32 " pulses\n", volumetricSettings->leftDoubleEspressoPulses);
-    Serial.printf("Right Single Espresso: %" PRIu32 " pulses\n", volumetricSettings->rightSingleEspressoPulses);
-    Serial.printf("Right Double Espresso: %" PRIu32 " pulses\n", volumetricSettings->rightDoubleEspressoPulses);
-    Serial.printf("Tea Water: %" PRIu32 " ms\n", volumetricSettings->teaWaterMilliseconds);
+    Serial.printf("Left Single Espresso: %" PRIu32 " pulses\n", volumetricSettings.leftSingleEspressoPulses);
+    Serial.printf("Left Double Espresso: %" PRIu32 " pulses\n", volumetricSettings.leftDoubleEspressoPulses);
+    Serial.printf("Right Single Espresso: %" PRIu32 " pulses\n", volumetricSettings.rightSingleEspressoPulses);
+    Serial.printf("Right Double Espresso: %" PRIu32 " pulses\n", volumetricSettings.rightDoubleEspressoPulses);
+    Serial.printf("Tea Water: %" PRIu32 " ms\n", volumetricSettings.teaWaterMilliseconds);
 }
 
 PreferenceKey VolumetricsHelper::convertButtonEventToPreferenceKey(GroupHeadButtonEvent event) const
@@ -30,28 +30,28 @@ PreferenceKey VolumetricsHelper::convertButtonEventToPreferenceKey(GroupHeadButt
     return PreferenceKey::INVALID;
 }
 
-VolumetricsHelper::VolumetricsHelper(PreferenceHelper *preferenceHelper)
+VolumetricsHelper::VolumetricsHelper(PreferenceHelper &preferenceHelper)
     : preferenceHelper(preferenceHelper) {}
 
 void VolumetricsHelper::setup()
 {
-    if (!preferenceHelper->open())
+    if (!preferenceHelper.open())
         return;
 
-    volumetricSettings.leftSingleEspressoPulses = preferenceHelper->getULong(PreferenceKey::FlowMeterPulsesLeftSingleEspresso);
-    volumetricSettings.leftDoubleEspressoPulses = preferenceHelper->getULong(PreferenceKey::FlowMeterPulsesLeftDoubleEspresso);
-    volumetricSettings.rightSingleEspressoPulses = preferenceHelper->getULong(PreferenceKey::FlowMeterPulsesRightSingleEspresso);
-    volumetricSettings.rightDoubleEspressoPulses = preferenceHelper->getULong(PreferenceKey::FlowMeterPulsesRightDoubleEspresso);
-    volumetricSettings.teaWaterMilliseconds = preferenceHelper->getULong(PreferenceKey::TeaWaterMilliseconds);
+    volumetricSettings.leftSingleEspressoPulses = preferenceHelper.getULong(PreferenceKey::FlowMeterPulsesLeftSingleEspresso);
+    volumetricSettings.leftDoubleEspressoPulses = preferenceHelper.getULong(PreferenceKey::FlowMeterPulsesLeftDoubleEspresso);
+    volumetricSettings.rightSingleEspressoPulses = preferenceHelper.getULong(PreferenceKey::FlowMeterPulsesRightSingleEspresso);
+    volumetricSettings.rightDoubleEspressoPulses = preferenceHelper.getULong(PreferenceKey::FlowMeterPulsesRightDoubleEspresso);
+    volumetricSettings.teaWaterMilliseconds = preferenceHelper.getULong(PreferenceKey::TeaWaterMilliseconds);
 
-    preferenceHelper->close();
+    preferenceHelper.close();
 
-    logVolumetricSettings(&volumetricSettings);
+    logVolumetricSettings();
 }
 
 bool VolumetricsHelper::writeFlowMeterSetting(GroupHeadButtonEvent event, uint32_t value)
 {
-    if (value == 0 || !preferenceHelper->setULong(convertButtonEventToPreferenceKey(event), value))
+    if (value == 0 || !preferenceHelper.setULong(convertButtonEventToPreferenceKey(event), value))
         return false;
 
     switch (event)
@@ -70,18 +70,18 @@ bool VolumetricsHelper::writeFlowMeterSetting(GroupHeadButtonEvent event, uint32
         break;
     };
 
-    logVolumetricSettings(&volumetricSettings);
+    logVolumetricSettings();
     return true;
 }
 
 bool VolumetricsHelper::writeTeaWaterSetting(uint32_t value)
 {
-    if (value == 0 || !preferenceHelper->setULong(PreferenceKey::TeaWaterMilliseconds, value))
+    if (value == 0 || !preferenceHelper.setULong(PreferenceKey::TeaWaterMilliseconds, value))
         return false;
 
     volumetricSettings.teaWaterMilliseconds = value;
 
-    logVolumetricSettings(&volumetricSettings);
+    logVolumetricSettings();
     return true;
 }
 

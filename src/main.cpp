@@ -11,12 +11,12 @@
 #include "storage/VolumetricsHelper.h"
 
 PreferenceHelper preferenceHelper;
-VolumetricsHelper volumetricsHelper(&preferenceHelper);
+VolumetricsHelper volumetricsHelper(preferenceHelper);
 ButtonEvent buttonEvent{};
 State state{};
-StateHandler stateHandler(&state, &buttonEvent, &volumetricsHelper);
-StateActor stateActor(&state);
-InputHandler inputHandler(&buttonEvent);
+StateHandler stateHandler(state, buttonEvent, volumetricsHelper);
+StateActor stateActor(state);
+InputHandler inputHandler(buttonEvent);
 
 void IRAM_ATTR groupOneFlowMeterHandler()
 {

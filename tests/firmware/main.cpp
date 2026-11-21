@@ -36,7 +36,7 @@ void failedStoragePreservesSettings()
     require(machine.volumes.writeFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO, 19), "valid dose must save");
     require(machine.volumes.writeTeaWaterSetting(7000), "valid tea duration must save");
     PreferenceHelper rebootPreferences;
-    VolumetricsHelper rebootVolumes{&rebootPreferences};
+    VolumetricsHelper rebootVolumes{rebootPreferences};
     rebootVolumes.setup();
     require(rebootVolumes.getFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO) == 19,
             "successful dose must survive reboot");
@@ -121,7 +121,7 @@ void stopWinsOverBackflush()
     Machine machine;
     GroupButtonMatrixState keys{};
     Event event = Event::NONE;
-    GroupHeadButtonHandler buttons(&keys, &event, 1);
+    GroupHeadButtonHandler buttons(keys, event, 1);
     machine.tick(Event::AUTO_BACKFLUSH);
     keys.leftSingleDose = keys.rightDoubleDose = keys.continuous = true;
     buttons.handle();

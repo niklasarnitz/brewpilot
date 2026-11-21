@@ -16,7 +16,7 @@ struct GroupFixture : StateMachineFixture
     ProgrammingTarget own;
 
     explicit GroupFixture(int number = 1)
-        : group(&extracting, &event, &volumes, &state.programmingTarget, number),
+        : group(extracting, event, volumes, state.programmingTarget, number),
           own(number == 1 ? ProgrammingTarget::GROUP_ONE : ProgrammingTarget::GROUP_TWO) {}
 
     void step(Event next = Event::NONE, uint32_t elapsed = 0)
@@ -146,7 +146,7 @@ void programmingContracts()
             require(f.volumes.getFlowMeterSetting(dose) == 11,
                     "learning saves only pulses since the selected dose began");
             PreferenceHelper rebootPreferences;
-            VolumetricsHelper reboot{&rebootPreferences};
+            VolumetricsHelper reboot{rebootPreferences};
             reboot.setup();
             require(reboot.getFlowMeterSetting(dose) == 11, "learned dose survives reload");
             for (Event untouched : doses)
@@ -265,7 +265,7 @@ void pulseBoundaryContracts()
                         f.volumes.getFlowMeterSetting(dose) == 2,
                     "learning save includes final pulse and excludes pre-start pulse");
             PreferenceHelper rebootPreferences;
-            VolumetricsHelper reboot{&rebootPreferences};
+            VolumetricsHelper reboot{rebootPreferences};
             reboot.setup();
             require(reboot.getFlowMeterSetting(dose) == 2, "boundary dose survives reload");
             f.flow(7);

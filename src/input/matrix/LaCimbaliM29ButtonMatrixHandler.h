@@ -6,12 +6,12 @@
 
 class LaCimbaliM29ButtonMatrixHandler
 {
-    ButtonMatrixState *buttonMatrixState;
+    ButtonMatrixState &buttonMatrixState;
 
     static void selectScanLine(uint8_t pin);
 
 public:
-    LaCimbaliM29ButtonMatrixHandler(ButtonMatrixState *buttonMatrixState);
+    explicit LaCimbaliM29ButtonMatrixHandler(ButtonMatrixState &buttonMatrixState);
 
     void initializePins();
 

@@ -16,7 +16,7 @@ void settingsKeyMapping()
     testStorage["T_M"] = 5050;
 
     PreferenceHelper preferences;
-    VolumetricsHelper volumes{&preferences};
+    VolumetricsHelper volumes{preferences};
     volumes.setup();
     for (unsigned i = 0; i < 4; ++i)
         require(volumes.getFlowMeterSetting(doses[i]) == values[i], "each stored dose key must load independently");
@@ -42,7 +42,7 @@ void settingsInvalidAndLoadFailure()
     testStorage.clear();
     testFailOpen = testFailWrite = false;
     PreferenceHelper preferences;
-    VolumetricsHelper volumes{&preferences};
+    VolumetricsHelper volumes{preferences};
     volumes.setup();
     require(volumes.getFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO) == 0 &&
                 volumes.getTeaWaterSetting() == 0, "missing keys must load default zero values");
@@ -64,7 +64,7 @@ void settingsInvalidAndLoadFailure()
     require(volumes.getFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO) == 71 &&
                 volumes.getTeaWaterSetting() == 8000, "failed NVS load must preserve active settings");
     PreferenceHelper freshPreferences;
-    VolumetricsHelper fresh{&freshPreferences};
+    VolumetricsHelper fresh{freshPreferences};
     fresh.setup();
     require(fresh.getFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO) == 0 &&
                 fresh.getTeaWaterSetting() == 0, "failed initial load must leave default settings");

@@ -7,7 +7,7 @@
 class GroupHeadButtonHandler
 {
 private:
-    GroupHeadButtonEvent *event;
+    GroupHeadButtonEvent &event;
 
     ButtonHandler leftSingleDoseButtonHandler;
     ButtonHandler leftDoubleDoseButtonHandler;
@@ -18,7 +18,7 @@ private:
     int groupNumber;
 
 public:
-    explicit GroupHeadButtonHandler(GroupButtonMatrixState *groupState, GroupHeadButtonEvent *event, int groupNumber);
+    GroupHeadButtonHandler(const GroupButtonMatrixState &groupState, GroupHeadButtonEvent &event, int groupNumber);
 
     void handle();
 };

@@ -18,10 +18,10 @@ private:
 
     ButtonHandler teaButtonHandler;
 
-    ButtonEvent *buttonEvent;
+    ButtonEvent &buttonEvent;
 
 public:
-    explicit InputHandler(ButtonEvent *buttonEvent);
+    explicit InputHandler(ButtonEvent &buttonEvent);
 
     void readInputs();
 };

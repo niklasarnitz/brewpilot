@@ -6,7 +6,7 @@
 
 using namespace rancilio_s27::panel;
 
-RancilioS27ButtonMatrixHandler::RancilioS27ButtonMatrixHandler(ButtonMatrixState *buttonMatrixState) : buttonMatrixState(buttonMatrixState) {}
+RancilioS27ButtonMatrixHandler::RancilioS27ButtonMatrixHandler(ButtonMatrixState &buttonMatrixState) : buttonMatrixState(buttonMatrixState) {}
 
 void RancilioS27ButtonMatrixHandler::initializePins()
 {
@@ -33,27 +33,27 @@ void RancilioS27ButtonMatrixHandler::initializePins()
 
 void RancilioS27ButtonMatrixHandler::handle()
 {
-    buttonMatrixState->groupOne.leftSingleDose = !digitalRead(IN_DOSE_1);
-    buttonMatrixState->groupOne.leftDoubleDose = !digitalRead(IN_DOSE_2);
-    buttonMatrixState->groupOne.continuous = !digitalRead(IN_CONTINUOUS);
-    buttonMatrixState->groupOne.rightSingleDose = !digitalRead(IN_DOSE_3);
-    buttonMatrixState->groupOne.rightDoubleDose = !digitalRead(IN_DOSE_4);
+    buttonMatrixState.groupOne.leftSingleDose = !digitalRead(IN_DOSE_1);
+    buttonMatrixState.groupOne.leftDoubleDose = !digitalRead(IN_DOSE_2);
+    buttonMatrixState.groupOne.continuous = !digitalRead(IN_CONTINUOUS);
+    buttonMatrixState.groupOne.rightSingleDose = !digitalRead(IN_DOSE_3);
+    buttonMatrixState.groupOne.rightDoubleDose = !digitalRead(IN_DOSE_4);
 
-    buttonMatrixState->tea = !digitalRead(IN_TEA_WATER);
+    buttonMatrixState.tea = !digitalRead(IN_TEA_WATER);
 
     // Logging ButtonMatrixState
     // Serial.println("ButtonMatrixState:");
     // Serial.printf("Group1: LSingle=%d, LDouble=%d, Cont=%d, RSingle=%d, RDouble=%d\n",
-    //               buttonMatrixState->groupOne.leftSingleDose,
-    //               buttonMatrixState->groupOne.leftDoubleDose,
-    //               buttonMatrixState->groupOne.continuous,
-    //               buttonMatrixState->groupOne.rightSingleDose,
-    //               buttonMatrixState->groupOne.rightDoubleDose);
+    //               buttonMatrixState.groupOne.leftSingleDose,
+    //               buttonMatrixState.groupOne.leftDoubleDose,
+    //               buttonMatrixState.groupOne.continuous,
+    //               buttonMatrixState.groupOne.rightSingleDose,
+    //               buttonMatrixState.groupOne.rightDoubleDose);
     // Serial.printf("Group2: LSingle=%d, LDouble=%d, Cont=%d, RSingle=%d, RDouble=%d\n",
-    //               buttonMatrixState->groupTwo.leftSingleDose,
-    //               buttonMatrixState->groupTwo.leftDoubleDose,
-    //               buttonMatrixState->groupTwo.continuous,
-    //               buttonMatrixState->groupTwo.rightSingleDose,
-    //               buttonMatrixState->groupTwo.rightDoubleDose);
-    // Serial.printf("Tea: %d\n", buttonMatrixState->tea);
+    //               buttonMatrixState.groupTwo.leftSingleDose,
+    //               buttonMatrixState.groupTwo.leftDoubleDose,
+    //               buttonMatrixState.groupTwo.continuous,
+    //               buttonMatrixState.groupTwo.rightSingleDose,
+    //               buttonMatrixState.groupTwo.rightDoubleDose);
+    // Serial.printf("Tea: %d\n", buttonMatrixState.tea);
 }

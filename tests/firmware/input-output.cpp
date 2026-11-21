@@ -10,7 +10,7 @@ namespace
 void physicalM29MatrixDecoding()
 {
     ButtonMatrixState state{};
-    LaCimbaliM29ButtonMatrixHandler matrix(&state);
+    LaCimbaliM29ButtonMatrixHandler matrix(state);
     matrix.initializePins();
     testDigitalReadHook = readPanelPin;
 
@@ -74,7 +74,7 @@ void physicalM29ScanDrive()
     };
 
     ButtonMatrixState state{};
-    LaCimbaliM29ButtonMatrixHandler matrix(&state);
+    LaCimbaliM29ButtonMatrixHandler matrix(state);
     matrix.initializePins();
     const bool idleAfterInit = rowsReleased();
     testDigitalReadHook = readPanelPin;
@@ -95,7 +95,7 @@ void physicalM29ScanDrive()
 struct PanelDecoder
 {
     ButtonEvent events{};
-    InputHandler input{&events};
+    InputHandler input{events};
 };
 
 PanelDecoder &panelDecoder()

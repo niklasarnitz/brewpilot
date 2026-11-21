@@ -10,7 +10,7 @@ constexpr uint32_t BOILER_FILL_WAIT_TIME_MS = 2000;
 constexpr uint16_t BOILER_FILL_LEVEL = 1000; // Value for the LaCimbali M29 Select DT2 / R
 } // namespace
 
-BoilerStateHandler::BoilerStateHandler(bool *isFillingBoiler)
+BoilerStateHandler::BoilerStateHandler(bool &isFillingBoiler)
     : isFillingBoiler(isFillingBoiler)
 {
     pinMode(pins::BOILER_PROBE, INPUT);
@@ -66,7 +66,7 @@ void BoilerStateHandler::handleState()
             if (!boilerIsFilled)
             {
                 Serial.println("BoilerStateHandler: Start filling");
-                *isFillingBoiler = true;
+                isFillingBoiler = true;
                 internalState = BoilerState::BOILER_BELOW_TARGET;
             }
             break;
@@ -75,7 +75,7 @@ void BoilerStateHandler::handleState()
             // if it's already underfilled again, it will start filling again on next cycle
             Serial.println("BoilerStateHandler: Stop filling");
             internalState = BoilerState::BOILER_ABOVE_TARGET_AND_FILLED;
-            *isFillingBoiler = false;
+            isFillingBoiler = false;
             break;
         case BoilerState::BOILER_BELOW_TARGET:
             if (boilerIsFilled)

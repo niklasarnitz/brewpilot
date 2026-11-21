@@ -10,15 +10,13 @@
 class StateHandler
 {
 private:
-    State *state;
-    ButtonEvent *buttonEvent;
     BoilerStateHandler boilerStateHandler;
     GroupHeadStateHandler groupOneStateHandler;
     GroupHeadStateHandler groupTwoStateHandler;
     TeaStateHandler teaStateHandler;
 
 public:
-    StateHandler(State *state, ButtonEvent *buttonEvent, VolumetricsHelper *volumetricsHelper);
+    StateHandler(State &state, const ButtonEvent &buttonEvent, VolumetricsHelper &volumetricsHelper);
 
     void handleState();
 

@@ -18,10 +18,10 @@ private:
 
     unsigned int pressedStreak = 0;
 
-    bool *matrixButtonState;
+    const bool &matrixButtonState;
 
 public:
-    explicit ButtonHandler(bool *matrixButtonState);
+    explicit ButtonHandler(const bool &matrixButtonState);
 
     ButtonState getEvent();
 };

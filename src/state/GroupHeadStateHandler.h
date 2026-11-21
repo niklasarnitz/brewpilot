@@ -9,11 +9,11 @@
 
 class GroupHeadStateHandler
 {
-    VolumetricsHelper *volumetricsHelper;
-    GroupHeadButtonEvent *event;
-    bool *isExtracting;
+    VolumetricsHelper &volumetricsHelper;
+    const GroupHeadButtonEvent &event;
+    bool &isExtracting;
 
-    ProgrammingTarget *programmingTarget;
+    ProgrammingTarget &programmingTarget;
     const ProgrammingTarget ownTarget;
 
     GroupHeadButtonEvent buttonToBeProgrammed = GroupHeadButtonEvent::NONE;
@@ -35,7 +35,8 @@ class GroupHeadStateHandler
     static constexpr int TOTAL_CYCLES = 5;
 
 public:
-    GroupHeadStateHandler(bool *isExtracting, GroupHeadButtonEvent *event, VolumetricsHelper *volumetricsHelper, ProgrammingTarget *programmingTarget, int groupNumber);
+    GroupHeadStateHandler(bool &isExtracting, const GroupHeadButtonEvent &event, VolumetricsHelper &volumetricsHelper,
+                          ProgrammingTarget &programmingTarget, int groupNumber);
 
     void handleState();
 

@@ -8,7 +8,7 @@ namespace
 void buttonLifecycle()
 {
     bool down = false;
-    ButtonHandler button(&down);
+    ButtonHandler button(down);
     auto sample = [&](ButtonEventType expected, bool state) {
         const ButtonState actual = button.getEvent();
         require(actual.event == expected, "button event must match the independent sample expectation");
@@ -36,7 +36,7 @@ struct ButtonFixture
     Event event = Event::RIGHT_DOUBLE_ESPRESSO;
     GroupHeadButtonHandler handler;
 
-    explicit ButtonFixture(int group) : handler(&keys, &event, group) {}
+    explicit ButtonFixture(int group) : handler(keys, event, group) {}
 
     void sample(Event expected)
     {

@@ -9,16 +9,17 @@
 class TeaStateHandler
 {
 private:
-    ButtonEventType *event;
-    bool *isExtractingTeaWater;
-    ProgrammingTarget *programmingTarget;
+    const ButtonEventType &event;
+    bool &isExtractingTeaWater;
+    ProgrammingTarget &programmingTarget;
 
-    VolumetricsHelper *volumetricsHelper;
+    VolumetricsHelper &volumetricsHelper;
 
     uint32_t startTime = 0;
 
 public:
-    TeaStateHandler(ButtonEventType *event, bool *isExtractingTeaWater, VolumetricsHelper *volumetricsHelper, ProgrammingTarget *programmingTarget);
+    TeaStateHandler(const ButtonEventType &event, bool &isExtractingTeaWater, VolumetricsHelper &volumetricsHelper,
+                    ProgrammingTarget &programmingTarget);
 
     void handleState();
 };

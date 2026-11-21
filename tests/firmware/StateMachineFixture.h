@@ -20,11 +20,11 @@ inline void require(bool condition, const char *message)
 struct StateMachineFixture
 {
     PreferenceHelper preferences;
-    VolumetricsHelper volumes{&preferences};
+    VolumetricsHelper volumes{preferences};
     State state{};
     ButtonEvent events{};
-    StateHandler handler{&state, &events, &volumes};
-    StateActor actor{&state};
+    StateHandler handler{state, events, volumes};
+    StateActor actor{state};
 
     StateMachineFixture()
     {

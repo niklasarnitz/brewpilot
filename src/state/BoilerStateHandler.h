@@ -12,7 +12,7 @@ private:
         BOILER_BELOW_TARGET
     };
 
-    bool *isFillingBoiler;
+    bool &isFillingBoiler;
 
     uint32_t lastCheckTime = 0;
 
@@ -23,7 +23,7 @@ private:
     bool readBoilerProbe();
 
 public:
-    explicit BoilerStateHandler(bool *isFillingBoiler);
+    explicit BoilerStateHandler(bool &isFillingBoiler);
 
     void handleState();
 };

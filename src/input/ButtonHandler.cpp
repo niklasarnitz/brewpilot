@@ -1,6 +1,6 @@
 #include "input/ButtonHandler.h"
 
-ButtonHandler::ButtonHandler(bool *matrixButtonState)
+ButtonHandler::ButtonHandler(const bool &matrixButtonState)
     : matrixButtonState(matrixButtonState)
 {
     buttonState.currentState = false;
@@ -8,7 +8,7 @@ ButtonHandler::ButtonHandler(bool *matrixButtonState)
 
 ButtonState ButtonHandler::getEvent()
 {
-    if (*matrixButtonState)
+    if (matrixButtonState)
     {
         if (pressedStreak <= MAX_STREAK)
         {
@@ -24,7 +24,7 @@ ButtonState ButtonHandler::getEvent()
     {
         buttonState.event = ButtonEventType::BUTTON_HELD;
     }
-    else if (!buttonState.currentState && *matrixButtonState)
+    else if (!buttonState.currentState && matrixButtonState)
     {
         buttonState.event = ButtonEventType::BUTTON_PRESSED;
     }
@@ -32,6 +32,6 @@ ButtonState ButtonHandler::getEvent()
     {
         buttonState.event = ButtonEventType::BUTTON_NONE;
     }
-    buttonState.currentState = *matrixButtonState;
+    buttonState.currentState = matrixButtonState;
     return buttonState;
 }

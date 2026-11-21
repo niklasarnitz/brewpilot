@@ -11,14 +11,14 @@ class VolumetricsHelper
 private:
     VolumetricSettings volumetricSettings{};
 
-    PreferenceHelper *preferenceHelper;
+    PreferenceHelper &preferenceHelper;
 
-    void logVolumetricSettings(const VolumetricSettings *volumetricSettings) const;
+    void logVolumetricSettings() const;
 
     PreferenceKey convertButtonEventToPreferenceKey(GroupHeadButtonEvent event) const;
 
 public:
-    explicit VolumetricsHelper(PreferenceHelper *preferenceHelper);
+    explicit VolumetricsHelper(PreferenceHelper &preferenceHelper);
 
     void setup();
 

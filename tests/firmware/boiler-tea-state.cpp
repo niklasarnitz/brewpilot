@@ -5,7 +5,7 @@ namespace
 {
 struct BoilerTest : StateMachineFixture
 {
-    BoilerStateHandler boiler{&state.isFillingBoiler};
+    BoilerStateHandler boiler{state.isFillingBoiler};
 
     void step(uint32_t elapsed = 0)
     {
@@ -96,8 +96,8 @@ namespace
 {
 struct TeaTest : StateMachineFixture
 {
-    TeaStateHandler tea{&events.tea, &state.isExtractingTeaWater,
-                        &volumes, &state.programmingTarget};
+    TeaStateHandler tea{events.tea, state.isExtractingTeaWater,
+                        volumes, state.programmingTarget};
 
     void step(bool pressed = false, uint32_t elapsed = 0, bool held = false)
     {
@@ -182,7 +182,7 @@ void teaLearningRollover()
                     machine.state.programmingTarget == ProgrammingTarget::NONE,
                 "rollover learning save stops water and releases ownership");
         PreferenceHelper rebootPreferences;
-        VolumetricsHelper rebootVolumes{&rebootPreferences};
+        VolumetricsHelper rebootVolumes{rebootPreferences};
         rebootVolumes.setup();
         // Independent duration, not subtraction using the firmware's host-width type.
         const auto actual = machine.volumes.getTeaWaterSetting();
@@ -224,7 +224,7 @@ void teaProgramming()
                 "successful learning must save elapsed time; failures must preserve old duration");
         testFailOpen = testFailWrite = false;
         PreferenceHelper rebootPreferences;
-        VolumetricsHelper rebootVolumes{&rebootPreferences};
+        VolumetricsHelper rebootVolumes{rebootPreferences};
         rebootVolumes.setup();
         require(rebootVolumes.getTeaWaterSetting() == expected,
                 "persisted duration must match independent expected value after reboot");

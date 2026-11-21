@@ -4,10 +4,10 @@
 
 class RancilioS27ButtonMatrixHandler
 {
-    ButtonMatrixState *buttonMatrixState;
+    ButtonMatrixState &buttonMatrixState;
 
 public:
-    RancilioS27ButtonMatrixHandler(ButtonMatrixState *buttonMatrixState);
+    explicit RancilioS27ButtonMatrixHandler(ButtonMatrixState &buttonMatrixState);
 
     void initializePins();
 
