@@ -81,7 +81,8 @@ selected build. It prints its exceptions instead of rewriting raw LLVM counts:
 - Headers only declare; executable code lives in .cpp files. The gate fails if
   LLVM reports functions in a header.
 
-Firmware and test sources build as separate translation units, like PlatformIO.
+Firmware and test sources build as separate translation units, like PlatformIO,
+with -Wall -Wextra -Werror.
 
 The raw per-variant HTML, JSON and summary.txt reports are under
 .amp/in/artifacts/firmware-coverage/ (override with COVERAGE_DIR). CI runs the

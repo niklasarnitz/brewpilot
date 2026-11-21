@@ -38,7 +38,7 @@ for machine in RANCILIO_S27 LA_CIMBALI_M29_SELECT; do
         variant="$machine-flowmeters-$flowmeters"
         mkdir -p "$build_dir/$variant"
         binary="$build_dir/$variant/tests"
-        set -- -std=c++17 -O2 -g -fsanitize=address,undefined -fno-sanitize-recover=all \
+        set -- -std=c++17 -O2 -g -Wall -Wextra -Werror -fsanitize=address,undefined -fno-sanitize-recover=all \
             -DBREWPILOT_MACHINE_"$machine" -DBREWPILOT_HAS_FLOWMETERS="$flowmeters" \
             -DUNITY_EXCLUDE_SETJMP_H -I "$unity" -I "$project_dir/tests/firmware" -I "$project_dir/src" \
             "$build_dir/unity.o" -o "$binary"
