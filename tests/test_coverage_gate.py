@@ -3,7 +3,6 @@
 import json
 import subprocess
 import sys
-import tempfile
 import unittest
 from pathlib import Path
 
@@ -15,10 +14,9 @@ SWITCH_LINE = BOILER.read_text().splitlines().index("            switch (interna
 
 class CoverageGateTests(unittest.TestCase):
     def report(self, counters):
-        headers = [BOILER, *(
-            ROOT / "src/hardware/state-handlers" / name
-            for name in ("GroupHeadHandler.h", "StateHandler.h", "TeaStateHandler.h")
-        ), ROOT / "src/hardware/actors/StateActor.h"]
+        group = BOILER.with_name("GroupHeadHandler.h")
+        headers = [BOILER, group, *sorted(set((ROOT / "src").rglob("*.h")) - {BOILER, group}),
+                   ROOT / "src/main.cpp"]
         files = [{
             "filename": str(header),
             "summary": {metric: {"count": 1, "covered": 1}
@@ -31,16 +29,13 @@ class CoverageGateTests(unittest.TestCase):
         # Newer local LLVM reports the same location with [162, 0] counters.
         files[0]["branches"] = [[SWITCH_LINE, 21, SWITCH_LINE, 34, *counters, 0, 0, 4]]
         files[0]["summary"]["branches"] = {"count": 2, "covered": sum(count > 0 for count in counters)}
-        return {"data": [{"files": files}]}
+        return {"data": [{"files": files, "functions": []}]}
 
     def check(self, report):
-        with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / "coverage.json"
-            path.write_text(json.dumps(report))
-            return subprocess.run(
-                [sys.executable, str(ROOT / "tools/check-state-coverage.py"), str(path)],
-                capture_output=True, text=True, check=False,
-            )
+        return subprocess.run(
+            [sys.executable, str(ROOT / "tools/check-firmware-coverage.py"), "RANCILIO_S27", "1"],
+            input=json.dumps(report), capture_output=True, text=True, check=False,
+        )
 
     def test_accepts_both_llvm_default_counter_orders(self):
         for counters in ([0, 162], [162, 0]):
@@ -88,7 +83,7 @@ class CoverageGateTests(unittest.TestCase):
         report["data"][0]["files"].pop()
         result = self.check(report)
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn("Missing coverage: StateActor.h", result.stderr)
+        self.assertIn("Missing coverage: main.cpp", result.stderr)
 
 
 if __name__ == "__main__":

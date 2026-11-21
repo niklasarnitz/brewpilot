@@ -25,16 +25,24 @@
 
 class LaCimbaliM29ButtonMatrixHandler : public MachineButtonMatrixHandler
 {
+    static void selectScanLine(int pin)
+    {
+        // Preload LOW before enabling the output so it cannot pulse HIGH.
+        digitalWrite(pin, LOW);
+        pinMode(pin, OUTPUT);
+        noop();
+    }
+
 public:
     LaCimbaliM29ButtonMatrixHandler(ButtonMatrixState *buttonMatrixState) : MachineButtonMatrixHandler(buttonMatrixState) {}
 
     void initializePins()
     {
-        pinMode(OUT_GROUP_ONE_LEFT_HALF_AND_STOP, OUTPUT);
-        pinMode(OUT_GROUP_ONE_RIGHT_HALF, OUTPUT);
-        pinMode(OUT_GROUP_TWO_LEFT_HALF_AND_STOP, OUTPUT);
-        pinMode(OUT_GROUP_TWO_RIGHT_HALF, OUTPUT);
-        pinMode(OUT_TEA_WATER, OUTPUT);
+        pinMode(OUT_GROUP_ONE_LEFT_HALF_AND_STOP, INPUT);
+        pinMode(OUT_GROUP_ONE_RIGHT_HALF, INPUT);
+        pinMode(OUT_GROUP_TWO_LEFT_HALF_AND_STOP, INPUT);
+        pinMode(OUT_GROUP_TWO_RIGHT_HALF, INPUT);
+        pinMode(OUT_TEA_WATER, INPUT);
 
         // R22-R27 provide external 10k pull-ups on these six inputs.
         pinMode(IN_GROUP_ONE_BIG_DRINKS, INPUT);
@@ -47,52 +55,41 @@ public:
         pinMode(IN_GROUP_TWO_STOP, INPUT);
 
         pinMode(IN_TEA_WATER, INPUT);
-
-        digitalWrite(OUT_GROUP_ONE_LEFT_HALF_AND_STOP, HIGH);
-        digitalWrite(OUT_GROUP_ONE_RIGHT_HALF, HIGH);
-        digitalWrite(OUT_GROUP_TWO_LEFT_HALF_AND_STOP, HIGH);
-        digitalWrite(OUT_GROUP_TWO_RIGHT_HALF, HIGH);
-        digitalWrite(OUT_TEA_WATER, HIGH);
     }
 
     void handle()
     {
-        digitalWrite(OUT_GROUP_ONE_LEFT_HALF_AND_STOP, LOW);
-        noop();
+        selectScanLine(OUT_GROUP_ONE_LEFT_HALF_AND_STOP);
 
         buttonMatrixState->groupOne.leftSingleDose = !digitalRead(IN_GROUP_ONE_SMALL_DRINKS);
         buttonMatrixState->groupOne.leftDoubleDose = !digitalRead(IN_GROUP_ONE_BIG_DRINKS);
         buttonMatrixState->groupOne.continuous = !digitalRead(IN_GROUP_ONE_STOP);
 
-        digitalWrite(OUT_GROUP_ONE_LEFT_HALF_AND_STOP, HIGH);
-        digitalWrite(OUT_GROUP_ONE_RIGHT_HALF, LOW);
-        noop();
+        pinMode(OUT_GROUP_ONE_LEFT_HALF_AND_STOP, INPUT);
+        selectScanLine(OUT_GROUP_ONE_RIGHT_HALF);
 
         buttonMatrixState->groupOne.rightSingleDose = !digitalRead(IN_GROUP_ONE_SMALL_DRINKS);
         buttonMatrixState->groupOne.rightDoubleDose = !digitalRead(IN_GROUP_ONE_BIG_DRINKS);
 
-        digitalWrite(OUT_GROUP_ONE_RIGHT_HALF, HIGH);
-        digitalWrite(OUT_GROUP_TWO_LEFT_HALF_AND_STOP, LOW);
-        noop();
+        pinMode(OUT_GROUP_ONE_RIGHT_HALF, INPUT);
+        selectScanLine(OUT_GROUP_TWO_LEFT_HALF_AND_STOP);
 
         buttonMatrixState->groupTwo.leftSingleDose = !digitalRead(IN_GROUP_TWO_SMALL_DRINKS);
         buttonMatrixState->groupTwo.leftDoubleDose = !digitalRead(IN_GROUP_TWO_BIG_DRINKS);
         buttonMatrixState->groupTwo.continuous = !digitalRead(IN_GROUP_TWO_STOP);
 
-        digitalWrite(OUT_GROUP_TWO_LEFT_HALF_AND_STOP, HIGH);
-        digitalWrite(OUT_GROUP_TWO_RIGHT_HALF, LOW);
-        noop();
+        pinMode(OUT_GROUP_TWO_LEFT_HALF_AND_STOP, INPUT);
+        selectScanLine(OUT_GROUP_TWO_RIGHT_HALF);
 
         buttonMatrixState->groupTwo.rightSingleDose = !digitalRead(IN_GROUP_TWO_SMALL_DRINKS);
         buttonMatrixState->groupTwo.rightDoubleDose = !digitalRead(IN_GROUP_TWO_BIG_DRINKS);
 
-        digitalWrite(OUT_GROUP_TWO_RIGHT_HALF, HIGH);
-        digitalWrite(OUT_TEA_WATER, LOW);
-        noop();
+        pinMode(OUT_GROUP_TWO_RIGHT_HALF, INPUT);
+        selectScanLine(OUT_TEA_WATER);
 
         buttonMatrixState->tea = !digitalRead(IN_TEA_WATER);
 
-        digitalWrite(OUT_TEA_WATER, HIGH);
+        pinMode(OUT_TEA_WATER, INPUT);
     }
 };
 

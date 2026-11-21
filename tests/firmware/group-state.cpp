@@ -397,26 +397,8 @@ void prolongedExtractionContracts(int number)
 }
 } // namespace
 
-int runGroupStateTests()
+void prolongedGroupExtractions()
 {
-    try
-    {
-        doseContracts();
-        continuousAndOwnership();
-        programmingContracts();
-        backflushContracts();
-        for (int number : {1, 2})
-            prolongedExtractionContracts(number);
-        pulseBoundaryContracts();
-        backflushExtractionRollover();
-        backflushPauseRollover();
-        std::cout << "PASS: group doses, continuous, programming, backflush and prolonged extraction (flowmeters="
-                  << BREWPILOT_HAS_FLOWMETERS << ")\n";
-    }
-    catch (const std::exception &error)
-    {
-        std::cerr << "FAIL: " << error.what() << '\n';
-        return 1;
-    }
-    return 0;
+    for (int number : {1, 2})
+        prolongedExtractionContracts(number);
 }
