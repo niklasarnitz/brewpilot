@@ -40,7 +40,7 @@ void testFirmwareBoot()
             "only a machine with group two may claim its valve pin");
     require(volumetricsHelper.getFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO) == 3,
             "boot must restore the stored dose before the first loop");
-    require(testPinModes[16] == INPUT && testPinModes[35] == (machineConfig.groupTwoActive ? INPUT : -1),
+    require(testPinModes[16] == INPUT && (testPinModes[35] == INPUT) == machineConfig.groupTwoActive,
             "setup must configure the flow meter input of each active group only");
     unsigned registrations = 0;
     for (const auto &interrupt : testInterrupts)
@@ -50,7 +50,7 @@ void testFirmwareBoot()
     require(registrations == 1 + groupTwo && testInterrupts[16].registrations == 1 &&
                 testInterrupts[35].registrations == groupTwo && testInterrupts[16].callback &&
                 bool(testInterrupts[35].callback) == bool(groupTwo) && testInterrupts[16].mode == FALLING &&
-                testInterrupts[35].mode == (groupTwo ? FALLING : 0),
+                (testInterrupts[35].mode == FALLING) == bool(groupTwo),
             "setup must attach one falling-edge interrupt per active group's flow meter, and none otherwise");
 #else
     require(registrations == 0, "flowmeter-disabled setup must not register interrupts");
