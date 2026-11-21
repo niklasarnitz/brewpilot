@@ -33,11 +33,8 @@ void testFirmwareBoot()
     testStorage["FM_P_L_S"] = 3;
     setup();
     for (int pin : {2, 4, 5, 15, 18})
-        if (pin != pins::RELAY_GROUP_TWO || machineConfig.groupTwoActive)
-            require(testPinModes[pin] == OUTPUT && testPins[pin] == outputOff,
-                    "all valves and the pump must be inactive on boot");
-    require(testPinIsGpio[pins::RELAY_GROUP_TWO] == machineConfig.groupTwoActive,
-            "only a machine with group two may claim its valve pin");
+        require(testPinModes[pin] == OUTPUT && testPins[pin] == outputOff,
+                "all valves and the pump must be inactive on boot, including an absent group's");
     require(volumetricsHelper.getFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO) == 3,
             "boot must restore the stored dose before the first loop");
     require(testPinModes[16] == INPUT && (testPinModes[35] == INPUT) == machineConfig.groupTwoActive,

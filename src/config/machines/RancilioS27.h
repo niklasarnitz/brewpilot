@@ -6,10 +6,6 @@
 #error "This machine config belongs to another build; include config/SelectedMachine.h"
 #endif
 
-// The same group values as below, for #if around code for absent groups.
-#define BREWPILOT_GROUP_ONE_ACTIVE 1
-#define BREWPILOT_GROUP_TWO_ACTIVE 0
-
 #include <stdint.h>
 
 #include "config/BoardPins.h"
@@ -25,8 +21,8 @@ constexpr MachineConfig config = {
         .boilerFillInverted = false,
         .teaInverted = false,
     },
-    .groupOneActive = BREWPILOT_GROUP_ONE_ACTIVE != 0,
-    .groupTwoActive = BREWPILOT_GROUP_TWO_ACTIVE != 0,
+    .groupOneActive = true,
+    .groupTwoActive = false,
     .hasFlowMeters = true,
 };
 

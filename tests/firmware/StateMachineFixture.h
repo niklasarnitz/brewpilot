@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <array>
 #include <iostream>
 #include <stdexcept>
 #include "config/BoardPins.h"
@@ -11,14 +12,15 @@
 using Event = GroupHeadButtonEvent;
 
 // Group numbers this machine has; whole-machine scenarios loop over these.
-inline constexpr int activeGroups[] = {
-#if BREWPILOT_GROUP_ONE_ACTIVE
-    1,
-#endif
-#if BREWPILOT_GROUP_TWO_ACTIVE
-    2,
-#endif
-};
+inline constexpr auto activeGroups = [] {
+    std::array<int, GROUP_ONE_ACTIVE + GROUP_TWO_ACTIVE> groups{};
+    size_t next = 0;
+    if constexpr (GROUP_ONE_ACTIVE)
+        groups[next++] = 1;
+    if constexpr (GROUP_TWO_ACTIVE)
+        groups[next++] = 2;
+    return groups;
+}();
 
 inline void require(bool condition, const char *message)
 {
@@ -57,20 +59,18 @@ struct StateMachineFixture
     {
         while (count--)
         {
-#if BREWPILOT_GROUP_ONE_ACTIVE
-            if (group == 1)
-            {
-                handler.groupOneFlowMeterPulseInterrupt();
-                continue;
-            }
-#endif
-#if BREWPILOT_GROUP_TWO_ACTIVE
-            if (group == 2)
-            {
-                handler.groupTwoFlowMeterPulseInterrupt();
-                continue;
-            }
-#endif
+            if constexpr (GROUP_ONE_ACTIVE)
+                if (group == 1)
+                {
+                    handler.groupOneFlowMeterPulseInterrupt();
+                    continue;
+                }
+            if constexpr (GROUP_TWO_ACTIVE)
+                if (group == 2)
+                {
+                    handler.groupTwoFlowMeterPulseInterrupt();
+                    continue;
+                }
             throw std::logic_error("this machine has no flow meter for that group");
         }
     }

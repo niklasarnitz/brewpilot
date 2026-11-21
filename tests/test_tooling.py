@@ -99,7 +99,7 @@ class ConfigurationTests(unittest.TestCase):
                 self.assertIn("Select exactly one BrewPilot machine", result.stderr)
 
     def test_machine_settings_come_only_from_the_machine_config(self):
-        for setting in ("BREWPILOT_GROUP_ONE_ACTIVE=1", "BREWPILOT_GROUP_TWO_ACTIVE=1"):
+        for setting in ("GROUP_ONE_ACTIVE=1", "GROUP_TWO_ACTIVE=1", "FLOWMETERS_ACTIVE=0"):
             with self.subTest(setting=setting):
                 result = self.compile_config('#include "config/SelectedMachine.h"\n',
                                              "BREWPILOT_MACHINE_RANCILIO_S27", setting)

@@ -12,12 +12,8 @@ class StateHandler
 {
 private:
     BoilerStateHandler boilerStateHandler;
-#if BREWPILOT_GROUP_ONE_ACTIVE
     GroupHeadStateHandler groupOneStateHandler;
-#endif
-#if BREWPILOT_GROUP_TWO_ACTIVE
     GroupHeadStateHandler groupTwoStateHandler;
-#endif
     TeaStateHandler teaStateHandler;
 
 public:
@@ -26,10 +22,6 @@ public:
     void handleState();
 
     // Run in interrupt context and are placed in IRAM.
-#if BREWPILOT_GROUP_ONE_ACTIVE
     void groupOneFlowMeterPulseInterrupt();
-#endif
-#if BREWPILOT_GROUP_TWO_ACTIVE
     void groupTwoFlowMeterPulseInterrupt();
-#endif
 };

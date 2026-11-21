@@ -39,11 +39,23 @@ for path in sorted(sources & files.keys()):
     for fn in data['functions']:
         if Path(fn['filenames'][0]) != src / path:
             continue
+        # Absent groups' interrupt handlers are compiled but never attached.
+        absent = (args.machine == models[0] and (path, fn['name']) in {
+            (Path('main.cpp'), '_Z24groupTwoFlowMeterHandlerv'),
+            (Path('state/StateHandler.cpp'), '_ZN12StateHandler31groupTwoFlowMeterPulseInterruptEv'),
+        })
+        if absent and not fn['count']:
+            allowed['functions'] += 1
         for start, _, end, _, count, _, _, kind in fn['regions']:
             if kind != 0 or count:
                 continue
             line = source[start - 1].strip()
-            failures.append(f'{path}:{start}-{end}: uncovered region: {line}')
+            if absent:
+                allowed['regions'] += 1
+                allowed['lines'] += end - start + 1
+                print(f'UNREACHABLE (not covered): {path}:{start}-{end} {line}')
+            else:
+                failures.append(f'{path}:{start}-{end}: uncovered region: {line}')
     for start, _, _, _, yes, no, *_ in file['branches']:
         if yes and no:
             continue

@@ -17,11 +17,11 @@ void outputStateMatrix()
                 "boiler valve must follow only boiler fill state");
         require(testPins[pins::RELAY_GROUP_ONE] == ((bool(mask & 2) != machineConfig.relayConfig.groupOneInverted) ? HIGH : LOW),
                 "group one valve must follow only group one state");
-        if (machineConfig.groupTwoActive)
-            require(testPins[pins::RELAY_GROUP_TWO] == ((bool(mask & 4) != machineConfig.relayConfig.groupTwoInverted) ? HIGH : LOW),
-                    "group two valve must follow only group two state");
-        else
-            require(!testPinIsGpio[pins::RELAY_GROUP_TWO], "a machine without group two must never claim its valve pin");
+        // An absent group's valve stays closed whatever its state says.
+        constexpr unsigned groupTwoMask = 4u * GROUP_TWO_ACTIVE;
+        require(testPins[pins::RELAY_GROUP_TWO] ==
+                    (bool(mask & groupTwoMask) != machineConfig.relayConfig.groupTwoInverted ? HIGH : LOW),
+                "group two valve must follow only group two state");
         require(testPins[pins::RELAY_TEA] == ((bool(mask & 8) != machineConfig.relayConfig.teaInverted) ? HIGH : LOW),
                 "tea valve must follow only tea state");
         // An absent group's state never runs the pump.
@@ -215,18 +215,15 @@ int main()
     SCENARIO(settingsKeyMapping);
     SCENARIO(settingsInvalidAndLoadFailure);
     SCENARIO(standaloneDeviceDrivers);
-#if BREWPILOT_GROUP_TWO_ACTIVE // Interaction between two groups.
-    SCENARIO(programmingIsGroupScoped);
-#endif
+    if constexpr (GROUP_TWO_ACTIVE) // Interaction between two groups.
+        SCENARIO(programmingIsGroupScoped);
     SCENARIO(failedStoragePreservesSettings);
-#if BREWPILOT_GROUP_TWO_ACTIVE // Interaction between two groups.
-    SCENARIO(programmingDoesNotCaptureOtherDrinks);
-#endif
+    if constexpr (GROUP_TWO_ACTIVE) // Interaction between two groups.
+        SCENARIO(programmingDoesNotCaptureOtherDrinks);
     SCENARIO(programmingCancelPreservesLastDose);
     SCENARIO(stopWinsOverBackflush);
-#if BREWPILOT_GROUP_TWO_ACTIVE // Interaction between two groups.
-    SCENARIO(normalDosesAndBoilerStillStop);
-#endif
+    if constexpr (GROUP_TWO_ACTIVE) // Interaction between two groups.
+        SCENARIO(normalDosesAndBoilerStillStop);
     SCENARIO(extractionHasNoDeadline);
     SCENARIO(backflushRemainsBoundedWithoutFlow);
     SCENARIO(doseContracts);
@@ -246,9 +243,8 @@ int main()
     SCENARIO(runButtonEventTests);
     SCENARIO(runInputOutputTests);
     SCENARIO(outputStateMatrix);
-#if BREWPILOT_GROUP_TWO_ACTIVE // Interaction between two groups.
-    SCENARIO(simultaneousProgrammingHasOneOwner);
-#endif
+    if constexpr (GROUP_TWO_ACTIVE) // Interaction between two groups.
+        SCENARIO(simultaneousProgrammingHasOneOwner);
     SCENARIO(teaAndGroupProgrammingAreExclusive);
     return UNITY_END();
 }
