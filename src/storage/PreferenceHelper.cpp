@@ -22,7 +22,7 @@ const char *PreferenceHelper::toString(PreferenceKey key) const
     return "INVALID";
 }
 
-bool PreferenceHelper::setULong(PreferenceKey key, unsigned long value)
+bool PreferenceHelper::setULong(PreferenceKey key, uint32_t value)
 {
     if (key == PreferenceKey::INVALID)
     {
@@ -39,7 +39,7 @@ bool PreferenceHelper::setULong(PreferenceKey key, unsigned long value)
     return saved;
 }
 
-unsigned long PreferenceHelper::getULong(PreferenceKey key, unsigned long defaultValue)
+uint32_t PreferenceHelper::getULong(PreferenceKey key, uint32_t defaultValue)
 {
     if (key == PreferenceKey::INVALID)
     {
@@ -47,7 +47,7 @@ unsigned long PreferenceHelper::getULong(PreferenceKey key, unsigned long defaul
         return defaultValue;
     }
 
-    unsigned long returnValue = preferences.getULong(toString(key), defaultValue);
+    uint32_t returnValue = preferences.getULong(toString(key), defaultValue);
 
     return returnValue;
 }

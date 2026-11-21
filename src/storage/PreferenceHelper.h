@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+
 #include <Preferences.h>
 
 enum class PreferenceKey
@@ -20,9 +22,9 @@ private:
     const char *toString(PreferenceKey key) const;
 
 public:
-    bool setULong(PreferenceKey key, unsigned long value);
+    bool setULong(PreferenceKey key, uint32_t value);
 
-    unsigned long getULong(PreferenceKey key, unsigned long defaultValue = 0);
+    uint32_t getULong(PreferenceKey key, uint32_t defaultValue = 0);
 
     bool open();
 

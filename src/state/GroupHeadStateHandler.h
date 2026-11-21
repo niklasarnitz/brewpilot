@@ -18,7 +18,9 @@ class GroupHeadStateHandler
 
     GroupHeadButtonEvent buttonToBeProgrammed = GroupHeadButtonEvent::NONE;
 
-    unsigned long targetPulses = 0;
+    uint32_t targetPulses = 0;
+    // Set by every extraction start: continuous runs have no pulse target.
+    bool isContinuous = false;
     // Only the ISR increments this monotonic counter; the loop never resets it.
     std::atomic<uint32_t> pulseCounter{0};
     uint32_t pulsesAtStart = 0;
@@ -28,9 +30,9 @@ class GroupHeadStateHandler
     bool isAutoBackflushing = false;
     int autoBackflushCycle = 0;
     uint32_t autoBackflushStartTime = 0;
-    static const int EXTRACT_DURATION_MS = 10000; // 10 seconds
-    static const int PAUSE_DURATION_MS = 5000;    // 5 seconds
-    static const int TOTAL_CYCLES = 5;
+    static constexpr uint32_t EXTRACT_DURATION_MS = 10000;
+    static constexpr uint32_t PAUSE_DURATION_MS = 5000;
+    static constexpr int TOTAL_CYCLES = 5;
 
 public:
     GroupHeadStateHandler(bool *isExtracting, GroupHeadButtonEvent *event, VolumetricsHelper *volumetricsHelper, ProgrammingTarget *programmingTarget, int groupNumber);

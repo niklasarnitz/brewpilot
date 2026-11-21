@@ -1,11 +1,13 @@
 #pragma once
 
+#include <stdint.h>
+
 struct VolumetricSettings
 {
-    unsigned long leftSingleEspressoPulses = 0;
-    unsigned long leftDoubleEspressoPulses = 0;
-    unsigned long rightSingleEspressoPulses = 0;
-    unsigned long rightDoubleEspressoPulses = 0;
+    uint32_t leftSingleEspressoPulses = 0;
+    uint32_t leftDoubleEspressoPulses = 0;
+    uint32_t rightSingleEspressoPulses = 0;
+    uint32_t rightDoubleEspressoPulses = 0;
 
-    unsigned long teaWaterMilliseconds = 0;
+    uint32_t teaWaterMilliseconds = 0;
 };

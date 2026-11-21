@@ -1,15 +1,16 @@
 #include "storage/VolumetricsHelper.h"
 
 #include <Arduino.h>
+#include <inttypes.h>
 
 void VolumetricsHelper::logVolumetricSettings(const VolumetricSettings *volumetricSettings) const
 {
     Serial.println("Volumetric Settings:");
-    Serial.printf("Left Single Espresso: %ld pulses\n", volumetricSettings->leftSingleEspressoPulses);
-    Serial.printf("Left Double Espresso: %ld pulses\n", volumetricSettings->leftDoubleEspressoPulses);
-    Serial.printf("Right Single Espresso: %ld pulses\n", volumetricSettings->rightSingleEspressoPulses);
-    Serial.printf("Right Double Espresso: %ld pulses\n", volumetricSettings->rightDoubleEspressoPulses);
-    Serial.printf("Tea Water: %ld ms\n", volumetricSettings->teaWaterMilliseconds);
+    Serial.printf("Left Single Espresso: %" PRIu32 " pulses\n", volumetricSettings->leftSingleEspressoPulses);
+    Serial.printf("Left Double Espresso: %" PRIu32 " pulses\n", volumetricSettings->leftDoubleEspressoPulses);
+    Serial.printf("Right Single Espresso: %" PRIu32 " pulses\n", volumetricSettings->rightSingleEspressoPulses);
+    Serial.printf("Right Double Espresso: %" PRIu32 " pulses\n", volumetricSettings->rightDoubleEspressoPulses);
+    Serial.printf("Tea Water: %" PRIu32 " ms\n", volumetricSettings->teaWaterMilliseconds);
 }
 
 PreferenceKey VolumetricsHelper::convertButtonEventToPreferenceKey(GroupHeadButtonEvent event) const
@@ -48,7 +49,7 @@ void VolumetricsHelper::setup()
     logVolumetricSettings(&volumetricSettings);
 }
 
-bool VolumetricsHelper::writeFlowMeterSetting(GroupHeadButtonEvent event, unsigned long value)
+bool VolumetricsHelper::writeFlowMeterSetting(GroupHeadButtonEvent event, uint32_t value)
 {
     if (value == 0 || !preferenceHelper->setULong(convertButtonEventToPreferenceKey(event), value))
         return false;
@@ -73,7 +74,7 @@ bool VolumetricsHelper::writeFlowMeterSetting(GroupHeadButtonEvent event, unsign
     return true;
 }
 
-bool VolumetricsHelper::writeTeaWaterSetting(unsigned long value)
+bool VolumetricsHelper::writeTeaWaterSetting(uint32_t value)
 {
     if (value == 0 || !preferenceHelper->setULong(PreferenceKey::TeaWaterMilliseconds, value))
         return false;
@@ -84,7 +85,7 @@ bool VolumetricsHelper::writeTeaWaterSetting(unsigned long value)
     return true;
 }
 
-unsigned long VolumetricsHelper::getFlowMeterSetting(GroupHeadButtonEvent key) const
+uint32_t VolumetricsHelper::getFlowMeterSetting(GroupHeadButtonEvent key) const
 {
     switch (key)
     {
@@ -102,7 +103,7 @@ unsigned long VolumetricsHelper::getFlowMeterSetting(GroupHeadButtonEvent key) c
     return 0;
 }
 
-unsigned long VolumetricsHelper::getTeaWaterSetting() const
+uint32_t VolumetricsHelper::getTeaWaterSetting() const
 {
     return volumetricSettings.teaWaterMilliseconds;
 }

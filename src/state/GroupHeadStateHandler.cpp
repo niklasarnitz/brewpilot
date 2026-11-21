@@ -1,7 +1,7 @@
 #include "state/GroupHeadStateHandler.h"
 
 #include <Arduino.h>
-#include <climits>
+#include <inttypes.h>
 
 GroupHeadStateHandler::GroupHeadStateHandler(bool *isExtracting, GroupHeadButtonEvent *event, VolumetricsHelper *volumetricsHelper, ProgrammingTarget *programmingTarget, int groupNumber)
     : volumetricsHelper(volumetricsHelper), event(event), isExtracting(isExtracting), programmingTarget(programmingTarget),
@@ -25,7 +25,7 @@ void GroupHeadStateHandler::handleState()
     }
 
     const uint32_t totalPulses = pulseCounter.load(std::memory_order_relaxed);
-    const unsigned long currentPulses = uint32_t(totalPulses - pulsesAtStart);
+    const uint32_t currentPulses = totalPulses - pulsesAtStart;
 
     // Check for auto backflush activation
     if (*event == GroupHeadButtonEvent::AUTO_BACKFLUSH && *programmingTarget == ProgrammingTarget::NONE)
@@ -37,7 +37,7 @@ void GroupHeadStateHandler::handleState()
     // Normal extraction handling
     if (*isExtracting)
     {
-        if (*event == GroupHeadButtonEvent::CONTINUOUS_HELD && targetPulses == LONG_MAX && *programmingTarget == ProgrammingTarget::NONE)
+        if (*event == GroupHeadButtonEvent::CONTINUOUS_HELD && isContinuous && *programmingTarget == ProgrammingTarget::NONE)
         {
             Serial.printf("GroupHeadStateHandler %d: Entered Programming Mode\n", groupNumber);
             stop();
@@ -55,16 +55,19 @@ void GroupHeadStateHandler::handleState()
             }
             else
             {
-                Serial.printf("GroupHeadStateHandler %d: Cancelled Extraction at %ld of %ld pulses\n", groupNumber, currentPulses, targetPulses);
+                if (isContinuous)
+                    Serial.printf("GroupHeadStateHandler %d: Stopped continuous extraction at %" PRIu32 " pulses\n", groupNumber, currentPulses);
+                else
+                    Serial.printf("GroupHeadStateHandler %d: Cancelled Extraction at %" PRIu32 " of %" PRIu32 " pulses\n", groupNumber, currentPulses, targetPulses);
             }
 
             stop();
         }
-        else if (*programmingTarget != ownTarget && currentPulses >= targetPulses)
+        else if (*programmingTarget != ownTarget && !isContinuous && currentPulses >= targetPulses)
         {
             *isExtracting = false;
 
-            Serial.printf("GroupHeadStateHandler %d: Finished Extraction - Current: %ld pulses; Target: %ld pulses; Difference: %ld pulses\n", groupNumber, currentPulses, targetPulses, currentPulses - targetPulses);
+            Serial.printf("GroupHeadStateHandler %d: Finished Extraction - Current: %" PRIu32 " pulses; Target: %" PRIu32 " pulses; Difference: %" PRIu32 " pulses\n", groupNumber, currentPulses, targetPulses, currentPulses - targetPulses);
 
             stop();
         }
@@ -91,12 +94,9 @@ void GroupHeadStateHandler::stop()
 void GroupHeadStateHandler::startExtraction(uint32_t totalPulses)
 {
     targetPulses = 0;
+    isContinuous = *event == GroupHeadButtonEvent::CONTINUOUS;
 
-    if (*event == GroupHeadButtonEvent::CONTINUOUS)
-    {
-        targetPulses = LONG_MAX;
-    }
-    else
+    if (!isContinuous)
     {
         targetPulses = volumetricsHelper->getFlowMeterSetting(*event);
 
@@ -106,12 +106,15 @@ void GroupHeadStateHandler::startExtraction(uint32_t totalPulses)
         }
     }
 
-    if (targetPulses != 0 || *programmingTarget == ownTarget)
+    if (isContinuous || targetPulses != 0 || *programmingTarget == ownTarget)
     {
         pulsesAtStart = totalPulses;
 
         *isExtracting = true;
-        Serial.printf("GroupHeadStateHandler %d: Start extracting targeting %ld pulses\n", groupNumber, targetPulses);
+        if (isContinuous)
+            Serial.printf("GroupHeadStateHandler %d: Start continuous extraction\n", groupNumber);
+        else
+            Serial.printf("GroupHeadStateHandler %d: Start extracting targeting %" PRIu32 " pulses\n", groupNumber, targetPulses);
     }
 }
 

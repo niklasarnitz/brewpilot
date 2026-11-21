@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+
 #include "input/ButtonEvents.h"
 #include "storage/PreferenceHelper.h"
 #include "storage/VolumetricSettings.h"
@@ -20,11 +22,11 @@ public:
 
     void setup();
 
-    bool writeFlowMeterSetting(GroupHeadButtonEvent event, unsigned long value);
+    bool writeFlowMeterSetting(GroupHeadButtonEvent event, uint32_t value);
 
-    bool writeTeaWaterSetting(unsigned long value);
+    bool writeTeaWaterSetting(uint32_t value);
 
-    unsigned long getFlowMeterSetting(GroupHeadButtonEvent key) const;
+    uint32_t getFlowMeterSetting(GroupHeadButtonEvent key) const;
 
-    unsigned long getTeaWaterSetting() const;
+    uint32_t getTeaWaterSetting() const;
 };
