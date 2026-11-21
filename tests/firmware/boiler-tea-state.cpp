@@ -1,21 +1,22 @@
 #include "StateMachineFixture.h"
+#include "Scenarios.h"
 
 namespace
 {
 struct BoilerTest : StateMachineFixture
 {
-    BoilerStateHandler boiler{&state.isFillingBoiler};
+    BoilerStateHandler boiler{state.isFillingBoiler};
 
     void step(uint32_t elapsed = 0)
     {
         testMillis += elapsed;
         boiler.handleState();
         actor.loop();
-        require(testPins[RELAY_BOILER_FILL] ==
-                    ((state.isFillingBoiler != config.relayConfig.boilerFillInverted) ? HIGH : LOW),
+        require(testPins[pins::RELAY_BOILER_FILL] ==
+                    ((state.isFillingBoiler != machineConfig.relayConfig.boilerFillInverted) ? HIGH : LOW),
                 "fill valve must reflect filling state with configured polarity");
-        require(testPins[RELAY_PUMP] ==
-                    ((state.isFillingBoiler != config.relayConfig.pumpInverted) ? HIGH : LOW),
+        require(testPins[pins::RELAY_PUMP] ==
+                    ((state.isFillingBoiler != machineConfig.relayConfig.pumpInverted) ? HIGH : LOW),
                 "pump must reflect filling state with configured polarity");
     }
 
@@ -23,31 +24,32 @@ struct BoilerTest : StateMachineFixture
     {
         testProbe = probe;
         step(elapsed);
-        require(testPins[OUT_BOILER_VOLTAGE] == HIGH,
+        require(testPins[pins::OUT_BOILER_VOLTAGE] == HIGH,
                 "probe voltage must be enabled before sampling");
         step();
-        require(testPins[OUT_BOILER_VOLTAGE] == LOW,
+        require(testPins[pins::OUT_BOILER_VOLTAGE] == LOW,
                 "probe voltage must be disabled after sampling");
     }
 };
+} // namespace
 
 void boilerSamplingAndOverfill()
 {
     BoilerTest machine;
-    require(testPins[OUT_BOILER_VOLTAGE] == LOW, "constructor must disable probe voltage");
+    require(testPins[pins::OUT_BOILER_VOLTAGE] == LOW, "constructor must disable probe voltage");
     testProbe = 1001;
     machine.step();
-    require(testPins[OUT_BOILER_VOLTAGE] == HIGH && !machine.state.isFillingBoiler,
+    require(testPins[pins::OUT_BOILER_VOLTAGE] == HIGH && !machine.state.isFillingBoiler,
             "initial dry probe must settle without starting filling");
     testProbe = 1000;
     machine.step();
     require(!machine.state.isFillingBoiler, "1000 is full; sample must use settled reading");
     testProbe = 1001;
     machine.step(2000);
-    require(testPins[OUT_BOILER_VOLTAGE] == LOW && !machine.state.isFillingBoiler,
+    require(testPins[pins::OUT_BOILER_VOLTAGE] == LOW && !machine.state.isFillingBoiler,
             "exactly 2000ms must not prepare a new sample");
     machine.step(1);
-    require(testPins[OUT_BOILER_VOLTAGE] == HIGH && !machine.state.isFillingBoiler,
+    require(testPins[pins::OUT_BOILER_VOLTAGE] == HIGH && !machine.state.isFillingBoiler,
             "2001ms must prepare but not sample the dry probe");
     machine.step();
     require(machine.state.isFillingBoiler, "1001 is dry and must start filling");
@@ -56,7 +58,7 @@ void boilerSamplingAndOverfill()
     machine.sample(1000);
     require(machine.state.isFillingBoiler, "first full sample must enter intentional overfill");
     machine.step(2000);
-    require(machine.state.isFillingBoiler && testPins[OUT_BOILER_VOLTAGE] == LOW,
+    require(machine.state.isFillingBoiler && testPins[pins::OUT_BOILER_VOLTAGE] == LOW,
             "overfill must still run at exactly 2000ms");
     machine.sample(1001, 1);
     require(!machine.state.isFillingBoiler,
@@ -90,10 +92,12 @@ void boilerFillingHasNoDeadline()
     }
 }
 
+namespace
+{
 struct TeaTest : StateMachineFixture
 {
-    TeaStateHandler tea{&events.tea, &state.isExtractingTeaWater,
-                        &volumes, &state.programmingTarget};
+    TeaStateHandler tea{events.tea, state.isExtractingTeaWater,
+                        volumes, state.programmingTarget};
 
     void step(bool pressed = false, uint32_t elapsed = 0, bool held = false)
     {
@@ -102,11 +106,12 @@ struct TeaTest : StateMachineFixture
                            (pressed ? ButtonEventType::BUTTON_PRESSED : ButtonEventType::BUTTON_NONE);
         tea.handleState();
         actor.loop();
-        require(testPins[RELAY_TEA] ==
-                    ((state.isExtractingTeaWater != config.relayConfig.teaInverted) ? HIGH : LOW),
+        require(testPins[pins::RELAY_TEA] ==
+                    ((state.isExtractingTeaWater != machineConfig.relayConfig.teaInverted) ? HIGH : LOW),
                 "tea valve must reflect extraction state with configured polarity");
     }
 };
+} // namespace
 
 void teaNormalOperation()
 {
@@ -177,7 +182,7 @@ void teaLearningRollover()
                     machine.state.programmingTarget == ProgrammingTarget::NONE,
                 "rollover learning save stops water and releases ownership");
         PreferenceHelper rebootPreferences;
-        VolumetricsHelper rebootVolumes{&rebootPreferences};
+        VolumetricsHelper rebootVolumes{rebootPreferences};
         rebootVolumes.setup();
         // Independent duration, not subtraction using the firmware's host-width type.
         const auto actual = machine.volumes.getTeaWaterSetting();
@@ -219,10 +224,9 @@ void teaProgramming()
                 "successful learning must save elapsed time; failures must preserve old duration");
         testFailOpen = testFailWrite = false;
         PreferenceHelper rebootPreferences;
-        VolumetricsHelper rebootVolumes{&rebootPreferences};
+        VolumetricsHelper rebootVolumes{rebootPreferences};
         rebootVolumes.setup();
         require(rebootVolumes.getTeaWaterSetting() == expected,
                 "persisted duration must match independent expected value after reboot");
     }
 }
-} // namespace

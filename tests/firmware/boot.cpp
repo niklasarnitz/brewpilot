@@ -1,11 +1,21 @@
+#include "PanelModel.h"
+#include "Scenarios.h"
 #include "StateMachineFixture.h"
-#include "../../src/main.cpp"
 
+// Firmware entry points and globals from src/main.cpp.
+extern State state;
+extern VolumetricsHelper volumetricsHelper;
+void setup();
+void loop();
+
+namespace
+{
 struct RestoreReadHook
 {
     int (*previous)(int) = testDigitalReadHook;
     ~RestoreReadHook() { releasePanel(); testDigitalReadHook = previous; }
 };
+} // namespace
 
 void testFirmwareBoot()
 {

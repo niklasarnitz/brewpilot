@@ -1,6 +1,9 @@
 #include "StateMachineFixture.h"
-#include "hardware/handlers/GroupHeadButtonHandler.h"
+#include "Scenarios.h"
+#include "input/GroupHeadButtonHandler.h"
 
+namespace
+{
 struct Machine : StateMachineFixture
 {
     Machine()
@@ -9,8 +12,8 @@ struct Machine : StateMachineFixture
         volumes.writeFlowMeterSetting(Event::RIGHT_DOUBLE_ESPRESSO, 13);
         volumes.writeTeaWaterSetting(3000);
     }
-
 };
+} // namespace
 
 void failedStoragePreservesSettings()
 {
@@ -33,7 +36,7 @@ void failedStoragePreservesSettings()
     require(machine.volumes.writeFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO, 19), "valid dose must save");
     require(machine.volumes.writeTeaWaterSetting(7000), "valid tea duration must save");
     PreferenceHelper rebootPreferences;
-    VolumetricsHelper rebootVolumes{&rebootPreferences};
+    VolumetricsHelper rebootVolumes{rebootPreferences};
     rebootVolumes.setup();
     require(rebootVolumes.getFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO) == 19,
             "successful dose must survive reboot");
@@ -118,7 +121,7 @@ void stopWinsOverBackflush()
     Machine machine;
     GroupButtonMatrixState keys{};
     Event event = Event::NONE;
-    GroupHeadButtonHandler buttons(&keys, &event, 1);
+    GroupHeadButtonHandler buttons(keys, event, 1);
     machine.tick(Event::AUTO_BACKFLUSH);
     keys.leftSingleDose = keys.rightDoubleDose = keys.continuous = true;
     buttons.handle();
@@ -149,7 +152,7 @@ void normalDosesAndBoilerStillStop()
     machine.tick();
     require(!machine.state.groupOneIsExtracting && machine.state.groupTwoIsExtracting,
             "groups must stop independently at their exact pulse targets");
-    require(testPins[RELAY_PUMP] == (config.relayConfig.pumpInverted ? LOW : HIGH),
+    require((testPins[pins::RELAY_PUMP] == HIGH) != machineConfig.relayConfig.pumpInverted,
             "one finished group must not stop the other group's pump");
     machine.pulses(2, 1);
     machine.tick(Event::NONE, Event::NONE, false, 2899);
@@ -185,8 +188,8 @@ void extractionHasNoDeadline()
                 testMillis = uint32_t(began + elapsed);
                 machine.tick(Event::NONE, Event::NONE, false, 0);
                 require(machine.state.groupOneIsExtracting, "dose, continuous and learning have no elapsed-time cutoff");
-                require(testPins[RELAY_GROUP_ONE] == (config.relayConfig.groupOneInverted ? LOW : HIGH) &&
-                            testPins[RELAY_PUMP] == (config.relayConfig.pumpInverted ? LOW : HIGH),
+                require((testPins[pins::RELAY_GROUP_ONE] == HIGH) != machineConfig.relayConfig.groupOneInverted &&
+                            (testPins[pins::RELAY_PUMP] == HIGH) != machineConfig.relayConfig.pumpInverted,
                         "prolonged extraction keeps the group valve and pump active");
             }
             machine.pulses(1, 3);

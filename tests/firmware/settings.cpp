@@ -1,7 +1,8 @@
 #include "StateMachineFixture.h"
+#include "Scenarios.h"
+#include "drivers/Relay.h"
+#include "drivers/Solenoid.h"
 
-namespace
-{
 void settingsKeyMapping()
 {
     testStorage.clear();
@@ -15,7 +16,7 @@ void settingsKeyMapping()
     testStorage["T_M"] = 5050;
 
     PreferenceHelper preferences;
-    VolumetricsHelper volumes{&preferences};
+    VolumetricsHelper volumes{preferences};
     volumes.setup();
     for (unsigned i = 0; i < 4; ++i)
         require(volumes.getFlowMeterSetting(doses[i]) == values[i], "each stored dose key must load independently");
@@ -41,7 +42,7 @@ void settingsInvalidAndLoadFailure()
     testStorage.clear();
     testFailOpen = testFailWrite = false;
     PreferenceHelper preferences;
-    VolumetricsHelper volumes{&preferences};
+    VolumetricsHelper volumes{preferences};
     volumes.setup();
     require(volumes.getFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO) == 0 &&
                 volumes.getTeaWaterSetting() == 0, "missing keys must load default zero values");
@@ -63,7 +64,7 @@ void settingsInvalidAndLoadFailure()
     require(volumes.getFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO) == 71 &&
                 volumes.getTeaWaterSetting() == 8000, "failed NVS load must preserve active settings");
     PreferenceHelper freshPreferences;
-    VolumetricsHelper fresh{&freshPreferences};
+    VolumetricsHelper fresh{freshPreferences};
     fresh.setup();
     require(fresh.getFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO) == 0 &&
                 fresh.getTeaWaterSetting() == 0, "failed initial load must leave default settings");
@@ -81,8 +82,29 @@ void standaloneDeviceDrivers()
         const int solenoidPin = 52 + inverted;
         const int on = inverted ? LOW : HIGH;
         const int off = inverted ? HIGH : LOW;
+        // Fresh pins after reset: unclaimed, output latch LOW. Inverted loads
+        // are active LOW, so enabling the output before latching HIGH glitches.
+        static int watchedPins[2];
+        static int activeLevel;
+        static bool glitched;
+        watchedPins[0] = relayPin;
+        watchedPins[1] = solenoidPin;
+        activeLevel = on;
+        glitched = false;
+        for (int pin : watchedPins)
+        {
+            testPinIsGpio[pin] = false;
+            testPinModes[pin] = INPUT;
+            testPins[pin] = LOW;
+        }
+        testGpioChangeHook = [] {
+            for (int pin : watchedPins)
+                glitched |= testPinModes[pin] == OUTPUT && testPins[pin] == activeLevel;
+        };
         Relay relay(relayPin, "test relay", inverted);
         Solenoid solenoid(solenoidPin, "test solenoid", inverted);
+        testGpioChangeHook = nullptr;
+        require(!glitched, "drivers must never drive their active level while starting up");
         require(testPinModes[relayPin] == OUTPUT && testPinModes[solenoidPin] == OUTPUT &&
                     !relay.isEnabled() && !solenoid.isOpen() &&
                     testPins[relayPin] == off && testPins[solenoidPin] == off,
@@ -105,4 +127,3 @@ void standaloneDeviceDrivers()
         }
     }
 }
-} // namespace

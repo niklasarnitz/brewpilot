@@ -1,9 +1,12 @@
 #pragma once
 
+#include <Arduino.h>
 #include <iostream>
 #include <stdexcept>
-#include "hardware/state-handlers/StateHandler.h"
-#include "hardware/actors/StateActor.h"
+#include "config/BoardPins.h"
+#include "config/SelectedMachine.h"
+#include "output/StateActor.h"
+#include "state/StateHandler.h"
 
 using Event = GroupHeadButtonEvent;
 
@@ -17,11 +20,11 @@ inline void require(bool condition, const char *message)
 struct StateMachineFixture
 {
     PreferenceHelper preferences;
-    VolumetricsHelper volumes{&preferences};
+    VolumetricsHelper volumes{preferences};
     State state{};
     ButtonEvent events{};
-    StateHandler handler{&state, &events, &volumes};
-    StateActor actor{&state};
+    StateHandler handler{state, events, volumes};
+    StateActor actor{state};
 
     StateMachineFixture()
     {

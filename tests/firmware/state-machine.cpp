@@ -1,15 +1,6 @@
+#include "Scenarios.h"
 #include "StateMachineFixture.h"
 #include <unity.h>
-
-// Firmware headers define non-inline functions (e.g. getMachineConfig), so
-// build the suites as one translation unit, just like the Arduino firmware.
-#include "main.cpp"
-#include "group-state.cpp"
-#include "boiler-tea-state.cpp"
-#include "button-events.cpp"
-#include "input-output.cpp"
-#include "settings.cpp"
-#include "boot.cpp"
 
 void outputStateMatrix()
 {
@@ -21,18 +12,18 @@ void outputStateMatrix()
         machine.state.groupTwoIsExtracting = mask & 4;
         machine.state.isExtractingTeaWater = mask & 8;
         machine.actor.loop();
-        require(testPins[RELAY_BOILER_FILL] == ((bool(mask & 1) != config.relayConfig.boilerFillInverted) ? HIGH : LOW),
+        require(testPins[pins::RELAY_BOILER_FILL] == ((bool(mask & 1) != machineConfig.relayConfig.boilerFillInverted) ? HIGH : LOW),
                 "boiler valve must follow only boiler fill state");
-        require(testPins[RELAY_GROUP_ONE] == ((bool(mask & 2) != config.relayConfig.groupOneInverted) ? HIGH : LOW),
+        require(testPins[pins::RELAY_GROUP_ONE] == ((bool(mask & 2) != machineConfig.relayConfig.groupOneInverted) ? HIGH : LOW),
                 "group one valve must follow only group one state");
-        require(testPins[RELAY_GROUP_TWO] == ((bool(mask & 4) != config.relayConfig.groupTwoInverted) ? HIGH : LOW),
+        require(testPins[pins::RELAY_GROUP_TWO] == ((bool(mask & 4) != machineConfig.relayConfig.groupTwoInverted) ? HIGH : LOW),
                 "group two valve must follow only group two state");
-        require(testPins[RELAY_TEA] == ((bool(mask & 8) != config.relayConfig.teaInverted) ? HIGH : LOW),
+        require(testPins[pins::RELAY_TEA] == ((bool(mask & 8) != machineConfig.relayConfig.teaInverted) ? HIGH : LOW),
                 "tea valve must follow only tea state");
-        require(testPins[RELAY_PUMP] == ((bool(mask & 7) != config.relayConfig.pumpInverted) ? HIGH : LOW),
+        require(testPins[pins::RELAY_PUMP] == ((bool(mask & 7) != machineConfig.relayConfig.pumpInverted) ? HIGH : LOW),
                 "pump must serve either group or boiler, but not tea alone");
         machine.actor.loop(); // Stable output must also remain correct without a transition.
-        require(testPins[RELAY_PUMP] == ((bool(mask & 7) != config.relayConfig.pumpInverted) ? HIGH : LOW),
+        require(testPins[pins::RELAY_PUMP] == ((bool(mask & 7) != machineConfig.relayConfig.pumpInverted) ? HIGH : LOW),
                 "repeated actor loop must preserve pump command");
     }
 }
