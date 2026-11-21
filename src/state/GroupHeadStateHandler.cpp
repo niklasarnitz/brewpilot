@@ -25,7 +25,7 @@ void GroupHeadStateHandler::handleState()
         return; // Auto backflush takes priority over normal operations
     }
 
-    const uint32_t totalPulses = pulseCounter.load(std::memory_order_relaxed);
+    const uint32_t totalPulses = pulseCounter.load();
     const uint32_t currentPulses = totalPulses - pulsesAtStart;
 
     // Check for auto backflush activation
@@ -81,7 +81,7 @@ void GroupHeadStateHandler::handleState()
 
 void IRAM_ATTR GroupHeadStateHandler::flowMeterPulseInterrupt()
 {
-    pulseCounter.fetch_add(1, std::memory_order_relaxed);
+    pulseCounter.fetch_add(1);
 }
 
 void GroupHeadStateHandler::stop()

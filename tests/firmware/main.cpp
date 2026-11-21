@@ -152,7 +152,7 @@ void normalDosesAndBoilerStillStop()
     machine.tick();
     require(!machine.state.groupOneIsExtracting && machine.state.groupTwoIsExtracting,
             "groups must stop independently at their exact pulse targets");
-    require(testPins[pins::RELAY_PUMP] == (machineConfig.relayConfig.pumpInverted ? LOW : HIGH),
+    require((testPins[pins::RELAY_PUMP] == HIGH) != machineConfig.relayConfig.pumpInverted,
             "one finished group must not stop the other group's pump");
     machine.pulses(2, 1);
     machine.tick(Event::NONE, Event::NONE, false, 2899);
@@ -188,8 +188,8 @@ void extractionHasNoDeadline()
                 testMillis = uint32_t(began + elapsed);
                 machine.tick(Event::NONE, Event::NONE, false, 0);
                 require(machine.state.groupOneIsExtracting, "dose, continuous and learning have no elapsed-time cutoff");
-                require(testPins[pins::RELAY_GROUP_ONE] == (machineConfig.relayConfig.groupOneInverted ? LOW : HIGH) &&
-                            testPins[pins::RELAY_PUMP] == (machineConfig.relayConfig.pumpInverted ? LOW : HIGH),
+                require((testPins[pins::RELAY_GROUP_ONE] == HIGH) != machineConfig.relayConfig.groupOneInverted &&
+                            (testPins[pins::RELAY_PUMP] == HIGH) != machineConfig.relayConfig.pumpInverted,
                         "prolonged extraction keeps the group valve and pump active");
             }
             machine.pulses(1, 3);
