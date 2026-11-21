@@ -1,0 +1,44 @@
+name: Firmware tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  state-machine:
+    name: State machine tests and coverage
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      CXX: clang++-18
+      LLVM_COV: llvm-cov-18
+      LLVM_PROFDATA: llvm-profdata-18
+      UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install test toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends clang-18 llvm-18 libclang-rt-18-dev python3
+
+      - name: Run tests with AddressSanitizer and UndefinedBehaviorSanitizer
+        run: ./tools/test-firmware.sh
+
+      - name: Check state machine coverage
+        env:
+          COVERAGE_DIR: ${{ runner.temp }}/state-coverage
+        run: ./tools/test-firmware.sh --coverage
+
+      - name: Upload coverage reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: state-machine-coverage
+          path: ${{ runner.temp }}/state-coverage
+          if-no-files-found: warn
