@@ -200,10 +200,13 @@ void stopPriority(int group)
 void runButtonEventTests()
 {
     buttonLifecycle();
+    // The button decoder is the same for every group; Stop is checked against
+    // the state machine, so only for groups this machine has.
     for (int group : {1, 2})
     {
         dosesAndPriorities(group);
         backflushCombinations(group);
-        stopPriority(group);
     }
+    for (int group : activeGroups)
+        stopPriority(group);
 }

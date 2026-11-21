@@ -10,6 +10,16 @@
 
 using Event = GroupHeadButtonEvent;
 
+// Group numbers this machine has; whole-machine scenarios loop over these.
+inline constexpr int activeGroups[] = {
+#if BREWPILOT_GROUP_ONE_ACTIVE
+    1,
+#endif
+#if BREWPILOT_GROUP_TWO_ACTIVE
+    2,
+#endif
+};
+
 inline void require(bool condition, const char *message)
 {
     if (!condition)
@@ -47,10 +57,21 @@ struct StateMachineFixture
     {
         while (count--)
         {
+#if BREWPILOT_GROUP_ONE_ACTIVE
             if (group == 1)
+            {
                 handler.groupOneFlowMeterPulseInterrupt();
-            else
+                continue;
+            }
+#endif
+#if BREWPILOT_GROUP_TWO_ACTIVE
+            if (group == 2)
+            {
                 handler.groupTwoFlowMeterPulseInterrupt();
+                continue;
+            }
+#endif
+            throw std::logic_error("this machine has no flow meter for that group");
         }
     }
 

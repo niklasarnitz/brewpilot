@@ -12,4 +12,9 @@ struct RelayConfig
 struct MachineConfig
 {
     RelayConfig relayConfig;
+
+    // Whether the machine has this group head. An inactive group's input,
+    // state handling, valve and flow meter are not compiled into the firmware.
+    bool groupOneActive;
+    bool groupTwoActive;
 };

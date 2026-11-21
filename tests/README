@@ -6,7 +6,9 @@ ThrowTheSwitch/Unity v2.6.1 (unmodified C sources and MIT license in vendor/unit
 it needs neither PlatformIO nor a network connection.
 
 The same regression suite runs for both machines, with flowmeters enabled and
-disabled. It exercises real button handlers, state handlers, persistence helpers
+disabled. The S27 has only group one: its build contains no group two input,
+state handler, valve or flow meter, and scenarios about two interacting groups
+run only on the M29. It exercises real button handlers, state handlers, persistence helpers
 and output actors. Only Arduino time/GPIO/Serial and the external Preferences
 API are replaced. The fake clock wraps at 32 bits like millis() on ESP32.
 
@@ -72,7 +74,7 @@ with python3 -m unittest discover -s tests.
 
 tools/check-firmware-coverage.py requires every executable source file in the
 selected build. It prints its exceptions instead of rewriting raw LLVM counts:
-- Only the selected panel driver runs. The S27 doesn't use the M29 settling loop.
+- Only the selected panel driver is compiled. The S27 doesn't use the M29 settling loop.
 - The machine is selected at compile time; an invalid selection fails
   compilation. Disabled flowmeters have no registered ISR.
 - The boiler state, preference key and dose slot switches handle every enum

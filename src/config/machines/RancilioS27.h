@@ -15,6 +15,8 @@ constexpr MachineConfig config = {
         .boilerFillInverted = false,
         .teaInverted = false,
     },
+    .groupOneActive = true,
+    .groupTwoActive = false,
 };
 
 // One group panel: a single scan line drives all dose buttons.

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "config/BuildConfig.h"
 #include "input/ButtonEvents.h"
 #include "input/ButtonHandler.h"
 #include "input/ButtonMatrixState.h"
@@ -13,8 +14,12 @@ private:
 
     ButtonMatrix buttonMatrix;
 
+#if BREWPILOT_GROUP_ONE_ACTIVE
     GroupHeadButtonHandler groupOneHandler;
+#endif
+#if BREWPILOT_GROUP_TWO_ACTIVE
     GroupHeadButtonHandler groupTwoHandler;
+#endif
 
     ButtonHandler teaButtonHandler;
 

@@ -15,6 +15,8 @@ constexpr MachineConfig config = {
         .boilerFillInverted = true,
         .teaInverted = true,
     },
+    .groupOneActive = true,
+    .groupTwoActive = true,
 };
 
 // Two group panels scanned row by row, plus the tea button.

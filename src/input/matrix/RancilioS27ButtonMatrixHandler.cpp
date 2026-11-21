@@ -1,3 +1,6 @@
+// Compiled only for the machine with this panel.
+#if defined(BREWPILOT_MACHINE_RANCILIO_S27)
+
 #include "input/matrix/RancilioS27ButtonMatrixHandler.h"
 
 #include <Arduino.h>
@@ -41,3 +44,5 @@ void RancilioS27ButtonMatrixHandler::handle()
 
     buttonMatrixState.tea = !digitalRead(IN_TEA_WATER);
 }
+
+#endif

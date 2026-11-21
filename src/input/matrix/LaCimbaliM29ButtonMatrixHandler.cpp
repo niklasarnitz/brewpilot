@@ -1,3 +1,6 @@
+// Compiled only for the machine with this panel.
+#if defined(BREWPILOT_MACHINE_LA_CIMBALI_M29_SELECT)
+
 #include "input/matrix/LaCimbaliM29ButtonMatrixHandler.h"
 
 #include <Arduino.h>
@@ -72,3 +75,5 @@ void LaCimbaliM29ButtonMatrixHandler::handle()
 
     pinMode(OUT_TEA_WATER, INPUT);
 }
+
+#endif
