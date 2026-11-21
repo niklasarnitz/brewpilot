@@ -33,11 +33,11 @@ void setup()
     Serial.begin(115200);
 
     // R9 / R8 provide external 10k pull-ups for the flow meters.
-    pinMode(GROUP_ONE_FLOW_METER_PIN, INPUT);
-    pinMode(GROUP_TWO_FLOW_METER_PIN, INPUT);
+    pinMode(pins::GROUP_ONE_FLOW_METER, INPUT);
+    pinMode(pins::GROUP_TWO_FLOW_METER, INPUT);
 #if BREWPILOT_HAS_FLOWMETERS
-    attachInterrupt(digitalPinToInterrupt(GROUP_ONE_FLOW_METER_PIN), groupOneFlowMeterHandler, FALLING);
-    attachInterrupt(digitalPinToInterrupt(GROUP_TWO_FLOW_METER_PIN), groupTwoFlowMeterHandler, FALLING);
+    attachInterrupt(digitalPinToInterrupt(pins::GROUP_ONE_FLOW_METER), groupOneFlowMeterHandler, FALLING);
+    attachInterrupt(digitalPinToInterrupt(pins::GROUP_TWO_FLOW_METER), groupTwoFlowMeterHandler, FALLING);
 #endif
 
     // Load Volumetric Settings

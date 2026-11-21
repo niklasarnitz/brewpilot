@@ -4,11 +4,11 @@
 #include "config/SelectedMachine.h"
 
 StateActor::StateActor(State *state)
-    : state(state), pumpRelay(RELAY_PUMP, "Pump", machineConfig.relayConfig.pumpInverted),
-      boilerFillSolenoid(RELAY_BOILER_FILL, "Boiler Fill", machineConfig.relayConfig.boilerFillInverted),
-      groupOneSolenoid(RELAY_GROUP_ONE, "Group One", machineConfig.relayConfig.groupOneInverted),
-      groupTwoSolenoid(RELAY_GROUP_TWO, "Group Two", machineConfig.relayConfig.groupTwoInverted),
-      teaWaterSolenoid(RELAY_TEA, "Tea Water Cold Water", machineConfig.relayConfig.teaInverted) {}
+    : state(state), pumpRelay(pins::RELAY_PUMP, "Pump", machineConfig.relayConfig.pumpInverted),
+      boilerFillSolenoid(pins::RELAY_BOILER_FILL, "Boiler Fill", machineConfig.relayConfig.boilerFillInverted),
+      groupOneSolenoid(pins::RELAY_GROUP_ONE, "Group One", machineConfig.relayConfig.groupOneInverted),
+      groupTwoSolenoid(pins::RELAY_GROUP_TWO, "Group Two", machineConfig.relayConfig.groupTwoInverted),
+      teaWaterSolenoid(pins::RELAY_TEA, "Tea Water Cold Water", machineConfig.relayConfig.teaInverted) {}
 
 void StateActor::loop()
 {

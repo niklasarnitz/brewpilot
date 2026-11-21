@@ -5,8 +5,8 @@
 
 #if defined(BREWPILOT_MACHINE_RANCILIO_S27)
 #include "config/machines/RancilioS27.h"
-constexpr MachineConfig machineConfig = rancilioS27MachineConfig;
+constexpr MachineConfig machineConfig = rancilio_s27::config;
 #elif defined(BREWPILOT_MACHINE_LA_CIMBALI_M29_SELECT)
 #include "config/machines/LaCimbaliM29Select.h"
-constexpr MachineConfig machineConfig = laCimbaliM29SelectMachineConfig;
+constexpr MachineConfig machineConfig = la_cimbali_m29_select::config;
 #endif

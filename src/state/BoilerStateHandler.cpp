@@ -4,18 +4,19 @@
 
 #include "config/BoardPins.h"
 
-#define BOILER_FILL_WAIT_TIME 2000
-
-// Boiler Stuff
-#define BOILER_FILL_LEVEL 1000 // Value for the LaCimbali M29 Select DT2 / R
+namespace
+{
+constexpr uint32_t BOILER_FILL_WAIT_TIME_MS = 2000;
+constexpr uint16_t BOILER_FILL_LEVEL = 1000; // Value for the LaCimbali M29 Select DT2 / R
+} // namespace
 
 BoilerStateHandler::BoilerStateHandler(bool *isFillingBoiler)
     : isFillingBoiler(isFillingBoiler)
 {
-    pinMode(BOILER_PROBE_PIN, INPUT);
-    pinMode(OUT_BOILER_VOLTAGE, OUTPUT);
+    pinMode(pins::BOILER_PROBE, INPUT);
+    pinMode(pins::OUT_BOILER_VOLTAGE, OUTPUT);
 
-    digitalWrite(OUT_BOILER_VOLTAGE, LOW);
+    digitalWrite(pins::OUT_BOILER_VOLTAGE, LOW);
 }
 
 // TODO: Maybe Implement smoothing
@@ -23,7 +24,7 @@ bool BoilerStateHandler::readBoilerProbe()
 {
     if (!hasTurnedOnBoilerProbeVoltage)
     {
-        digitalWrite(OUT_BOILER_VOLTAGE, HIGH);
+        digitalWrite(pins::OUT_BOILER_VOLTAGE, HIGH);
         hasTurnedOnBoilerProbeVoltage = true;
 
         return internalState != BoilerState::BOILER_BELOW_TARGET;
@@ -32,7 +33,7 @@ bool BoilerStateHandler::readBoilerProbe()
     {
         lastCheckTime = millis();
 
-        uint16_t rawValue = analogRead(BOILER_PROBE_PIN);
+        uint16_t rawValue = analogRead(pins::BOILER_PROBE);
         bool full = rawValue <= BOILER_FILL_LEVEL;
 
         Serial.print("BoilerStateHandler: Boiler is ");
@@ -42,7 +43,7 @@ bool BoilerStateHandler::readBoilerProbe()
         Serial.print("full; Raw value: ");
         Serial.println(rawValue);
 
-        digitalWrite(OUT_BOILER_VOLTAGE, LOW);
+        digitalWrite(pins::OUT_BOILER_VOLTAGE, LOW);
         hasTurnedOnBoilerProbeVoltage = false;
 
         return full;
@@ -51,7 +52,7 @@ bool BoilerStateHandler::readBoilerProbe()
 
 void BoilerStateHandler::handleState()
 {
-    if (uint32_t(millis() - lastCheckTime) > BOILER_FILL_WAIT_TIME || lastCheckTime == 0)
+    if (uint32_t(millis() - lastCheckTime) > BOILER_FILL_WAIT_TIME_MS || lastCheckTime == 0)
     {
         bool boilerIsFilled = readBoilerProbe();
         if (hasTurnedOnBoilerProbeVoltage) {

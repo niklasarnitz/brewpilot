@@ -3,7 +3,7 @@
 #include "input/ButtonEvents.h"
 
 // With 50ms loop delay in main.cpp, MAX_STREAK=40 means ~2 seconds to register a held button
-const unsigned int MAX_STREAK = 40;
+constexpr unsigned int MAX_STREAK = 40;
 
 struct ButtonState
 {

@@ -2,18 +2,9 @@
 
 #include <Arduino.h>
 
-#include "config/BoardPins.h"
+#include "config/machines/RancilioS27.h"
 
-#define OUT_DOSE_BUTTONS FLEXIBLE_IO_7
-#define IN_DOSE_1 FLEXIBLE_IO_4
-#define IN_DOSE_2 FLEXIBLE_IO_5
-#define IN_DOSE_3 FLEXIBLE_IO_6
-#define IN_DOSE_4 FLEXIBLE_IO_1
-#define IN_CONTINUOUS FLEXIBLE_IO_2
-
-// Same connector pins as the M29 tea scan line, defined here for this panel.
-#define OUT_TEA_WATER FLEXIBLE_IO_9
-#define IN_TEA_WATER FLEXIBLE_IO_12
+using namespace rancilio_s27::panel;
 
 RancilioS27ButtonMatrixHandler::RancilioS27ButtonMatrixHandler(ButtonMatrixState *buttonMatrixState) : MachineButtonMatrixHandler(buttonMatrixState) {}
 
