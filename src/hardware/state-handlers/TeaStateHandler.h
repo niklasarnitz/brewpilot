@@ -8,50 +8,61 @@
 #include <Arduino.h>
 
 #include "GenericStateHandler.h"
+#include "../handlers/ButtonHandler.h"
 #include "../../utils/VolumetricsHelper.h"
 
 class TeaStateHandler : public GenericStateHandler
 {
 private:
-    bool *teaButtonPressed;
+    ButtonEventType *event;
     bool *isExtractingTeaWater;
-    bool *isInProgrammingMode;
+    ProgrammingTarget *programmingTarget;
 
     VolumetricsHelper *volumetricsHelper;
 
-    unsigned long startTime = 0;
+    uint32_t startTime = 0;
 
 public:
-    TeaStateHandler(bool *teaButtonPressed, bool *isExtractingTeaWater, VolumetricsHelper *volumetricsHelper, bool *isInProgrammingMode)
-        : teaButtonPressed(teaButtonPressed),
+    TeaStateHandler(ButtonEventType *event, bool *isExtractingTeaWater, VolumetricsHelper *volumetricsHelper, ProgrammingTarget *programmingTarget)
+        : event(event),
           isExtractingTeaWater(isExtractingTeaWater),
-          isInProgrammingMode(isInProgrammingMode),
+          programmingTarget(programmingTarget),
           volumetricsHelper(volumetricsHelper) {}
 
     void handleState() override
     {
+        if (*event == ButtonEventType::BUTTON_HELD && *programmingTarget == ProgrammingTarget::NONE)
+        {
+            *isExtractingTeaWater = false;
+            *programmingTarget = ProgrammingTarget::TEA;
+            Serial.println("TeaStateHandler: Entered programming; press Tea to start learning");
+            return;
+        }
+
         if (*isExtractingTeaWater)
         {
-            if (*teaButtonPressed)
+            const auto elapsed = uint32_t(millis() - startTime);
+            if (*event == ButtonEventType::BUTTON_PRESSED)
             {
-                if (*isInProgrammingMode)
+                if (*programmingTarget == ProgrammingTarget::TEA)
                 {
-                    volumetricsHelper->writeTeaWaterSetting(millis() - startTime);
-
-                    Serial.println("TeaStateHandler: Stored tea extraction time. Left Programming Mode");
-                    *isInProgrammingMode = false;
+                    bool saved = volumetricsHelper->writeTeaWaterSetting(elapsed);
+                    Serial.println(saved ? "TeaStateHandler: Tea duration saved; left programming"
+                                         : "TeaStateHandler: Tea duration NOT saved; left programming");
+                    *programmingTarget = ProgrammingTarget::NONE;
                 }
 
                 *isExtractingTeaWater = false;
             }
 
-            if (!(*isInProgrammingMode) && ((millis() - startTime) >= volumetricsHelper->getTeaWaterSetting()))
+            if (*programmingTarget != ProgrammingTarget::TEA && elapsed >= volumetricsHelper->getTeaWaterSetting())
             {
                 Serial.println("TeaStateHandler: Stop extracting");
                 *isExtractingTeaWater = false;
             }
         }
-        else if ((volumetricsHelper->getTeaWaterSetting() != 0 || *isInProgrammingMode) && *teaButtonPressed && !*isExtractingTeaWater)
+        else if ((volumetricsHelper->getTeaWaterSetting() != 0 || *programmingTarget == ProgrammingTarget::TEA) &&
+                 *event == ButtonEventType::BUTTON_PRESSED)
         {
             Serial.println("TeaStateHandler: Start extracting");
             *isExtractingTeaWater = true;
