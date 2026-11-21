@@ -41,3 +41,9 @@
 	(condition "A.Type == 'Pad' && A.NetName == '' && B.Type == 'Zone' && B.NetName == 'GND'")
 	(constraint physical_clearance (min 0.5mm))
 )
+
+# The existing 3.81 mm pitch terminals have 2 mm copper pads.
+(rule "Different mains nets: 1.81 mm"
+	(condition "A.NetClass == 'AC_HIGH_CURRENT' && B.NetClass == 'AC_HIGH_CURRENT' && A.NetName != B.NetName")
+	(constraint clearance (min 1.81mm))
+)
