@@ -2,16 +2,16 @@
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('report', type=Path)
 models = ('RANCILIO_S27', 'LA_CIMBALI_M29_SELECT')
 parser.add_argument('machine', choices=models)
 parser.add_argument('flowmeters', choices=('0', '1'))
 args = parser.parse_args()
 src = Path(__file__).resolve().parents[1] / 'src'
-data = json.loads(args.report.read_text())['data'][0]
+data = json.load(sys.stdin)['data'][0]
 files = {Path(f['filename']).relative_to(src): f for f in data['files']}
 
 # New source files must appear in LLVM's inventory unless reviewed as declarative.
@@ -25,13 +25,16 @@ inactive = ('LaCimbaliM29ButtonMatrixHandler.h' if args.machine == models[0]
 unused = {Path('hardware/handlers/machine-specific-handlers') / inactive}
 if args.machine == models[0]:
     unused.add(Path('utils/noop.h'))  # Only the M29 scanner needs settling time.
-expected = {p.relative_to(src) for p in src.rglob('*')
-            if p.suffix in {'.h', '.hpp', '.cpp', '.c', '.cc', '.ino'}} - declarations - unused
+sources = {p.relative_to(src) for p in src.rglob('*')
+           if p.suffix in {'.h', '.hpp', '.cpp', '.c', '.cc', '.ino'} and p.resolve().is_relative_to(src)}
+expected = sources - declarations - unused
 failures = [f'Missing coverage: {p}' for p in sorted(expected - files.keys())]
+failures.extend(f'Unexpected source: {p}' for p in files.keys() - sources)
 
 other_case = 'case MachineType::' + next(m for m in models if m != args.machine) + ':'
 selectors = {'ButtonMatrixHandler.h', 'getMachineConfig.h'}
-for path, file in files.items():
+for path in sorted(sources & files.keys()):
+    file = files[path]
     if path in unused:
         print(f'INACTIVE: {path}')
         continue

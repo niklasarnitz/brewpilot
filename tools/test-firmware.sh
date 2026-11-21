@@ -55,7 +55,7 @@ for machine in RANCILIO_S27 LA_CIMBALI_M29_SELECT; do
             cat "$report_dir/summary.txt"
             "$llvm_cov" show "$@" -show-branches=count -format=html -output-dir="$report_dir/html"
             "$llvm_cov" export "$@" > "$report_dir/coverage.json"
-            python3 "$project_dir/tools/check-firmware-coverage.py" "$report_dir/coverage.json" "$machine" "$flowmeters"
+            python3 "$project_dir/tools/check-firmware-coverage.py" "$machine" "$flowmeters" < "$report_dir/coverage.json"
         fi
     done
 done

@@ -3,7 +3,6 @@
 import json
 import subprocess
 import sys
-import tempfile
 import unittest
 from pathlib import Path
 
@@ -33,13 +32,10 @@ class CoverageGateTests(unittest.TestCase):
         return {"data": [{"files": files, "functions": []}]}
 
     def check(self, report):
-        with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / "coverage.json"
-            path.write_text(json.dumps(report))
-            return subprocess.run(
-                [sys.executable, str(ROOT / "tools/check-firmware-coverage.py"), str(path), "RANCILIO_S27", "1"],
-                capture_output=True, text=True, check=False,
-            )
+        return subprocess.run(
+            [sys.executable, str(ROOT / "tools/check-firmware-coverage.py"), "RANCILIO_S27", "1"],
+            input=json.dumps(report), capture_output=True, text=True, check=False,
+        )
 
     def test_accepts_both_llvm_default_counter_orders(self):
         for counters in ([0, 162], [162, 0]):
