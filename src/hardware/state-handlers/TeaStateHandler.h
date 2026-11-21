@@ -41,7 +41,7 @@ public:
 
         if (*isExtractingTeaWater)
         {
-            const uint32_t elapsed = uint32_t(millis() - startTime);
+            const auto elapsed = uint32_t(millis() - startTime);
             if (*event == ButtonEventType::BUTTON_PRESSED)
             {
                 if (*programmingTarget == ProgrammingTarget::TEA)

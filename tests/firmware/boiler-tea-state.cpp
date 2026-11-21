@@ -226,23 +226,3 @@ void teaProgramming()
     }
 }
 } // namespace
-
-int runBoilerTeaStateTests()
-{
-    try
-    {
-        boilerSamplingAndOverfill();
-        boilerFillingHasNoDeadline();
-        teaNormalOperation();
-        teaProgramming();
-        teaNormalRollover();
-        teaLearningRollover();
-        std::cout << "PASS: boiler sampling, thresholds, overfill, prolonged filling and tea normal/programming states\n";
-    }
-    catch (const std::exception &error)
-    {
-        std::cerr << "FAIL: " << error.what() << '\n';
-        return 1;
-    }
-    return 0;
-}

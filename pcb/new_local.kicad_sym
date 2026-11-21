@@ -27,7 +27,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Footprint" "696108003002:696108003002"
+		(property "Footprint" "new_local:696108003002"
 			(at 0 0 0)
 			(effects
 				(font

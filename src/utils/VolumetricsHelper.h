@@ -14,7 +14,7 @@ private:
 
     PreferenceHelper *preferenceHelper;
 
-    void logVolumetricSettings(VolumetricSettings *volumetricSettings)
+    void logVolumetricSettings(const VolumetricSettings *volumetricSettings) const
     {
         Serial.println("Volumetric Settings:");
         Serial.printf("Left Single Espresso: %ld pulses\n", volumetricSettings->leftSingleEspressoPulses);
@@ -24,7 +24,7 @@ private:
         Serial.printf("Tea Water: %ld ms\n", volumetricSettings->teaWaterMilliseconds);
     }
 
-    PreferenceKey convertButtonEventToPreferenceKey(GroupHeadButtonEvent event)
+    PreferenceKey convertButtonEventToPreferenceKey(GroupHeadButtonEvent event) const
     {
         switch (event)
         {
@@ -97,7 +97,7 @@ public:
         return true;
     }
 
-    unsigned long getFlowMeterSetting(GroupHeadButtonEvent key)
+    unsigned long getFlowMeterSetting(GroupHeadButtonEvent key) const
     {
         switch (key)
         {
@@ -115,7 +115,7 @@ public:
         return 0;
     }
 
-    unsigned long getTeaWaterSetting()
+    unsigned long getTeaWaterSetting() const
     {
         return volumetricSettings.teaWaterMilliseconds;
     }

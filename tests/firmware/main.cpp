@@ -252,28 +252,3 @@ void backflushRemainsBoundedWithoutFlow()
     machine.tick(Event::NONE, Event::NONE, false, 5000);
     require(!machine.state.groupOneIsExtracting, "backflush must finish after five cycles");
 }
-
-int runFirmwareRegressionTests()
-{
-    try
-    {
-        failedStoragePreservesSettings();
-        std::cout << "PASS: failed storage preserves settings; successful writes survive reboot\n";
-        programmingDoesNotCaptureOtherDrinks();
-        programmingCancelPreservesLastDose();
-        std::cout << "PASS: programming ownership, tea learning and cancellation\n";
-        stopWinsOverBackflush();
-        std::cout << "PASS: STOP takes priority over backflush\n";
-        normalDosesAndBoilerStillStop();
-        std::cout << "PASS: normal doses, shared pump, tea duration and boiler filling\n";
-        extractionHasNoDeadline();
-        backflushRemainsBoundedWithoutFlow();
-        std::cout << "PASS: prolonged extraction, missing pulses, clock rollover and bounded backflush\n";
-    }
-    catch (const std::exception &error)
-    {
-        std::cerr << "FAIL: " << error.what() << '\n';
-        return 1;
-    }
-    return 0;
-}

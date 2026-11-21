@@ -106,29 +106,7 @@ public:
         }
         else if (*event != GroupHeadButtonEvent::NONE && *event != GroupHeadButtonEvent::CONTINUOUS_HELD && *event != GroupHeadButtonEvent::AUTO_BACKFLUSH)
         {
-            targetPulses = 0;
-
-            if (*event == GroupHeadButtonEvent::CONTINUOUS)
-            {
-                targetPulses = LONG_MAX;
-            }
-            else
-            {
-                targetPulses = volumetricsHelper->getFlowMeterSetting(*event);
-
-                if (*programmingTarget == ownTarget)
-                {
-                    buttonToBeProgrammed = *event;
-                }
-            }
-
-            if (targetPulses != 0 || *programmingTarget == ownTarget)
-            {
-                pulsesAtStart = totalPulses;
-
-                *isExtracting = true;
-                Serial.printf("GroupHeadStateHandler %d: Start extracting targeting %ld pulses\n", groupNumber, targetPulses);
-            }
+            startExtraction(totalPulses);
         }
     }
 
@@ -146,6 +124,33 @@ public:
     }
 
 private:
+    void startExtraction(uint32_t totalPulses)
+    {
+        targetPulses = 0;
+
+        if (*event == GroupHeadButtonEvent::CONTINUOUS)
+        {
+            targetPulses = LONG_MAX;
+        }
+        else
+        {
+            targetPulses = volumetricsHelper->getFlowMeterSetting(*event);
+
+            if (*programmingTarget == ownTarget)
+            {
+                buttonToBeProgrammed = *event;
+            }
+        }
+
+        if (targetPulses != 0 || *programmingTarget == ownTarget)
+        {
+            pulsesAtStart = totalPulses;
+
+            *isExtracting = true;
+            Serial.printf("GroupHeadStateHandler %d: Start extracting targeting %ld pulses\n", groupNumber, targetPulses);
+        }
+    }
+
     void startAutoBackflush()
     {
         Serial.printf("GroupHeadStateHandler %d: Starting auto backflush sequence\n", groupNumber);
@@ -165,7 +170,7 @@ private:
             return;
         }
 
-        const uint32_t elapsed = uint32_t(millis() - autoBackflushStartTime);
+        const auto elapsed = uint32_t(millis() - autoBackflushStartTime);
         int cyclePosition = autoBackflushCycle % 2; // 0 = extract, 1 = pause
 
         int currentCycle = (autoBackflushCycle / 2) + 1;

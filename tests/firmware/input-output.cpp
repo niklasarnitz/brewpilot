@@ -30,16 +30,20 @@ constexpr unsigned panelGroups = sizeof(panelContacts) / sizeof(panelContacts[0]
 bool panelKeys[panelGroups][5]{};
 bool panelTea = false;
 
+// Model independently decoded contacts, not ghosting through the real keypad.
 int readPanelPin(int pin)
 {
+    if (pin == 12)
+        require(testPinModes[pin] == INPUT_PULLUP, "GPIO12 needs its internal return pull-up");
     for (unsigned group = 0; group < panelGroups; ++group)
         for (unsigned key = 0; key < 5; ++key)
         {
             const auto contact = panelContacts[group][key];
-            if (contact.input == pin && panelKeys[group][key] && testPins[contact.row] == LOW)
+            if (contact.input == pin && panelKeys[group][key] &&
+                testPinModes[contact.row] == OUTPUT && testPins[contact.row] == LOW)
                 return LOW;
         }
-    if (pin == 23 && panelTea && testPins[19] == LOW)
+    if (pin == 23 && panelTea && testPinModes[19] == OUTPUT && testPins[19] == LOW)
         return LOW;
     return HIGH;
 }
@@ -51,6 +55,92 @@ void releasePanel()
             pressed = false;
     panelTea = false;
 }
+
+#if defined(BREWPILOT_MACHINE_LA_CIMBALI_M29_SELECT)
+void physicalM29MatrixDecoding()
+{
+    ButtonMatrixState state{};
+    LaCimbaliM29ButtonMatrixHandler matrix(&state);
+    matrix.initializePins();
+    testDigitalReadHook = readPanelPin;
+
+    constexpr bool GroupButtonMatrixState::* fields[] = {
+        &GroupButtonMatrixState::leftSingleDose, &GroupButtonMatrixState::leftDoubleDose,
+        &GroupButtonMatrixState::rightSingleDose, &GroupButtonMatrixState::rightDoubleDose,
+        &GroupButtonMatrixState::continuous};
+    const GroupButtonMatrixState *groups[] = {&state.groupOne, &state.groupTwo};
+    for (unsigned mask = 0; mask < (1u << 11); ++mask)
+    {
+        for (unsigned group = 0; group < 2; ++group)
+            for (unsigned key = 0; key < 5; ++key)
+                panelKeys[group][key] = mask & (1u << (group * 5 + key));
+        panelTea = mask & (1u << 10);
+        for (int sample = 0; sample < 3; ++sample)
+        {
+            if (sample == 2)
+                releasePanel();
+            matrix.handle();
+            for (unsigned group = 0; group < 2; ++group)
+                for (unsigned key = 0; key < 5; ++key)
+                    if (groups[group]->*fields[key] != panelKeys[group][key])
+                        throw std::runtime_error("M29 group/key decode mismatch for mask " + std::to_string(mask));
+            if (state.tea != panelTea)
+                throw std::runtime_error("M29 tea decode mismatch for mask " + std::to_string(mask));
+        }
+    }
+    testDigitalReadHook = nullptr;
+    std::cout << "PASS: M29 ButtonMatrixState for all 2048 keypad combinations, including hold and release\n";
+}
+
+void physicalM29ScanDrive()
+{
+    static constexpr int rows[] = {33, 32, 13, 14, 19};
+    // Include a stale HIGH latch so enabling OUTPUT before clearing it fails.
+    for (int row : rows)
+    {
+        testPinModes[row] = INPUT;
+        testPins[row] = row == 33 ? HIGH : LOW;
+    }
+    static bool droveHigh;
+    static unsigned maxDrivenLow;
+    droveHigh = false;
+    maxDrivenLow = 0;
+    testGpioChangeHook = [] {
+        unsigned drivenLow = 0;
+        for (int row : rows)
+            if (testPinModes[row] == OUTPUT)
+            {
+                droveHigh |= testPins[row] == HIGH;
+                drivenLow += testPins[row] == LOW;
+            }
+        if (drivenLow > maxDrivenLow)
+            maxDrivenLow = drivenLow;
+    };
+    auto rowsReleased = [&] {
+        for (int row : rows)
+            if (testPinModes[row] != INPUT)
+                return false;
+        return true;
+    };
+
+    ButtonMatrixState state{};
+    LaCimbaliM29ButtonMatrixHandler matrix(&state);
+    matrix.initializePins();
+    const bool idleAfterInit = rowsReleased();
+    testDigitalReadHook = readPanelPin;
+    panelKeys[0][0] = panelKeys[0][2] = true; // Left + right share a return.
+    matrix.handle();
+    releasePanel();
+    testDigitalReadHook = nullptr;
+    testGpioChangeHook = nullptr;
+
+    if (droveHigh || maxDrivenLow > 1)
+        throw std::runtime_error("M29 scan drove HIGH: " + std::to_string(droveHigh) +
+                                 "; maximum simultaneous LOW outputs: " + std::to_string(maxDrivenLow));
+    require(idleAfterInit && rowsReleased(), "M29 scan lines must be high-Z after setup and between scans");
+    std::cout << "PASS: M29 scan rows stay high-Z except for one LOW output, with no HIGH transients\n";
+}
+#endif
 
 struct PanelDecoder
 {
@@ -101,11 +191,12 @@ struct GpioMachine : StateMachineFixture
         require(state.groupOneIsExtracting == one && state.groupTwoIsExtracting == two &&
                     state.isExtractingTeaWater == tea && state.isFillingBoiler == fill,
                 "GPIO input scenario must produce the expected independent water states");
-        require(testPins[RELAY_GROUP_ONE] == (one ? outputOn : outputOff) &&
-                    testPins[RELAY_GROUP_TWO] == (two ? outputOn : outputOff) &&
-                    testPins[RELAY_TEA] == (tea ? outputOn : outputOff) &&
-                    testPins[RELAY_BOILER_FILL] == (fill ? outputOn : outputOff) &&
-                    testPins[RELAY_PUMP] == ((one || two || fill) ? outputOn : outputOff),
+        // Use connector pin numbers, not the aliases whose mapping we're testing.
+        require(testPins[4] == (one ? outputOn : outputOff) &&
+                    testPins[2] == (two ? outputOn : outputOff) &&
+                    testPins[15] == (tea ? outputOn : outputOff) &&
+                    testPins[18] == (fill ? outputOn : outputOff) &&
+                    testPins[5] == ((one || two || fill) ? outputOn : outputOff),
                 "physical valves and pump must match expected outputs and machine polarity");
     }
 
@@ -437,6 +528,10 @@ void mixedPanelSessions()
 
 void runInputOutputTests()
 {
+#if defined(BREWPILOT_MACHINE_LA_CIMBALI_M29_SELECT)
+    physicalM29MatrixDecoding();
+    physicalM29ScanDrive();
+#endif
     physicalDoseButtons();
     physicalTeaAndStopPriority();
     physicalProlongedBoilerFilling();

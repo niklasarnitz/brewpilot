@@ -41,3 +41,10 @@
 	(condition "A.Type == 'Pad' && A.NetName == '' && B.Type == 'Zone' && B.NetName == 'GND'")
 	(constraint physical_clearance (min 0.5mm))
 )
+
+# This is a release gate: the current 3.81 mm pitch mains terminals cannot
+# meet it with their 2 mm pads. Do not waive those pad pairs for fabrication.
+(rule "Different mains nets: 3 mm"
+	(condition "A.NetClass == 'AC_HIGH_CURRENT' && B.NetClass == 'AC_HIGH_CURRENT' && A.NetName != B.NetName")
+	(constraint clearance (min 3mm))
+)

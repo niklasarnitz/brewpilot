@@ -61,7 +61,7 @@ private:
     }
 
 public:
-    BoilerStateHandler(bool *isFillingBoiler)
+    explicit BoilerStateHandler(bool *isFillingBoiler)
         : isFillingBoiler(isFillingBoiler)
     {
         pinMode(BOILER_PROBE_PIN, INPUT);

@@ -1143,6 +1143,7 @@
 				)
 			)
 		)
+		(path "/984abdd7-04b9-4e3e-89fa-76d5e88dd7b3")
 		(attr through_hole)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -3424,6 +3425,7 @@
 				)
 			)
 		)
+		(path "/8bae3d75-9ca8-4c4e-9ff9-e562afb9f445")
 		(attr through_hole)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -3837,6 +3839,7 @@
 				)
 			)
 		)
+		(path "/a992d883-0399-4e4d-8439-020faf5b6ef1")
 		(attr through_hole)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -6315,6 +6318,7 @@
 				)
 			)
 		)
+		(path "/9bb4e1d4-16be-4539-bb38-c9bbd547cc2f")
 		(attr through_hole)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -8036,6 +8040,7 @@
 				)
 			)
 		)
+		(path "/a27ef324-9668-40bb-8899-5234c0e50ad3")
 		(attr through_hole)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -9482,6 +9487,7 @@
 				)
 			)
 		)
+		(path "/830a9b8a-0563-4056-91a9-d5a05b5e48a3")
 		(attr through_hole)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -9685,7 +9691,7 @@
 			)
 		)
 		(property ki_fp_filters "R_*")
-		(path "/e6e602ed-bca6-4e8f-9d25-64efcd415b87")
+		(path "/16f0a129-4239-4017-b361-954d7ce0d851")
 		(sheetname "/")
 		(sheetfile "BrewPilot.kicad_sch")
 		(attr through_hole)
@@ -10324,6 +10330,7 @@
 				)
 			)
 		)
+		(path "/f7616f43-7455-4276-8eef-6febd819b71b")
 		(attr through_hole)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -14392,6 +14399,7 @@
 				)
 			)
 		)
+		(path "/19bead4e-78d8-4816-a715-207e0d7a84cb")
 		(attr through_hole)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -15034,7 +15042,7 @@
 			)
 		)
 		(property ki_fp_filters "R_*")
-		(path "/e6e602ed-bca6-4e8f-9d25-64efcd415b87")
+		(path "/ca7fc631-f5a7-4845-b283-385d944efb42")
 		(sheetname "/")
 		(sheetfile "BrewPilot.kicad_sch")
 		(attr through_hole)
@@ -15909,6 +15917,7 @@
 				)
 			)
 		)
+		(path "/4e48abbb-fff3-4997-b744-5041fd068290")
 		(attr through_hole)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -18151,6 +18160,7 @@
 				)
 			)
 		)
+		(path "/c42ad291-cafe-4e8e-a7e7-b78e64896cab")
 		(attr through_hole)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
@@ -18866,6 +18876,7 @@
 				)
 			)
 		)
+		(path "/5ffc5e7b-4612-4cf1-848d-78d0b97b61c2")
 		(attr through_hole)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
