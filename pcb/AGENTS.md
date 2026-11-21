@@ -49,16 +49,15 @@ the MTDI flash-voltage strap. Flow inputs 16/35 use existing R9/R8 and `INPUT`.
 Keep boiler GPIO34/R7/R5, SSR pulldowns R17–R21, centered assemblies and
 clearance rules unchanged. The approved via budget for F01/F03/F10/F11 and
 I2C together is at most 5 rather than the original 4. The ten pull-ups
-R8/R9/R15/R16/R22–R27 now share one straight row; its placement and current
-routing measurements are recorded in `docs/esp32-pin-audit.md`.
+R8/R9/R15/R16/R22–R27 share one straight row.
 
-For matrix wiring or pull-mode changes, consult `docs/esp32-pin-audit.md` and
-update both machine variants with the hardware. Select the machine through its
+For matrix wiring or pull-mode changes, check the schematic and update both
+machine variants with the hardware. Select the machine through its
 PlatformIO environment; `tools/build-firmware.sh` builds both without uploading.
 Old PCB wiring and new firmware are incompatible. The revision is integrated
 in `pcb/BrewPilot.kicad_sch` and `pcb/BrewPilot.kicad_pcb`.
-The pin audit records checks and their limits; logical contact-model tests
-are not tests of the actual keyboard, boot behavior or I2C device operation.
+Logical contact-model tests do not verify the actual keyboard, boot behavior
+or I2C device operation.
 Push, flash and fabrication require separate owner authorization.
 
 ## Layout validation
@@ -67,8 +66,8 @@ Keep all DRC checks enabled. H1–H4 are PCB-only mechanical mounting holes.
 U1's two courtyards cover the PCB-level socket strips, assuming the confirmed
 elevated module; reassess this geometry if header height or under-module parts
 change. J13's local BoardEdge footprint preserves standard pads and mechanics
-while clipping silk to this board. For mechanical changes, read the verification
-section of `docs/esp32-pin-audit.md` for these assumptions and check limits.
+while clipping silk to this board. DRC does not verify physical fit; recheck
+module and connector clearances for mechanical changes.
 
 ## Fabrication exports
 
