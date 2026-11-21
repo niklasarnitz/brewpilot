@@ -1,5 +1,11 @@
 #pragma once
 
+// Everything that differs between machine configurations lives in this file.
+// Include config/SelectedMachine.h rather than this header.
+#if !defined(BREWPILOT_MACHINE_RANCILIO_S27)
+#error "This machine config belongs to another build; include config/SelectedMachine.h"
+#endif
+
 #include <stdint.h>
 
 #include "config/BoardPins.h"
@@ -15,6 +21,9 @@ constexpr MachineConfig config = {
         .boilerFillInverted = false,
         .teaInverted = false,
     },
+    .groupOneActive = true,
+    .groupTwoActive = false,
+    .hasFlowMeters = true,
 };
 
 // One group panel: a single scan line drives all dose buttons.

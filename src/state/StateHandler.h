@@ -1,5 +1,6 @@
 #pragma once
 
+#include "config/SelectedMachine.h"
 #include "input/ButtonEvents.h"
 #include "state/BoilerStateHandler.h"
 #include "state/GroupHeadStateHandler.h"

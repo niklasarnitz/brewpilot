@@ -33,36 +33,34 @@ sources=$(find "$project_dir/src" "$project_dir/tests/firmware" -name '*.cpp' | 
 "${CC:-cc}" -std=c99 -DUNITY_EXCLUDE_SETJMP_H -c "$unity/unity.c" -o "$build_dir/unity.o"
 
 for machine in RANCILIO_S27 LA_CIMBALI_M29_SELECT; do
-    for flowmeters in 0 1; do
-        echo "Testing $machine, BREWPILOT_HAS_FLOWMETERS=$flowmeters"
-        variant="$machine-flowmeters-$flowmeters"
-        mkdir -p "$build_dir/$variant"
-        binary="$build_dir/$variant/tests"
-        set -- -std=c++17 -O2 -g -Wall -Wextra -Werror -fsanitize=address,undefined -fno-sanitize-recover=all \
-            -DBREWPILOT_MACHINE_"$machine" -DBREWPILOT_HAS_FLOWMETERS="$flowmeters" \
-            -DUNITY_EXCLUDE_SETJMP_H -I "$unity" -I "$project_dir/tests/firmware" -I "$project_dir/src" \
-            "$build_dir/unity.o" -o "$binary"
-        if [ "$coverage" = 1 ]; then
-            set -- "$@" -O0 -fprofile-instr-generate -fcoverage-mapping
-        fi
-        old_ifs=$IFS
-        IFS='
+    echo "Testing $machine"
+    variant="$machine"
+    mkdir -p "$build_dir/$variant"
+    binary="$build_dir/$variant/tests"
+    set -- -std=c++17 -O2 -g -Wall -Wextra -Werror -Wundef -fsanitize=address,undefined -fno-sanitize-recover=all \
+        -DBREWPILOT_MACHINE_"$machine" \
+        -DUNITY_EXCLUDE_SETJMP_H -I "$unity" -I "$project_dir/tests/firmware" -I "$project_dir/src" \
+        "$build_dir/unity.o" -o "$binary"
+    if [ "$coverage" = 1 ]; then
+        set -- "$@" -O0 -fprofile-instr-generate -fcoverage-mapping
+    fi
+    old_ifs=$IFS
+    IFS='
 '
-        # shellcheck disable=SC2086 # Split $sources on newlines only.
-        "$compiler" "$@" $sources
-        IFS=$old_ifs
-        LLVM_PROFILE_FILE="$build_dir/$variant/tests.profraw" "$binary"
+    # shellcheck disable=SC2086 # Split $sources on newlines only.
+    "$compiler" "$@" $sources
+    IFS=$old_ifs
+    LLVM_PROFILE_FILE="$build_dir/$variant/tests.profraw" "$binary"
 
-        if [ "$coverage" = 1 ]; then
-            report_dir="$coverage_dir/$variant"
-            mkdir -p "$report_dir"
-            "$llvm_profdata" merge -sparse "$build_dir/$variant/tests.profraw" -o "$build_dir/$variant/coverage.profdata"
-            set -- "$binary" -instr-profile "$build_dir/$variant/coverage.profdata" "$project_dir/src"
-            "$llvm_cov" report "$@" > "$report_dir/summary.txt"
-            cat "$report_dir/summary.txt"
-            "$llvm_cov" show "$@" -show-branches=count -format=html -output-dir="$report_dir/html"
-            "$llvm_cov" export "$@" > "$report_dir/coverage.json"
-            python3 "$project_dir/tools/check-firmware-coverage.py" "$machine" "$flowmeters" < "$report_dir/coverage.json"
-        fi
-    done
+    if [ "$coverage" = 1 ]; then
+        report_dir="$coverage_dir/$variant"
+        mkdir -p "$report_dir"
+        "$llvm_profdata" merge -sparse "$build_dir/$variant/tests.profraw" -o "$build_dir/$variant/coverage.profdata"
+        set -- "$binary" -instr-profile "$build_dir/$variant/coverage.profdata" "$project_dir/src"
+        "$llvm_cov" report "$@" > "$report_dir/summary.txt"
+        cat "$report_dir/summary.txt"
+        "$llvm_cov" show "$@" -show-branches=count -format=html -output-dir="$report_dir/html"
+        "$llvm_cov" export "$@" > "$report_dir/coverage.json"
+        python3 "$project_dir/tools/check-firmware-coverage.py" "$machine" < "$report_dir/coverage.json"
+    fi
 done

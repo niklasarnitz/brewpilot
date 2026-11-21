@@ -14,8 +14,10 @@ StateHandler::StateHandler(State &state, const ButtonEvent &buttonEvent, Volumet
 void StateHandler::handleState()
 {
     boilerStateHandler.handleState();
-    groupOneStateHandler.handleState();
-    groupTwoStateHandler.handleState();
+    if constexpr (GROUP_ONE_ACTIVE)
+        groupOneStateHandler.handleState();
+    if constexpr (GROUP_TWO_ACTIVE)
+        groupTwoStateHandler.handleState();
     teaStateHandler.handleState();
 }
 

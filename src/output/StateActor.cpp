@@ -16,12 +16,21 @@ void StateActor::loop()
     boilerFillSolenoid.setOpen(state.isFillingBoiler);
 
     // Group Heads
-    groupOneSolenoid.setOpen(state.groupOneIsExtracting);
-    groupTwoSolenoid.setOpen(state.groupTwoIsExtracting);
+    bool groupIsExtracting = false;
+    if constexpr (GROUP_ONE_ACTIVE)
+    {
+        groupOneSolenoid.setOpen(state.groupOneIsExtracting);
+        groupIsExtracting |= state.groupOneIsExtracting;
+    }
+    if constexpr (GROUP_TWO_ACTIVE)
+    {
+        groupTwoSolenoid.setOpen(state.groupTwoIsExtracting);
+        groupIsExtracting |= state.groupTwoIsExtracting;
+    }
 
     // Tea Water
     teaWaterSolenoid.setOpen(state.isExtractingTeaWater);
 
     // Pump
-    pumpRelay.setEnabled(state.isFillingBoiler || state.groupOneIsExtracting || state.groupTwoIsExtracting);
+    pumpRelay.setEnabled(state.isFillingBoiler || groupIsExtracting);
 }

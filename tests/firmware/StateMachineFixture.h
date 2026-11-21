@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <array>
 #include <iostream>
 #include <stdexcept>
 #include "config/BoardPins.h"
@@ -9,6 +10,17 @@
 #include "state/StateHandler.h"
 
 using Event = GroupHeadButtonEvent;
+
+// Group numbers this machine has; whole-machine scenarios loop over these.
+inline constexpr auto activeGroups = [] {
+    std::array<int, GROUP_ONE_ACTIVE + GROUP_TWO_ACTIVE> groups{};
+    size_t next = 0;
+    if constexpr (GROUP_ONE_ACTIVE)
+        groups[next++] = 1;
+    if constexpr (GROUP_TWO_ACTIVE)
+        groups[next++] = 2;
+    return groups;
+}();
 
 inline void require(bool condition, const char *message)
 {
@@ -47,10 +59,19 @@ struct StateMachineFixture
     {
         while (count--)
         {
-            if (group == 1)
-                handler.groupOneFlowMeterPulseInterrupt();
-            else
-                handler.groupTwoFlowMeterPulseInterrupt();
+            if constexpr (GROUP_ONE_ACTIVE)
+                if (group == 1)
+                {
+                    handler.groupOneFlowMeterPulseInterrupt();
+                    continue;
+                }
+            if constexpr (GROUP_TWO_ACTIVE)
+                if (group == 2)
+                {
+                    handler.groupTwoFlowMeterPulseInterrupt();
+                    continue;
+                }
+            throw std::logic_error("this machine has no flow meter for that group");
         }
     }
 

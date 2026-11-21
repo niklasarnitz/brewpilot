@@ -1,5 +1,6 @@
 #include "Scenarios.h"
 #include "StateMachineFixture.h"
+#include <iterator>
 #include <unity.h>
 
 void outputStateMatrix()
@@ -16,14 +17,19 @@ void outputStateMatrix()
                 "boiler valve must follow only boiler fill state");
         require(testPins[pins::RELAY_GROUP_ONE] == ((bool(mask & 2) != machineConfig.relayConfig.groupOneInverted) ? HIGH : LOW),
                 "group one valve must follow only group one state");
-        require(testPins[pins::RELAY_GROUP_TWO] == ((bool(mask & 4) != machineConfig.relayConfig.groupTwoInverted) ? HIGH : LOW),
+        // An absent group's valve stays closed whatever its state says.
+        constexpr unsigned groupTwoMask = 4u * GROUP_TWO_ACTIVE;
+        require(testPins[pins::RELAY_GROUP_TWO] ==
+                    (bool(mask & groupTwoMask) != machineConfig.relayConfig.groupTwoInverted ? HIGH : LOW),
                 "group two valve must follow only group two state");
         require(testPins[pins::RELAY_TEA] == ((bool(mask & 8) != machineConfig.relayConfig.teaInverted) ? HIGH : LOW),
                 "tea valve must follow only tea state");
-        require(testPins[pins::RELAY_PUMP] == ((bool(mask & 7) != machineConfig.relayConfig.pumpInverted) ? HIGH : LOW),
+        // An absent group's state never runs the pump.
+        const unsigned pumpMask = 1u | (machineConfig.groupOneActive ? 2u : 0u) | (machineConfig.groupTwoActive ? 4u : 0u);
+        require(testPins[pins::RELAY_PUMP] == ((bool(mask & pumpMask) != machineConfig.relayConfig.pumpInverted) ? HIGH : LOW),
                 "pump must serve either group or boiler, but not tea alone");
         machine.actor.loop(); // Stable output must also remain correct without a transition.
-        require(testPins[pins::RELAY_PUMP] == ((bool(mask & 7) != machineConfig.relayConfig.pumpInverted) ? HIGH : LOW),
+        require(testPins[pins::RELAY_PUMP] == ((bool(mask & pumpMask) != machineConfig.relayConfig.pumpInverted) ? HIGH : LOW),
                 "repeated actor loop must preserve pump command");
     }
 }
@@ -121,7 +127,7 @@ void programmingIsGroupScoped()
 
 void teaAndGroupProgrammingAreExclusive()
 {
-    for (int group : {1, 2})
+    for (int group : activeGroups)
         for (bool learning : {false, true})
         {
             StateMachineFixture machine;
@@ -161,7 +167,8 @@ void teaAndGroupProgrammingAreExclusive()
         machine.tick(Event::CONTINUOUS, Event::CONTINUOUS);
         machine.tick(Event::CONTINUOUS_HELD, Event::CONTINUOUS_HELD);
         require(machine.state.programmingTarget == ProgrammingTarget::TEA &&
-                    machine.state.groupOneIsExtracting && machine.state.groupTwoIsExtracting &&
+                    machine.state.groupOneIsExtracting &&
+                    machine.state.groupTwoIsExtracting == machineConfig.groupTwoActive &&
                     machine.state.isExtractingTeaWater == learning,
                 "neither group hold can steal waiting or learning Tea programming");
         machine.tick(Event::CONTINUOUS, Event::CONTINUOUS);
@@ -175,8 +182,10 @@ void teaAndGroupProgrammingAreExclusive()
                     !machine.state.isExtractingTeaWater &&
                     machine.volumes.getTeaWaterSetting() == (learning ? 4250 : 4100),
                 "Tea can save and release ownership after competing group holds");
-        machine.selectProgramming(2);
-        machine.tick(Event::NONE, Event::CONTINUOUS);
+        const int lastGroup = activeGroups[std::size(activeGroups) - 1];
+        machine.selectProgramming(lastGroup);
+        machine.tick(lastGroup == 1 ? Event::CONTINUOUS : Event::NONE,
+                     lastGroup == 2 ? Event::CONTINUOUS : Event::NONE);
         require(machine.state.programmingTarget == ProgrammingTarget::NONE,
                 "a completed Tea session does not block later group programming");
     }
@@ -206,12 +215,15 @@ int main()
     SCENARIO(settingsKeyMapping);
     SCENARIO(settingsInvalidAndLoadFailure);
     SCENARIO(standaloneDeviceDrivers);
-    SCENARIO(programmingIsGroupScoped);
+    if constexpr (GROUP_TWO_ACTIVE) // Interaction between two groups.
+        SCENARIO(programmingIsGroupScoped);
     SCENARIO(failedStoragePreservesSettings);
-    SCENARIO(programmingDoesNotCaptureOtherDrinks);
+    if constexpr (GROUP_TWO_ACTIVE) // Interaction between two groups.
+        SCENARIO(programmingDoesNotCaptureOtherDrinks);
     SCENARIO(programmingCancelPreservesLastDose);
     SCENARIO(stopWinsOverBackflush);
-    SCENARIO(normalDosesAndBoilerStillStop);
+    if constexpr (GROUP_TWO_ACTIVE) // Interaction between two groups.
+        SCENARIO(normalDosesAndBoilerStillStop);
     SCENARIO(extractionHasNoDeadline);
     SCENARIO(backflushRemainsBoundedWithoutFlow);
     SCENARIO(doseContracts);
@@ -231,7 +243,8 @@ int main()
     SCENARIO(runButtonEventTests);
     SCENARIO(runInputOutputTests);
     SCENARIO(outputStateMatrix);
-    SCENARIO(simultaneousProgrammingHasOneOwner);
+    if constexpr (GROUP_TWO_ACTIVE) // Interaction between two groups.
+        SCENARIO(simultaneousProgrammingHasOneOwner);
     SCENARIO(teaAndGroupProgrammingAreExclusive);
     return UNITY_END();
 }

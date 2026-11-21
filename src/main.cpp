@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 #include "config/BoardPins.h"
-#include "config/BuildConfig.h"
+#include "config/SelectedMachine.h"
 #include "input/ButtonEvents.h"
 #include "input/InputHandler.h"
 #include "output/StateActor.h"
@@ -33,12 +33,18 @@ void setup()
     Serial.begin(115200);
 
     // R9 / R8 provide external 10k pull-ups for the flow meters.
-    pinMode(pins::GROUP_ONE_FLOW_METER, INPUT);
-    pinMode(pins::GROUP_TWO_FLOW_METER, INPUT);
-#if BREWPILOT_HAS_FLOWMETERS
-    attachInterrupt(digitalPinToInterrupt(pins::GROUP_ONE_FLOW_METER), groupOneFlowMeterHandler, FALLING);
-    attachInterrupt(digitalPinToInterrupt(pins::GROUP_TWO_FLOW_METER), groupTwoFlowMeterHandler, FALLING);
-#endif
+    if constexpr (GROUP_ONE_ACTIVE)
+    {
+        pinMode(pins::GROUP_ONE_FLOW_METER, INPUT);
+        if constexpr (FLOWMETERS_ACTIVE)
+            attachInterrupt(digitalPinToInterrupt(pins::GROUP_ONE_FLOW_METER), groupOneFlowMeterHandler, FALLING);
+    }
+    if constexpr (GROUP_TWO_ACTIVE)
+    {
+        pinMode(pins::GROUP_TWO_FLOW_METER, INPUT);
+        if constexpr (FLOWMETERS_ACTIVE)
+            attachInterrupt(digitalPinToInterrupt(pins::GROUP_TWO_FLOW_METER), groupTwoFlowMeterHandler, FALLING);
+    }
 
     // Load Volumetric Settings
     volumetricsHelper.setup();

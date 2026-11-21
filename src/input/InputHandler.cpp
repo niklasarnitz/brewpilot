@@ -17,6 +17,8 @@ void InputHandler::readInputs()
 
     // Write Events
     buttonEvent.tea = teaButtonHandler.getEvent().event;
-    groupOneHandler.handle();
-    groupTwoHandler.handle();
+    if constexpr (GROUP_ONE_ACTIVE)
+        groupOneHandler.handle();
+    if constexpr (GROUP_TWO_ACTIVE)
+        groupTwoHandler.handle();
 }

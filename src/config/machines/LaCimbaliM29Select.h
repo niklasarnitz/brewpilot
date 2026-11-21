@@ -1,5 +1,11 @@
 #pragma once
 
+// Everything that differs between machine configurations lives in this file.
+// Include config/SelectedMachine.h rather than this header.
+#if !defined(BREWPILOT_MACHINE_LA_CIMBALI_M29_SELECT)
+#error "This machine config belongs to another build; include config/SelectedMachine.h"
+#endif
+
 #include <stdint.h>
 
 #include "config/BoardPins.h"
@@ -15,6 +21,9 @@ constexpr MachineConfig config = {
         .boilerFillInverted = true,
         .teaInverted = true,
     },
+    .groupOneActive = true,
+    .groupTwoActive = true,
+    .hasFlowMeters = true,
 };
 
 // Two group panels scanned row by row, plus the tea button.

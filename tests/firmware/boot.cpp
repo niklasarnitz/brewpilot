@@ -34,22 +34,27 @@ void testFirmwareBoot()
     setup();
     for (int pin : {2, 4, 5, 15, 18})
         require(testPinModes[pin] == OUTPUT && testPins[pin] == outputOff,
-                "all valves and the pump must be inactive on boot");
+                "all valves and the pump must be inactive on boot, including an absent group's");
     require(volumetricsHelper.getFlowMeterSetting(Event::LEFT_SINGLE_ESPRESSO) == 3,
             "boot must restore the stored dose before the first loop");
-    require(testPinModes[16] == INPUT && testPinModes[35] == INPUT,
-            "setup must configure physical flow meter GPIO16 and GPIO35 as inputs");
+    require(testPinModes[16] == INPUT && (testPinModes[35] == INPUT) == machineConfig.groupTwoActive,
+            "setup must configure the flow meter input of each active group only");
     unsigned registrations = 0;
     for (const auto &interrupt : testInterrupts)
         registrations += interrupt.registrations;
-#if BREWPILOT_HAS_FLOWMETERS
-    require(registrations == 2 && testInterrupts[16].registrations == 1 && testInterrupts[35].registrations == 1 &&
-                testInterrupts[16].callback && testInterrupts[35].callback &&
-                testInterrupts[16].mode == FALLING && testInterrupts[35].mode == FALLING,
-            "setup must attach exactly one falling-edge interrupt to each physical flow meter pin");
-#else
-    require(registrations == 0, "flowmeter-disabled setup must not register interrupts");
-#endif
+    if constexpr (machineConfig.hasFlowMeters)
+    {
+        const unsigned groupTwo = machineConfig.groupTwoActive;
+        require(registrations == 1 + groupTwo && testInterrupts[16].registrations == 1 &&
+                    testInterrupts[35].registrations == groupTwo && testInterrupts[16].callback &&
+                    bool(testInterrupts[35].callback) == bool(groupTwo) && testInterrupts[16].mode == FALLING &&
+                    (testInterrupts[35].mode == FALLING) == bool(groupTwo),
+                "setup must attach one falling-edge interrupt per active group's flow meter, and none otherwise");
+    }
+    else
+    {
+        require(registrations == 0, "flowmeter-disabled setup must not register interrupts");
+    }
 
     const uint32_t before = testMillis;
     for (auto &group : panelKeys)
@@ -58,27 +63,28 @@ void testFirmwareBoot()
     require(testMillis == before + 50, "firmware loop must delay 50 milliseconds");
     require(state.groupOneIsExtracting && testPins[4] == outputOn && testPins[5] == outputOn,
             "first loop must drive the group one valve and pump");
-#if defined(BREWPILOT_MACHINE_LA_CIMBALI_M29_SELECT)
-    require(state.groupTwoIsExtracting, "physical group two dose must start through firmware loop");
-#endif
+    require(state.groupTwoIsExtracting == machineConfig.groupTwoActive,
+            "a physical group two dose must start through the firmware loop exactly when group two exists");
     releasePanel();
     loop();
-#if BREWPILOT_HAS_FLOWMETERS
-    for (int i = 0; i < 3; ++i)
-        testInterrupts[16].callback();
-    loop();
-    require(!state.groupOneIsExtracting, "GPIO16 callbacks must finish group one's dose");
-#if defined(BREWPILOT_MACHINE_LA_CIMBALI_M29_SELECT)
-    require(state.groupTwoIsExtracting, "GPIO16 callbacks must not advance group two");
-#endif
-    for (int i = 0; i < 3; ++i)
-        testInterrupts[35].callback();
-    loop();
-#if defined(BREWPILOT_MACHINE_LA_CIMBALI_M29_SELECT)
-    require(!state.groupTwoIsExtracting, "GPIO35 callbacks must finish group two's dose");
-#endif
-#else
-    loop();
-    require(state.groupOneIsExtracting, "disabled flowmeters must not stop the physical dose automatically");
-#endif
+    if constexpr (machineConfig.hasFlowMeters)
+    {
+        for (int i = 0; i < 3; ++i)
+            testInterrupts[16].callback();
+        loop();
+        require(!state.groupOneIsExtracting, "GPIO16 callbacks must finish group one's dose");
+        if (machineConfig.groupTwoActive)
+        {
+            require(state.groupTwoIsExtracting, "GPIO16 callbacks must not advance group two");
+            for (int i = 0; i < 3; ++i)
+                testInterrupts[35].callback();
+            loop();
+            require(!state.groupTwoIsExtracting, "GPIO35 callbacks must finish group two's dose");
+        }
+    }
+    else
+    {
+        loop();
+        require(state.groupOneIsExtracting, "disabled flowmeters must not stop the physical dose automatically");
+    }
 }

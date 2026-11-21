@@ -34,7 +34,7 @@ class CoverageGateTests(unittest.TestCase):
 
     def check(self, report):
         return subprocess.run(
-            [sys.executable, str(ROOT / "tools/check-firmware-coverage.py"), "RANCILIO_S27", "1"],
+            [sys.executable, str(ROOT / "tools/check-firmware-coverage.py"), "RANCILIO_S27"],
             input=json.dumps(report), capture_output=True, text=True, check=False,
         )
 
