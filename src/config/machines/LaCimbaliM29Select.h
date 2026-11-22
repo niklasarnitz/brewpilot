@@ -15,11 +15,11 @@ namespace la_cimbali_m29_select
 {
 constexpr MachineConfig config = {
     .relayConfig = {
-        .pumpInverted = true,
-        .groupOneInverted = true,
-        .groupTwoInverted = true,
-        .boilerFillInverted = true,
-        .teaInverted = true,
+        .pumpInverted = false,
+        .groupOneInverted = false,
+        .groupTwoInverted = false,
+        .boilerFillInverted = false,
+        .teaInverted = false,
     },
     .groupOneActive = true,
     .groupTwoActive = true,

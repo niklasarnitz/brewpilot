@@ -48,6 +48,9 @@ void setup()
 
     // Load Volumetric Settings
     volumetricsHelper.setup();
+
+    // Reboot, and with it switch all outputs off, if loop() ever hangs.
+    enableLoopWDT();
 }
 
 void loop()

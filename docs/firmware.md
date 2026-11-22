@@ -8,7 +8,6 @@
 ```
 
 Maschine über `rancilio-s27` beziehungsweise `la-cimbali-m29-select` wählen.
-Pinbelegung und PCB-Kompatibilität stehen im [Pin-Audit](esp32-pin-audit.md).
 
 ## Flowmeter konfigurieren
 

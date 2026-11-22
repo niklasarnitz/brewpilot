@@ -16,15 +16,14 @@ inline constexpr Event panelEvents[] = {Event::LEFT_SINGLE_ESPRESSO, Event::LEFT
 inline constexpr unsigned stopKey = 4;
 #if defined(BREWPILOT_MACHINE_RANCILIO_S27)
 inline constexpr PanelContact panelContacts[][5] = {{{27, 33}, {26, 33}, {25, 33}, {36, 33}, {12, 33}}};
-inline constexpr int outputOn = HIGH;
-inline constexpr int outputOff = LOW;
 #else
 inline constexpr PanelContact panelContacts[][5] = {
     {{26, 33}, {27, 33}, {26, 32}, {27, 32}, {25, 33}},
     {{12, 13}, {36, 13}, {12, 14}, {36, 14}, {39, 13}}};
-inline constexpr int outputOn = LOW;
-inline constexpr int outputOff = HIGH;
 #endif
+// The board's SSR drive stage is active high for both machines.
+inline constexpr int outputOn = HIGH;
+inline constexpr int outputOff = LOW;
 inline constexpr unsigned panelGroups = sizeof(panelContacts) / sizeof(panelContacts[0]);
 inline bool panelKeys[panelGroups][5]{};
 inline bool panelTea = false;
