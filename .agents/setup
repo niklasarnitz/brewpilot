@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
+
+echo 'Checking native firmware and coverage tools'
+missing=()
+for package in build-essential clang llvm libclang-rt-dev python3; do
+    if [[ $(dpkg-query -W -f='${Status}' "$package" 2>/dev/null) != 'install ok installed' ]]; then
+        missing+=("$package")
+    fi
+done
+if ((${#missing[@]})); then
+    time sudo -n apt-get update
+    time sudo -n env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "${missing[@]}"
+fi
+
+echo 'Preparing PlatformIO and ESP32 packages for both firmware environments'
+bin_dir="$HOME/.local/bin"
+mkdir -p "$bin_dir"
+time UV_TOOL_BIN_DIR="$bin_dir" uv tool install --python /usr/bin/python3 'platformio==6.1.19'
+time "$bin_dir/pio" pkg install
+
+echo 'Preparing KiCad 10 CLI and PCB libraries'
+kicad_version=10.0.8
+kicad_dir="$HOME/.local/opt/kicad-$kicad_version"
+if [[ ! -x "$kicad_dir/bin/kicad-cli" ]]; then
+    (
+        mkdir -p "$(dirname -- "$kicad_dir")"
+        staging=$(mktemp -d "${kicad_dir}.XXXXXX")
+        trap 'rm -rf -- "$staging"' EXIT
+        cd -- "$staging"
+        # The lite release includes symbols and footprints but omits 3D models.
+        image="kicad-$kicad_version-x86_64-lite.AppImage"
+        time curl -fsSL --retry 3 "https://mirrors.mit.edu/kicad/appimage/stable/$image.tar" -o "$image.tar"
+        echo "abb59cee9f9782736c1b9a92e3ab08b31320ee01d72a6f9442a07fdef71b87d0  $image.tar" | sha256sum --check
+        tar -xf "$image.tar" "$image"
+        # Extract rather than mount: orbs need no FUSE access to run the CLI.
+        time "./$image" --appimage-extract >/dev/null
+        squashfs-root/bin/kicad-cli version
+        mv -T -- "$(realpath squashfs-root)" "$kicad_dir"
+    )
+fi
+ln -sfn -- "$kicad_dir/bin/kicad-cli" "$bin_dir/kicad-cli"
+
+# The headless CLI does not show the first-run library table setup dialog.
+kicad_config="${XDG_CONFIG_HOME:-$HOME/.config}/kicad/10.0"
+mkdir -p "$kicad_config"
+for table in sym-lib-table fp-lib-table; do
+    [[ -f "$kicad_config/$table" ]] || cp -- "$kicad_dir/share/kicad/template/$table" "$kicad_config/$table"
+done
