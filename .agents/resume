@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# The toolchains live on disk and need no services or authentication on wake.

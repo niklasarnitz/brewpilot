@@ -32,3 +32,6 @@ pcb/review/*audit*.md
 __pycache__/
 *.py[cod]
 *.tmp
+
+# Generated orb portal metadata
+.amp/portals/*
