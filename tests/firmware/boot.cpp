@@ -31,7 +31,9 @@ void testFirmwareBoot()
     testPinModes[16] = testPinModes[35] = -1;
 
     testStorage["FM_P_L_S"] = 3;
+    testLoopWdtEnabled = false;
     setup();
+    require(testLoopWdtEnabled, "setup must enable the loop watchdog so a hung loop reboots");
     for (int pin : {2, 4, 5, 15, 18})
         require(testPinModes[pin] == OUTPUT && testPins[pin] == outputOff,
                 "all valves and the pump must be inactive on boot, including an absent group's");

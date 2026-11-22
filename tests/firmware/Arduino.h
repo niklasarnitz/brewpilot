@@ -46,6 +46,8 @@ inline uint16_t analogRead(int pin)
     return pin == 34 && testPinModes[17] == OUTPUT && testPins[17] == HIGH ? testProbe : 0;
 }
 inline void delay(uint32_t ms) { testMillis += ms; }
+inline bool testLoopWdtEnabled = false;
+inline void enableLoopWDT() { testLoopWdtEnabled = true; }
 inline int digitalPinToInterrupt(int pin) { return pin; }
 inline void attachInterrupt(int pin, void (*callback)(), int mode)
 {
