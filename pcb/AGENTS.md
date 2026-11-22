@@ -65,8 +65,9 @@ Push, flash and fabrication require separate owner authorization.
 Keep all DRC checks enabled. H1–H4 are PCB-only mechanical mounting holes.
 U1's two courtyards cover the PCB-level socket strips, assuming the confirmed
 elevated module; reassess this geometry if header height or under-module parts
-change. J13's local BoardEdge footprint preserves standard pads and mechanics
-while clipping silk to this board. DRC does not verify physical fit; recheck
+change. J13 is a 1x4 2.54 mm right-angle pin header for I2C (pin 1 GND, 2 3V3,
+3 SCL, 4 SDA) whose pins point at the left board edge and end about 1.5 mm
+inside it; it replaced the RJ45 on 2026-11-21. DRC does not verify physical fit; recheck
 module and connector clearances for mechanical changes.
 
 ## Fabrication exports
